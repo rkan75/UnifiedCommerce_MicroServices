@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build / cache
+.next/
+out/
+build/
+dist/
+.cache/
+*.tsbuildinfo
+
+# IDE / OS
+.idea
+.vscode
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Medusa / backend
+medusa-db.sql
+.medusa
+/uploads
+
+# Testing
+coverage/
+test-results/
+playwright-report/
+.playwright/
+
+# Misc
+*.pem
+.vercel

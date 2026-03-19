@@ -1,0 +1,62 @@
+{
+  "name": "unifiedcommerce-grocery-store",
+  "version": "0.0.1",
+  "description": "A starter for Medusa projects.",
+  "author": "Medusa (https://medusajs.com)",
+  "license": "MIT",
+  "keywords": [
+    "sqlite",
+    "postgres",
+    "typescript",
+    "ecommerce",
+    "headless",
+    "medusa"
+  ],
+  "scripts": {
+    "build": "XDG_CONFIG_HOME=\"${XDG_CONFIG_HOME:-.medusa-cli-config}\" npx medusa build",
+    "seed": "npx medusa exec ./src/scripts/seed.ts",
+    "load-store-locations": "medusa exec ./src/scripts/load-store-locations-from-csv.ts",
+    "start": "npx medusa start",
+    "dev": "npx medusa develop",
+    "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
+    "test:integration:modules": "TEST_TYPE=integration:modules NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
+    "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit",
+    "postinstall": "patch-package && node scripts/apply-admin-branding.js"
+  },
+  "dependencies": {
+    "scrypt-kdf": "^2.0.1",
+    "@medusajs/admin-sdk": "2.12.6",
+    "@medusajs/cli": "2.12.6",
+    "@medusajs/framework": "2.12.6",
+    "@medusajs/medusa": "^2.13.1",
+    "@medusajs/notification-sendgrid": "^2.12.6",
+    "@medusajs/rbac": "2.12.6",
+    "@rsc-labs/medusa-wishlist": "^0.0.6",
+    "medusa-plugin-algolia": "^0.2.21",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
+    "@medusajs/test-utils": "2.12.6",
+    "@swc/core": "^1.7.28",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^20.12.11",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.2.25",
+    "jest": "^29.7.0",
+    "patch-package": "^8.0.1",
+    "playwright": "^1.58.2",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "vite": "^7.3.1",
+    "yalc": "^1.0.0-pre.53"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "npm@11.7.0"
+}

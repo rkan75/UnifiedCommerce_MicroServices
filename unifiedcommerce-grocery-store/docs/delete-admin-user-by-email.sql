@@ -1,0 +1,14 @@
+-- Optional: manually delete all records for an admin user by email (so you can re-create with create-admin-user.ts).
+-- Replace 'your@email.com' with the actual email.
+--
+-- 1) Find auth_identity_id(s) first (you need these before deleting provider_identity):
+--    SELECT auth_identity_id FROM provider_identity WHERE entity_id = 'your@email.com' AND provider = 'emailpass';
+--
+-- 2) Delete in this order (use the auth_identity_id from step 1 in the auth_identity DELETE):
+-- DELETE FROM user_rbac_role WHERE user_id IN (SELECT id FROM "user" WHERE email = 'your@email.com');
+-- DELETE FROM provider_identity WHERE entity_id = 'your@email.com' AND provider = 'emailpass';
+-- DELETE FROM auth_identity WHERE id = 'authid_xxx';   -- use id(s) from step 1
+-- DELETE FROM "user" WHERE email = 'your@email.com';
+--
+-- Recommended: use the script instead:
+--   npx medusa exec ./src/scripts/delete-admin-user.ts -- your@email.com

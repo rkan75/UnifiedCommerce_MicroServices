@@ -1,0 +1,21 @@
+# Exclude from Cloud Build upload to speed up gcloud builds submit
+.git
+.gitignore
+node_modules
+**/node_modules
+.next
+**/.next
+.medusa
+**/.medusa
+*.log
+.env
+.env.*
+!.env.example
+coverage
+**/__tests__
+**/*.test.ts
+**/*.spec.ts
+.DS_Store
+.vscode
+*.md
+!deploy/*.md

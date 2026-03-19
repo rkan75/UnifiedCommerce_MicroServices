@@ -1,0 +1,55 @@
+# GCP Cloud Build - Storefront only (build and push Docker image)
+# Use this when you only want to build/deploy the Next.js storefront.
+# Usage: gcloud builds submit --config deploy/cloudbuild-storefront.yaml .
+#
+# Prerequisites:
+#   - gcloud auth configure-docker REGION-docker.pkg.dev
+#   - Artifact Registry repo: gcloud artifacts repositories create medusa-grocery --repository-format=docker --location=REGION
+
+substitutions:
+  _REGION: us-central1
+  _REPO: medusa-grocery
+  _STOREFRONT_IMAGE: storefront
+  _NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: pk_f8e261468637babef6c09293ce362076755f516c3fd5fb40355e8b90c964eb42
+  _NEXT_PUBLIC_BASE_URL: https://unifiedomnichannel.com
+  _NEXT_PUBLIC_ALGOLIA_APP_ID: "8UPZHDU2DT"
+  _NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY: "869234ab00b84d5ec9fcc79f1ff48658"
+  _NEXT_PUBLIC_ALGOLIA_INDEX_NAME: products
+
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-storefront
+    args:
+      - "build"
+      - "--build-arg"
+      - "NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=${_NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_BASE_URL=${_NEXT_PUBLIC_BASE_URL}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_ALGOLIA_APP_ID=${_NEXT_PUBLIC_ALGOLIA_APP_ID}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY=${_NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_ALGOLIA_INDEX_NAME=${_NEXT_PUBLIC_ALGOLIA_INDEX_NAME}"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_STOREFRONT_IMAGE}:${BUILD_ID}"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_STOREFRONT_IMAGE}:latest"
+      - "-f"
+      - "unifiedcommerce-grocery-store-storefront/Dockerfile"
+      - "unifiedcommerce-grocery-store-storefront"
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-storefront
+    args:
+      - "push"
+      - "--all-tags"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_STOREFRONT_IMAGE}"
+    waitFor: ["build-storefront"]
+
+images:
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_STOREFRONT_IMAGE}:${BUILD_ID}"
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_STOREFRONT_IMAGE}:latest"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "medusa-plugin-contentful": "^1.2.12"
+  }
+}
