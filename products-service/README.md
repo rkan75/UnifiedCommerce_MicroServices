@@ -20,8 +20,9 @@ Query parameters (aligned with Medusa Store API):
 | `q`            | string   | Search in title/description (AND of words). |
 | `category_id`  | string   | Filter by category (uses `product_category_product` link table: product_id, product_category_id). |
 | `collection_id`| string   | Filter by collection (requires `product.collection_id` column). |
+| `type_id`      | string   | Filter by Medusa product type (`product.type_id`). |
 | `order`        | string   | Sort: `created_at`, `-created_at`, `title`, `-title`, `handle`, `-handle`. |
-| `fields`       | string   | Ignored; response is full StoreProduct-like shape. |
+| `fields`       | string   | Ignored; response is full StoreProduct-like shape. Each product includes `type: { id, value }` when `product_type` join is enabled (default). |
 
 **Response:** `{ "products": [ { "id", "title", "handle", "description", "thumbnail", "status", "variants", "metadata" }, ... ], "count": N }`
 

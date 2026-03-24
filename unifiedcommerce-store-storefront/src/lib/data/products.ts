@@ -1,7 +1,10 @@
 "use server"
 
 import { unstable_cache } from "next/cache"
-import { sdk } from "@lib/config"
+import {
+  getMedusaPublishableKeyHeaders,
+  getProductsServiceBaseUrl,
+} from "@lib/config/products-service"
 import { getStorefrontProductTypeConfigKey } from "@lib/config/storefront-product-scope"
 import { sortProducts } from "@lib/util/sort-products"
 import { HttpTypes } from "@medusajs/types"
@@ -9,6 +12,25 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { getRegion, retrieveRegion } from "./regions"
 import { resolveStorefrontProductTypeId } from "./storefront-product-type-id"
+
+function appendStoreProductQueryParams(
+  sp: URLSearchParams,
+  query: Record<string, unknown>
+) {
+  for (const [key, raw] of Object.entries(query)) {
+    if (raw === undefined || raw === null) continue
+    if (key === "fields") continue
+    if (Array.isArray(raw)) {
+      for (const item of raw) {
+        if (item !== undefined && item !== null && `${item}` !== "") {
+          sp.append(key, String(item))
+        }
+      }
+    } else {
+      sp.set(key, String(raw))
+    }
+  }
+}
 
 /** Cache key for raw product list (no price filter) so price-filter clicks reuse the same data */
 const RAW_PRODUCTS_CACHE_TAG = "store-products-raw"
@@ -63,6 +85,7 @@ export const listProducts = async ({
   }
 
   const headers = {
+    ...getMedusaPublishableKeyHeaders(),
     ...(await getAuthHeaders()),
   }
 
@@ -85,36 +108,46 @@ export const listProducts = async ({
     mergedQuery.type_id = scopedTypeId
   }
 
-  return sdk.client
-    .fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
-      `/store/products`,
-      {
-        method: "GET",
-        query: {
-          limit,
-          offset,
-          region_id: region?.id,
-          fields:
-            "*categories,*variants.calculated_price,+variants.inventory_quantity,*variants.images,*variants.thumbnail,+metadata,+tags,",
-          ...mergedQuery,
-        },
-        headers,
-        next,
-        cache: "force-cache",
-      }
-    )
-    .then(({ products, count }) => {
-      const nextPage = count > offset + limit ? pageParam + 1 : null
+  const base = getProductsServiceBaseUrl()
+  const sp = new URLSearchParams()
+  appendStoreProductQueryParams(sp, {
+    ...mergedQuery,
+    fields:
+      "*categories,*variants.calculated_price,+variants.inventory_quantity,*variants.images,*variants.thumbnail,+metadata,+tags,",
+  } as Record<string, unknown>)
+  sp.set("limit", String(limit))
+  sp.set("offset", String(offset))
+  if (region?.id) {
+    sp.set("region_id", region.id)
+  }
 
-      return {
-        response: {
-          products,
-          count,
-        },
-        nextPage: nextPage,
-        queryParams: mergedQuery,
-      }
-    })
+  const url = `${base}/store/products?${sp.toString()}`
+  const res = await fetch(url, {
+    method: "GET",
+    headers,
+    next,
+    cache: "force-cache",
+  })
+  if (!res.ok) {
+    const body = await res.text().catch(() => "")
+    throw new Error(
+      `products-service GET /store/products failed: ${res.status} ${body.slice(0, 200)}`
+    )
+  }
+  const { products, count } = (await res.json()) as {
+    products: HttpTypes.StoreProduct[]
+    count: number
+  }
+  const nextPage = count > offset + limit ? pageParam + 1 : null
+
+  return {
+    response: {
+      products,
+      count,
+    },
+    nextPage,
+    queryParams: mergedQuery,
+  }
 }
 
 /**

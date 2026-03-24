@@ -142,8 +142,39 @@ async function handlePromotionRequest(req: MedusaRequest, res: MedusaResponse): 
  * from the JWT so that routes that opt out of auth (e.g. DELETE /admin/users/:id) still
  * have auth_context for checkPermissions (which expects auth_context.app_metadata).
  */
+function storeProductApiDisabled(): boolean {
+  return process.env.DISABLE_MEDUSA_STORE_PRODUCT_API === "true"
+}
+
+function rejectDecommissionedStoreProductApi(
+  req: MedusaRequest,
+  res: MedusaResponse,
+  next: MedusaNextFunction
+) {
+  if (!storeProductApiDisabled()) {
+    return next()
+  }
+  const method = (req.method || "").toUpperCase()
+  if (method !== "GET") {
+    return next()
+  }
+  res.status(410).json({
+    type: "gone",
+    message:
+      "Medusa store product APIs are disabled. Use Java products-service (GET /store/products, /store/product-variants). Set PRODUCTS_SERVICE_URL on the storefront.",
+  })
+}
+
 export default defineMiddlewares({
   routes: [
+    {
+      matcher: "/store/products*",
+      middlewares: [rejectDecommissionedStoreProductApi],
+    },
+    {
+      matcher: "/store/product-variants*",
+      middlewares: [rejectDecommissionedStoreProductApi],
+    },
     // Run promotion override first so we never hit framework policy (promotion:undefined)
     {
       matcher: "/admin/promotions*",

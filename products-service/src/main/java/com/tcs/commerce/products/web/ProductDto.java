@@ -17,6 +17,7 @@ public record ProductDto(
     String description,
     String thumbnail,
     String status,
+    ProductTypeDto type,
     List<ProductVariantDto> variants,
     List<ProductOptionDto> options,
     Object metadata

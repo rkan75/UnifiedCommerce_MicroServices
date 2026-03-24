@@ -15,6 +15,8 @@ public class ProductsProperties {
     private String productCategoryLinkTable = "product_category_product";
     /** Category column name in the link table (product_category_id or category_id) */
     private String productCategoryLinkTableCategoryColumn = "product_category_id";
+    /** Medusa {@code product_type} table; join for {@code type} on products. Set empty to disable join. */
+    private String productTypeTable = "product_type";
     private int maxLimit = 100;
     private int defaultLimit = 12;
 
@@ -64,6 +66,14 @@ public class ProductsProperties {
 
     public void setProductCategoryLinkTableCategoryColumn(String productCategoryLinkTableCategoryColumn) {
         this.productCategoryLinkTableCategoryColumn = productCategoryLinkTableCategoryColumn;
+    }
+
+    public String getProductTypeTable() {
+        return productTypeTable;
+    }
+
+    public void setProductTypeTable(String productTypeTable) {
+        this.productTypeTable = productTypeTable;
     }
 
     public int getMaxLimit() {

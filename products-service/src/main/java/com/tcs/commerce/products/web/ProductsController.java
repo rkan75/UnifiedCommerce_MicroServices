@@ -34,6 +34,7 @@ public class ProductsController {
         @RequestParam(required = false, name = "category_id") String categoryId,
         @RequestParam(required = false, name = "category_handle") String categoryHandle,
         @RequestParam(required = false, name = "collection_id") String collectionId,
+        @RequestParam(required = false, name = "type_id") String typeId,
         @RequestParam(required = false) String order,
         @RequestParam(required = false) String fields
     ) {
@@ -46,6 +47,7 @@ public class ProductsController {
             categoryHandle,
             collectionId,
             regionId,
+            typeId,
             limit,
             offset,
             order

@@ -33,7 +33,7 @@ public class ProductsService {
     }
 
     /**
-     * List products with optional filters: handle, id(s), q (search), category_id, category_handle, collection_id, region_id.
+     * List products with optional filters: handle, id(s), q (search), category_id, category_handle, collection_id, region_id, type_id.
      * When category_handle is set and category_id is blank, resolves category_id from product_category table by handle.
      */
     public ProductsResponse getProducts(
@@ -44,6 +44,7 @@ public class ProductsService {
         String categoryHandle,
         String collectionId,
         String regionId,
+        String typeId,
         Integer limit,
         Integer offset,
         String order
@@ -64,11 +65,11 @@ public class ProductsService {
         // 1) Try link table first (product_category_product)
         ProductsResponse withFilter = null;
         try {
-            withFilter = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, limit, offset, order, true);
+            withFilter = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, typeId, limit, offset, order, true);
         } catch (Exception e) {
             if (hasCategoryFilter || hasCollectionFilter) {
                 try {
-                    return getProductsInternal(handle, ids, q, null, null, regionId, limit, offset, order, true);
+                    return getProductsInternal(handle, ids, q, null, null, regionId, typeId, limit, offset, order, true);
                 } catch (Exception ignored) {
                     throw e;
                 }
@@ -88,7 +89,7 @@ public class ProductsService {
         // 2) Link table returned 0: try direct product.category_id (some schemas have this column)
         if (hasCategoryFilter) {
             try {
-                ProductsResponse direct = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, limit, offset, order, false);
+                ProductsResponse direct = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, typeId, limit, offset, order, false);
                 if (direct.count() > 0) {
                     return direct;
                 }
@@ -111,6 +112,7 @@ public class ProductsService {
         String categoryId,
         String collectionId,
         String regionId,
+        String typeId,
         Integer limit,
         Integer offset,
         String order,
@@ -122,17 +124,22 @@ public class ProductsService {
         int safeOffset = Math.max(0, offset != null ? offset : 0);
         String productTable = sanitize(props.getProductTable());
         String variantTable = sanitize(props.getVariantTable());
+        boolean joinProductType = productTypeJoinEnabled();
 
-        StringBuilder where = new StringBuilder();
-        where.append(" FROM ").append(productTable).append(" p WHERE p.deleted_at IS NULL ");
+        StringBuilder fromWhere = new StringBuilder();
+        fromWhere.append(" FROM ").append(productTable).append(" p ");
+        if (joinProductType) {
+            fromWhere.append(" LEFT JOIN ").append(sanitize(props.getProductTypeTable())).append(" pt ON pt.id = p.type_id ");
+        }
+        fromWhere.append(" WHERE p.deleted_at IS NULL ");
         List<Object> params = new ArrayList<>();
 
         if (handle != null && !handle.isBlank()) {
-            where.append(" AND p.handle = ? ");
+            fromWhere.append(" AND p.handle = ? ");
             params.add(handle.trim());
         }
         if (ids != null && !ids.isEmpty()) {
-            where.append(" AND p.id IN (").append(String.join(",", Collections.nCopies(ids.size(), "?"))).append(") ");
+            fromWhere.append(" AND p.id IN (").append(String.join(",", Collections.nCopies(ids.size(), "?"))).append(") ");
             params.addAll(ids);
         }
         if (categoryId != null && !categoryId.isBlank()) {
@@ -141,22 +148,26 @@ public class ProductsService {
                 String rawCategoryCol = props.getProductCategoryLinkTableCategoryColumn() != null && !props.getProductCategoryLinkTableCategoryColumn().isBlank() ? props.getProductCategoryLinkTableCategoryColumn() : "product_category_id";
                 String linkTable = sanitizeLower(rawLinkTable);
                 String categoryCol = sanitizeLower(rawCategoryCol);
-                where.append(" AND EXISTS (SELECT 1 FROM ").append(linkTable).append(" pcl WHERE pcl.product_id = p.id AND pcl.").append(categoryCol).append(" = ?) ");
+                fromWhere.append(" AND EXISTS (SELECT 1 FROM ").append(linkTable).append(" pcl WHERE pcl.product_id = p.id AND pcl.").append(categoryCol).append(" = ?) ");
                 params.add(categoryId.trim());
             } else {
-                where.append(" AND p.category_id = ? ");
+                fromWhere.append(" AND p.category_id = ? ");
                 params.add(categoryId.trim());
             }
         }
         if (collectionId != null && !collectionId.isBlank()) {
-            where.append(" AND p.collection_id = ? ");
+            fromWhere.append(" AND p.collection_id = ? ");
             params.add(collectionId.trim());
+        }
+        if (typeId != null && !typeId.isBlank()) {
+            fromWhere.append(" AND p.type_id = ? ");
+            params.add(typeId.trim());
         }
         if (q != null && !q.trim().isEmpty()) {
             String[] words = q.trim().toLowerCase().split("\\s+");
             for (String word : words) {
                 String w = word.replace("%", "\\%").replace("_", "\\_");
-                where.append(" AND (LOWER(p.title) LIKE ? OR LOWER(COALESCE(p.description,'')) LIKE ?) ");
+                fromWhere.append(" AND (LOWER(p.title) LIKE ? OR LOWER(COALESCE(p.description,'')) LIKE ?) ");
                 params.add("%" + w + "%");
                 params.add("%" + w + "%");
             }
@@ -172,14 +183,15 @@ public class ProductsService {
             orderDir = order.startsWith("-") ? "DESC" : "ASC";
         }
 
-        String countSql = "SELECT COUNT(*) " + where;
+        String countSql = "SELECT COUNT(*) " + fromWhere;
         List<Object> dataParams = new ArrayList<>(params);
         dataParams.add(safeLimit);
         dataParams.add(safeOffset);
 
         String orderClause = " ORDER BY p." + orderColumn + " " + orderDir + " LIMIT ? OFFSET ?";
-        String dataSqlWithMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.metadata, p.created_at " + where + orderClause;
-        String dataSqlNoMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.created_at " + where + orderClause;
+        String typeSelect = joinProductType ? ", pt.id AS type_row_id, pt.value AS type_row_value" : "";
+        String dataSqlWithMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.metadata, p.created_at" + typeSelect + " " + fromWhere + orderClause;
+        String dataSqlNoMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.created_at" + typeSelect + " " + fromWhere + orderClause;
 
         // Debug: log SQL when filtering by category (always at INFO when category filter is on; set log level to DEBUG for params too)
         if (categoryId != null && !categoryId.isBlank()) {
@@ -227,6 +239,13 @@ public class ProductsService {
             } catch (Exception ignored) {
                 // some drivers return JSONB in a way that fails get(); ignore
             }
+            ProductTypeDto typeDto = null;
+            if (joinProductType) {
+                String tid = getString(row, "type_row_id");
+                if (tid != null && !tid.isBlank()) {
+                    typeDto = new ProductTypeDto(tid, getString(row, "type_row_value"));
+                }
+            }
             ProductDto dto = new ProductDto(
                 productId,
                 getString(row, "title"),
@@ -234,6 +253,7 @@ public class ProductsService {
                 getString(row, "description"),
                 getString(row, "thumbnail"),
                 getString(row, "status"),
+                typeDto,
                 variants,
                 productOptions.isEmpty() ? null : productOptions,
                 metadata
@@ -242,6 +262,11 @@ public class ProductsService {
         }
 
         return ProductsResponse.of(products, total);
+    }
+
+    private boolean productTypeJoinEnabled() {
+        String t = props.getProductTypeTable();
+        return t != null && !t.isBlank();
     }
 
     private List<ProductVariantDto> getVariantsForProduct(String variantTable, String productId, String regionId) {

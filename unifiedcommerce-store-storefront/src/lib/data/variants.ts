@@ -1,38 +1,35 @@
 "use server"
 
-import { sdk } from "@lib/config"
+import {
+  getMedusaPublishableKeyHeaders,
+  getProductsServiceBaseUrl,
+} from "@lib/config/products-service"
 import { HttpTypes } from "@medusajs/types"
 
-import { getAuthHeaders, getCacheOptions } from "./cookies"
+import { getCacheOptions } from "./cookies"
 
 export const retrieveVariant = async (
   variant_id: string
 ): Promise<HttpTypes.StoreProductVariant | null> => {
-  const authHeaders = await getAuthHeaders()
-
-  if (!authHeaders) return null
-
-  const headers = {
-    ...authHeaders,
-  }
-
   const next = {
     ...(await getCacheOptions("variants")),
   }
 
-  return await sdk.client
-    .fetch<{ variant: HttpTypes.StoreProductVariant }>(
-      `/store/product-variants/${variant_id}`,
-      {
-        method: "GET",
-        query: {
-          fields: "*images",
-        },
-        headers,
-        next,
-        cache: "force-cache",
-      }
-    )
-    .then(({ variant }) => variant)
-    .catch(() => null)
+  try {
+    const base = getProductsServiceBaseUrl()
+    const url = `${base}/store/product-variants/${encodeURIComponent(variant_id)}?fields=${encodeURIComponent("*images")}`
+    const res = await fetch(url, {
+      method: "GET",
+      headers: getMedusaPublishableKeyHeaders(),
+      next,
+      cache: "force-cache",
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as {
+      variant?: HttpTypes.StoreProductVariant
+    }
+    return data.variant ?? null
+  } catch {
+    return null
+  }
 }

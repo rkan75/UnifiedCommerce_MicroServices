@@ -1,8 +1,9 @@
 "use server"
 
+import { getProductsServiceBaseUrl } from "@lib/config/products-service"
 import { getAuthHeaders } from "./cookies"
 
-const getBackendUrl = () => {
+const getMedusaBackendUrl = () => {
   return process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"
 }
 
@@ -32,7 +33,7 @@ export async function getProductIdByVariantId(
   const headers = await getStoreRequestHeaders()
   try {
     const res = await fetch(
-      `${getBackendUrl()}/store/product-variants/${variantId}`,
+      `${getProductsServiceBaseUrl()}/store/product-variants/${encodeURIComponent(variantId)}`,
       {
         method: "GET",
         headers,
@@ -106,7 +107,7 @@ export async function getWishlist(): Promise<WishlistResponse | null> {
   }
   const headers = await getStoreRequestHeaders()
   try {
-    const res = await fetch(`${getBackendUrl()}/store/customers/me/wishlist`, {
+    const res = await fetch(`${getMedusaBackendUrl()}/store/customers/me/wishlist`, {
       method: "GET",
       headers,
       cache: "no-store",
@@ -146,7 +147,7 @@ export async function addToWishlist(
   const headers = await getStoreRequestHeaders()
   try {
     const res = await fetch(
-      `${getBackendUrl()}/store/customers/me/wishlist/items`,
+      `${getMedusaBackendUrl()}/store/customers/me/wishlist/items`,
       {
         method: "POST",
         headers,
@@ -207,7 +208,7 @@ export async function removeFromWishlist(
   const headers = await getStoreRequestHeaders()
   try {
     const url = new URL(
-      `${getBackendUrl()}/store/customers/me/wishlist/items`
+      `${getMedusaBackendUrl()}/store/customers/me/wishlist/items`
     )
     url.searchParams.set("productId", productId)
     url.searchParams.set("productVariantId", productVariantId)
