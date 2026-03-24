@@ -1,0 +1,165 @@
+{
+  "info": {
+    "name": "Cart Service API",
+    "description": "Cart service (Java Store Cart API). Set base_url, region_id (from Java regions-service GET /store/regions), then run Create cart and set cart_id. Set variant_id for Add line item.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8083" },
+    { "key": "region_id", "value": "" },
+    { "key": "cart_id", "value": "" },
+    { "key": "variant_id", "value": "" },
+    { "key": "line_item_id", "value": "" },
+    { "key": "shipping_option_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/store/health",
+        "description": "Cart service health. Expect status UP and proxy configured."
+      }
+    },
+    {
+      "name": "Create cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"region_id\": \"{{region_id}}\"\n}"
+        },
+        "url": "{{base_url}}/store/carts",
+        "description": "Create a cart. Get region_id from Java regions-service GET /store/regions (e.g. http://localhost:8084/store/regions). Copy cart.id from response into cart_id variable."
+      }
+    },
+    {
+      "name": "Get cart",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/store/carts/{{cart_id}}",
+        "description": "Retrieve cart by ID. Optional: ?fields=id,items,region_id,subtotal,total"
+      }
+    },
+    {
+      "name": "Add line item",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 1\n}"
+        },
+        "url": "{{base_url}}/store/carts/{{cart_id}}/line-items",
+        "description": "Add item to cart. Get variant_id from products-service GET /store/products or Medusa."
+      }
+    },
+    {
+      "name": "Update line item",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 2\n}"
+        },
+        "url": "{{base_url}}/store/carts/{{cart_id}}/line-items/{{line_item_id}}",
+        "description": "Update quantity or metadata. line_item_id = cart.items[].id from Get cart."
+      }
+    },
+    {
+      "name": "Delete line item",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{base_url}}/store/carts/{{cart_id}}/line-items/{{line_item_id}}",
+        "description": "Remove a line item from the cart."
+      }
+    },
+    {
+      "name": "List shipping options",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/store/shipping-options?cart_id={{cart_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["store", "shipping-options"],
+          "query": [
+            { "key": "cart_id", "value": "{{cart_id}}" }
+          ]
+        },
+        "description": "Get shipping options for the cart. Use one option id for Add shipping method."
+      }
+    },
+    {
+      "name": "Add shipping method",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"option_id\": \"{{shipping_option_id}}\"\n}"
+        },
+        "url": "{{base_url}}/store/carts/{{cart_id}}/shipping-methods",
+        "description": "Set shipping method. option_id from List shipping options response."
+      }
+    },
+    {
+      "name": "Add promotion code",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"promo_codes\": [\"YOUR_CODE\"]\n}"
+        },
+        "url": "{{base_url}}/store/carts/{{cart_id}}/promotions",
+        "description": "Apply promotion code(s) to cart."
+      }
+    },
+    {
+      "name": "Remove promotion code",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"promo_codes\": [\"YOUR_CODE\"]\n}"
+        },
+        "url": "{{base_url}}/store/carts/{{cart_id}}/promotions",
+        "description": "Remove promotion code(s) from cart."
+      }
+    },
+    {
+      "name": "Complete cart (place order)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": "{{base_url}}/store/carts/{{cart_id}}/complete",
+        "description": "Complete cart and create order. Medusa may require address and payment first."
+      }
+    }
+  ]
+}

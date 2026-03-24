@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in | Store Admin</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
+      display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 2.5rem; max-width: 400px; width: 100%; }
+    .logo { text-align: center; margin-bottom: 1.5rem; }
+    .logo img { max-height: 56px; width: auto; }
+    h1 { font-size: 1.5rem; font-weight: 600; color: #111; margin: 0 0 0.5rem 0; }
+    .hint { color: #64748b; font-size: 0.875rem; margin-bottom: 1.5rem; }
+    label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.375rem; }
+    input { width: 100%; padding: 0.625rem 0.75rem; font-size: 1rem; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 1rem; }
+    input:focus { outline: none; border-color: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,0.2); }
+    button { width: 100%; padding: 0.75rem 1rem; font-size: 1rem; font-weight: 600; color: #fff; background: #16a34a; border: none; border-radius: 8px; cursor: pointer; margin-top: 0.5rem; }
+    button:hover { background: #15803d; }
+    button:disabled { opacity: 0.7; cursor: not-allowed; }
+    .error { color: #dc2626; font-size: 0.875rem; margin-top: 1rem; }
+    .back { text-align: center; margin-top: 1.5rem; }
+    .back a { color: #16a34a; text-decoration: none; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <img src="/admin/logo" alt=" " onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+      <span style="display:none;">Store Admin</span>
+    </div>
+    <h1>Welcome Unified OmniChannel</h1>
+    <p class="hint">Sign in with your admin credentials.</p>
+    <form id="loginForm" method="post" action="">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" placeholder="admin@example.com" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••" />
+      <button type="submit" id="submitBtn">Sign in</button>
+    </form>
+    <p id="errorMsg" class="error" style="display:none;"></p>
+    <div class="back"><a href="/app/products">Open Admin</a></div>
+  </div>
+  <script>
+    (function() {
+      var form = document.getElementById('loginForm');
+      var submitBtn = document.getElementById('submitBtn');
+      var errorMsg = document.getElementById('errorMsg');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        errorMsg.style.display = 'none';
+        errorMsg.textContent = '';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in…';
+        fetch('/auth/user/emailpass', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value.trim(),
+            password: document.getElementById('password').value
+          }),
+          credentials: 'include'
+        })
+        .then(function(res) {
+          if (res.ok) { window.location.href = '/app/products'; return; }
+          return res.json().then(function(data) { throw new Error(data.message || 'Invalid email or password'); }).catch(function(err) {
+            if (err.message) throw err;
+            throw new Error('Invalid email or password');
+          });
+        })
+        .catch(function(err) {
+          errorMsg.textContent = err.message || 'Sign in failed. Try again.';
+          errorMsg.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign in';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

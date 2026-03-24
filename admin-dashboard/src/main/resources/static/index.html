@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Store Admin</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="/app/products" class="logo-link">Unified OmniChannel</a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/app/products" class="nav-item" data-page="products">Products</a>
+        <a href="/app/orders" class="nav-item" data-page="orders">Orders</a>
+        <a href="/app/regions" class="nav-item" data-page="regions">Regions</a>
+        <a href="/app/users" class="nav-item" data-page="users">Users</a>
+        <a href="/app/invites" class="nav-item" data-page="invites">Invites</a>
+        <a href="/app/settings" class="nav-item" data-page="settings">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/admin-login" class="nav-item">Sign out</a>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="main-header">
+        <h1 id="pageTitle">Products</h1>
+      </header>
+      <div id="content" class="content"></div>
+    </main>
+  </div>
+  <script src="/js/app.js"></script>
+</body>
+</html>

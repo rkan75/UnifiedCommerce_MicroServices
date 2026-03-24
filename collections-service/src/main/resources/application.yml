@@ -1,0 +1,20 @@
+# Collections Service - replacement for Medusa GET /store/collections and GET /store/collections/:id
+# Connects to the same PostgreSQL database as Medusa (product_collection table).
+
+server:
+  port: ${SERVER_PORT:8086}
+
+spring:
+  application:
+    name: collections-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+
+# Medusa product_collection table (id, title, handle, created_at, updated_at, metadata)
+app:
+  collections:
+    table: ${COLLECTION_TABLE:product_collection}
+    table-schema: ${COLLECTION_TABLE_SCHEMA:public}

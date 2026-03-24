@@ -1,0 +1,32 @@
+# Cart Service - full implementation (no proxy). Uses same PostgreSQL as Medusa.
+
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: cart-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      # Force read-write: pool and session (fixes SQL state 25006 when DB/proxy hands out read-only connections)
+      read-only: false
+      connection-init-sql: "SET SESSION default_transaction_read_only = off; SET SESSION transaction_read_only = off"
+  sql:
+    init:
+      mode: always
+      # Runs src/main/resources/schema.sql on startup (CREATE TABLE IF NOT EXISTS)
+      schema-locations: classpath:schema.sql
+      continue-on-error: true
+
+# Table names (default: commerce_cart, commerce_line_item). Set table-schema to "public" only if your DB requires it; leave empty for default search_path.
+app:
+  cart:
+    cart-table: ${CART_TABLE:commerce_cart}
+    line-item-table: ${LINE_ITEM_TABLE:commerce_line_item}
+    table-schema: ${CART_TABLE_SCHEMA:}
+  # Optional: for complete() to create order via Medusa. If not set, complete creates order in commerce_order table.
+  medusa-backend-url: ${MEDUSA_BACKEND_URL:}

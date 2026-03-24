@@ -1,0 +1,20 @@
+# Categories Service - replacement for Medusa GET /store/product-categories
+# Connects to the same PostgreSQL database as Medusa (product_category table).
+
+server:
+  port: ${SERVER_PORT:8085}
+
+spring:
+  application:
+    name: categories-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+
+# Medusa product_category table (id, name, handle, description, parent_category_id, ...)
+app:
+  categories:
+    table: ${CATEGORY_TABLE:product_category}
+    table-schema: ${CATEGORY_TABLE_SCHEMA:public}

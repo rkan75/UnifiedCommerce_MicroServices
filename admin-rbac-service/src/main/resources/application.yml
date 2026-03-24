@@ -1,0 +1,30 @@
+# Admin RBAC Service - replicates Medusa admin users, roles, user-roles, invites (same DB)
+server:
+  port: ${SERVER_PORT:8088}
+
+spring:
+  application:
+    name: admin-rbac-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      read-only: false
+      connection-init-sql: "SET SESSION default_transaction_read_only = off; SET SESSION transaction_read_only = off"
+
+# Admin auth: JWT (same secret as store backend so backend can validate cookie) and credential table
+app:
+  admin-auth:
+    jwt-secret: ${ADMIN_JWT_SECRET:${JWT_SECRET:}}
+    jwt-expires-seconds: ${ADMIN_JWT_EXPIRES_SECONDS:604800}
+    credential-table: ${ADMIN_CREDENTIAL_TABLE:admin_credential}
+  rbac:
+    table-schema: ${RBAC_TABLE_SCHEMA:public}
+    user-table: ${RBAC_USER_TABLE:user}
+    invite-table: ${RBAC_INVITE_TABLE:invite}
+    role-table: ${RBAC_ROLE_TABLE:rbac_role}
+    policy-table: ${RBAC_POLICY_TABLE:rbac_policy}
+    user-role-link-table: ${RBAC_USER_ROLE_LINK_TABLE:user_rbac_role}
+    role-policy-link-table: ${RBAC_ROLE_POLICY_LINK_TABLE:rbac_role_rbac_policy}

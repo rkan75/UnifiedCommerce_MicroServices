@@ -1,0 +1,18 @@
+# Admin Dashboard - serves UI and proxies to Java microservices (replaces Medusa dashboard)
+server:
+  port: ${SERVER_PORT:9010}
+
+spring:
+  application:
+    name: admin-dashboard
+
+# URLs of Java microservices (required for login: admin-rbac; others optional for proxying)
+app:
+  admin-rbac-url: ${ADMIN_RBAC_SERVICE_URL:http://localhost:8088}
+  products-url: ${PRODUCTS_SERVICE_URL:http://localhost:8082}
+  regions-url: ${REGIONS_SERVICE_URL:http://localhost:8084}
+  categories-url: ${CATEGORIES_SERVICE_URL:http://localhost:8083}
+  collections-url: ${COLLECTIONS_SERVICE_URL:http://localhost:8085}
+  # JWT secret must match admin-rbac-service for cookie/session validation
+  jwt-secret: ${JWT_SECRET:${ADMIN_JWT_SECRET:}}
+  cookie-name: ${ADMIN_COOKIE_NAME:medusa_admin_token}

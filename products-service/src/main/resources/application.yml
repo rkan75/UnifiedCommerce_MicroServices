@@ -1,0 +1,35 @@
+# Products Service - replacement for Medusa GET /store/products
+# Connects to the same PostgreSQL database as Medusa (read-only recommended).
+# Derive from Medusa DATABASE_URL: jdbc:postgresql://host:port/dbname
+
+server:
+  port: ${SERVER_PORT:8082}
+
+spring:
+  application:
+    name: products-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gnc_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      read-only: true
+      connection-init-sql: "SET default_transaction_read_only = on"
+      initialization-fail-timeout: -1
+      connection-timeout: 60000
+      maximum-pool-size: 20
+      minimum-idle: 2
+
+# Medusa table names (match your Medusa v2 schema)
+# product-category-link-table: link table (product_id, product_category_id), all lowercase in SQL
+app:
+  products:
+    product-table: ${MEDUSA_PRODUCT_TABLE:product}
+    variant-table: ${MEDUSA_VARIANT_TABLE:product_variant}
+    region-table: ${MEDUSA_REGION_TABLE:region}
+    product-category-table: ${MEDUSA_PRODUCT_CATEGORY_TABLE:product_category}
+    product-category-link-table: ${MEDUSA_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
+    product-category-link-table-category-column: ${MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
+    max-limit: 100
+    default-limit: 12

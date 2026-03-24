@@ -1,0 +1,41 @@
+# Search Service - same DB as Medusa (read-only recommended)
+# Set SPRING_DATASOURCE_URL from Medusa DATABASE_URL, e.g.:
+#   DATABASE_URL=postgresql://user:pass@host:5432/dbname
+#   SPRING_DATASOURCE_URL=jdbc:postgresql://host:5432/dbname
+#   SPRING_DATASOURCE_USERNAME=user
+#   SPRING_DATASOURCE_PASSWORD=pass
+
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: search-service
+  datasource:
+    # URL must be host:port/database only; set username/password below or via env
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      read-only: true
+      connection-init-sql: "SET default_transaction_read_only = on"
+      # Allow app to start even if DB is down; /search will return 503 until DB is available
+      initialization-fail-timeout: -1
+      # Wait up to 60s for a connection from pool (default 30s can be too short if DB is slow)
+      connection-timeout: 60000
+      # Pool size; increase if you have many concurrent /search requests
+      maximum-pool-size: 20
+      # Idle connections kept ready (reduces latency for bursts)
+      minimum-idle: 2
+
+# Optional: table name overrides if Medusa uses different names (e.g. prefixed)
+# product-category-link-table: link table (product_id, product_category_id), all lowercase in SQL
+app:
+  search:
+    product-table: ${MEDUSA_PRODUCT_TABLE:product}
+    variant-table: ${MEDUSA_VARIANT_TABLE:product_variant}
+    product-category-link-table: ${MEDUSA_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
+    product-category-link-table-category-column: ${MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
+    max-limit: 100
+    default-limit: 12

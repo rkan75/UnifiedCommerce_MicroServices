@@ -1,0 +1,11 @@
+# Development profile - optional local DB
+spring:
+  jpa:
+    show-sql: true
+  datasource:
+    hikari:
+      read-only: false
+
+logging:
+  level:
+    com.tcs.commerce.search: DEBUG

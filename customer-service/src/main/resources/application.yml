@@ -1,0 +1,29 @@
+# Customer Service - replacement for Medusa GET /store/customers/me and customer/address CRUD
+# Validates Medusa-issued JWT (same JWT_SECRET as Medusa backend). Auth (login/register) remains in Medusa.
+
+server:
+  port: ${SERVER_PORT:8087}
+
+spring:
+  application:
+    name: customer-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      # Force read-write so INSERT/UPDATE work (fixes SQL state 25006 "cannot execute INSERT in a read-only transaction")
+      read-only: false
+      connection-init-sql: "SET SESSION default_transaction_read_only = off; SET SESSION transaction_read_only = off"
+
+# JWT secret for signing and validating tokens (auth is in this service; no Medusa)
+app:
+  customer:
+    jwt-secret: ${JWT_SECRET:}
+    jwt-expires-seconds: ${JWT_EXPIRES_SECONDS:604800}
+    customer-table: ${CUSTOMER_TABLE:customer}
+    address-table: ${ADDRESS_TABLE:address}
+    auth-table: ${AUTH_TABLE:customer_auth}
+    table-schema: ${CUSTOMER_TABLE_SCHEMA:public}
+    reset-token-valid-seconds: ${RESET_TOKEN_VALID_SECONDS:3600}

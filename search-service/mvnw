@@ -1,0 +1,105 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup script (script-only, downloads Maven if needed)
+# ----------------------------------------------------------------------------
+
+set -euf
+[ "${MVNW_VERBOSE-}" != debug ] || set -x
+
+# Find Java so Maven can run (fixes macOS "Unable to locate a Java Runtime")
+find_java() {
+  if [ -n "${JAVA_HOME-}" ] && [ -x "${JAVA_HOME}/bin/java" ]; then
+    return
+  fi
+  if [ "$(uname)" = "Darwin" ]; then
+    if [ -x "/usr/libexec/java_home" ]; then
+      _home="$(/usr/libexec/java_home 2>/dev/null)" && JAVA_HOME="$_home" && return
+    fi
+    for _candidate in /opt/homebrew/opt/openjdk@17 /opt/homebrew/opt/openjdk@21 /opt/homebrew/opt/openjdk /usr/local/opt/openjdk@17 /usr/local/opt/openjdk; do
+      if [ -x "${_candidate}/bin/java" ]; then
+        JAVA_HOME="$_candidate"
+        return
+      fi
+    done
+  fi
+  if command -v java >/dev/null 2>&1; then
+    _java="$(command -v java)"
+    JAVA_HOME="${_java%/bin/java}"
+    [ -n "$JAVA_HOME" ] && return
+  fi
+}
+find_java
+if [ -n "${JAVA_HOME-}" ]; then
+  PATH="${JAVA_HOME}/bin:${PATH}"
+  export PATH
+  if ! "${JAVA_HOME}/bin/java" -version >/dev/null 2>&1; then
+    echo "JAVA_HOME is set to '$JAVA_HOME' but java -version failed. Install a JDK (e.g. brew install openjdk@17) or set JAVA_HOME to your JDK root."
+    exit 1
+  fi
+else
+  echo "No Java found. Install a JDK (e.g. brew install openjdk@17) and set JAVA_HOME, or run: export JAVA_HOME=\$(/usr/libexec/java_home)"
+  exit 1
+fi
+
+native_path() { printf %s\\n "$1"; }
+case "$(uname)" in
+  CYGWIN* | MINGW*) native_path() { cygpath --path --windows "$1"; };;
+esac
+
+scriptDir="$(cd "$(dirname "$0")" && pwd)"
+[ -f "$scriptDir/.mvn/wrapper/maven-wrapper.properties" ] || { echo "Missing .mvn/wrapper/maven-wrapper.properties"; exit 1; }
+
+distributionUrl=""
+while IFS= read -r line; do
+  case "$line" in
+    distributionUrl=*) distributionUrl="${line#*=}";;
+  esac
+done <"$scriptDir/.mvn/wrapper/maven-wrapper.properties"
+[ -n "$distributionUrl" ] || { echo "distributionUrl not set"; exit 1; }
+
+distributionUrlName="${distributionUrl##*/}"
+distributionUrlNameMain="${distributionUrlName%.*}"; distributionUrlNameMain="${distributionUrlNameMain%-bin}"
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-${HOME}/.m2}"
+MAVEN_HOME="${MAVEN_USER_HOME}/wrapper/dists/${distributionUrlNameMain}"
+
+if [ -x "$MAVEN_HOME/bin/mvn" ]; then
+  JAVA_HOME="$JAVA_HOME" PATH="${JAVA_HOME}/bin:$PATH" exec "$MAVEN_HOME/bin/mvn" "$@"
+fi
+
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT INT TERM
+
+echo "Downloading Maven to $MAVEN_HOME ..."
+mkdir -p "${MAVEN_HOME%/*}"
+if command -v curl >/dev/null; then
+  curl -sL -o "$TMP/maven.zip" "$distributionUrl"
+elif command -v wget >/dev/null; then
+  wget -q -O "$TMP/maven.zip" "$distributionUrl"
+else
+  echo "Need curl or wget to download Maven"; exit 1
+fi
+
+( cd "$TMP" && unzip -q maven.zip )
+_subdir=$(find "$TMP" -maxdepth 1 -type d ! -path "$TMP" | head -1)
+[ -n "$_subdir" ] && [ -x "$_subdir/bin/mvn" ] || { echo "Unexpected Maven zip layout"; exit 1; }
+mv "$_subdir" "$MAVEN_HOME"
+JAVA_HOME="$JAVA_HOME" PATH="${JAVA_HOME}/bin:$PATH" exec "$MAVEN_HOME/bin/mvn" "$@"
