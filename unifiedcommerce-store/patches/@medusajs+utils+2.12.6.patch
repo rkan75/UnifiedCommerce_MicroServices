@@ -1,0 +1,13 @@
+diff --git a/node_modules/@medusajs/utils/dist/modules-sdk/define-policies.js b/node_modules/@medusajs/utils/dist/modules-sdk/define-policies.js
+index 3f4bbfc..0bdd320 100644
+--- a/node_modules/@medusajs/utils/dist/modules-sdk/define-policies.js
++++ b/node_modules/@medusajs/utils/dist/modules-sdk/define-policies.js
+@@ -13,7 +13,7 @@ global.PolicyResource ??= exports.PolicyResource;
+ /**
+  * Global registry for all unique operations.
+  */
+-const defaultOperations = ["read", "write", "update", "delete", "*"];
++const defaultOperations = ["read", "write", "create", "update", "delete", "*"];
+ exports.PolicyOperation = global.PolicyOperation ?? {};
+ global.PolicyOperation ??= exports.PolicyOperation;
+ for (const operation of defaultOperations) {

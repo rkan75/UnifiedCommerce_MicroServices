@@ -1,0 +1,77 @@
+diff --git a/node_modules/@medusajs/medusa/dist/api/admin/fulfillment-sets/middlewares.js b/node_modules/@medusajs/medusa/dist/api/admin/fulfillment-sets/middlewares.js
+index 59780ad..cfad146 100644
+--- a/node_modules/@medusajs/medusa/dist/api/admin/fulfillment-sets/middlewares.js
++++ b/node_modules/@medusajs/medusa/dist/api/admin/fulfillment-sets/middlewares.js
+@@ -53,7 +53,7 @@ exports.adminFulfillmentSetsRoutesMiddlewares = [
+         matcher: "/admin/fulfillment-sets/*/service-zones/*",
+         policies: [
+             {
+-                resource: query_config_1.Entities.service_zone,
++                resource: query_config_1.Entities.fulfillment_set,
+                 operation: utils_1.PolicyOperation.read,
+             },
+         ],
+@@ -66,13 +66,12 @@ exports.adminFulfillmentSetsRoutesMiddlewares = [
+             (0, framework_1.validateAndTransformQuery)(validators_1.AdminFulfillmentSetParams, QueryConfig.retrieveTransformQueryConfig),
+         ],
+         policies: [
++            // Medusa registers RBAC for `fulfillment_set` (policies/shipping.js) but not `service_zone`,
++            // so `service_zone:create` never syncs to rbac_policy and create always fails.
++            // Adding service zones mutates an existing set - require fulfillment_set:update.
+             {
+                 resource: query_config_1.Entities.fulfillment_set,
+-                operation: utils_1.PolicyOperation.create,
+-            },
+-            {
+-                resource: query_config_1.Entities.service_zone,
+-                operation: utils_1.PolicyOperation.create,
++                operation: utils_1.PolicyOperation.update,
+             },
+         ],
+     },
+@@ -87,10 +86,6 @@ exports.adminFulfillmentSetsRoutesMiddlewares = [
+                 resource: query_config_1.Entities.fulfillment_set,
+                 operation: utils_1.PolicyOperation.update,
+             },
+-            {
+-                resource: query_config_1.Entities.service_zone,
+-                operation: utils_1.PolicyOperation.delete,
+-            },
+         ],
+     },
+     {
+@@ -116,10 +111,6 @@ exports.adminFulfillmentSetsRoutesMiddlewares = [
+                 resource: query_config_1.Entities.fulfillment_set,
+                 operation: utils_1.PolicyOperation.update,
+             },
+-            {
+-                resource: query_config_1.Entities.service_zone,
+-                operation: utils_1.PolicyOperation.update,
+-            },
+         ],
+     },
+     {
+@@ -130,7 +121,7 @@ exports.adminFulfillmentSetsRoutesMiddlewares = [
+         ],
+         policies: [
+             {
+-                resource: query_config_1.Entities.service_zone,
++                resource: query_config_1.Entities.fulfillment_set,
+                 operation: utils_1.PolicyOperation.read,
+             },
+         ],
+diff --git a/node_modules/@medusajs/medusa/dist/api/admin/product-types/middlewares.js b/node_modules/@medusajs/medusa/dist/api/admin/product-types/middlewares.js
+index 1f1b0a5..fc226cb 100644
+--- a/node_modules/@medusajs/medusa/dist/api/admin/product-types/middlewares.js
++++ b/node_modules/@medusajs/medusa/dist/api/admin/product-types/middlewares.js
+@@ -74,7 +74,9 @@ exports.adminProductTypeRoutesMiddlewares = [
+         policies: [
+             {
+                 resource: query_config_1.Entities.product_type,
+-                operation: utils_1.PolicyOperation.create,
++                // Use "write" - PolicyOperation.create was undefined in @medusajs/utils 2.12.x (shows as product_type:undefined).
++                // Product RBAC policies always include "write" for product_type (WriteProductType).
++                operation: utils_1.PolicyOperation.write,
+             },
+         ],
+     },

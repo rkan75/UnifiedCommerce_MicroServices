@@ -1,0 +1,301 @@
+diff --git a/node_modules/@medusajs/dashboard/dist/chunk-WATKBUHQ.mjs b/node_modules/@medusajs/dashboard/dist/chunk-WATKBUHQ.mjs
+index ee8277c..4d63184 100644
+--- a/node_modules/@medusajs/dashboard/dist/chunk-WATKBUHQ.mjs
++++ b/node_modules/@medusajs/dashboard/dist/chunk-WATKBUHQ.mjs
+@@ -1,10 +1,18 @@
+-// src/lib/format-currency.ts
+-var formatCurrency = (amount, currency) => {
++import {
++  currencies
++} from "./chunk-DK4WIVY6.mjs";
++
++// src/lib/format-currency.ts — Medusa API amounts are minor units (e.g. USD cents)
++var formatCurrency = (amount, currency, options) => {
++  var _a;
++  const digits = ((_a = currencies[currency.toUpperCase()]) == null ? void 0 : _a.decimal_digits) ?? 0;
++  const fromMinor = (options == null ? void 0 : options.fromMinorUnit) !== false;
++  const value = fromMinor ? amount / Math.pow(10, digits) : amount;
+   return new Intl.NumberFormat(void 0, {
+     style: "currency",
+     currency,
+     signDisplay: "auto"
+-  }).format(amount);
++  }).format(value);
+ };
+ 
+ export {
+diff --git a/node_modules/@medusajs/dashboard/dist/chunk-X6BAAGCL.mjs b/node_modules/@medusajs/dashboard/dist/chunk-X6BAAGCL.mjs
+index 0b53e7e..18c180f 100644
+--- a/node_modules/@medusajs/dashboard/dist/chunk-X6BAAGCL.mjs
++++ b/node_modules/@medusajs/dashboard/dist/chunk-X6BAAGCL.mjs
+@@ -6,13 +6,17 @@ import {
+ var getDecimalDigits = (currency) => {
+   return currencies[currency.toUpperCase()]?.decimal_digits ?? 0;
+ };
++var toMajorUnit = (amount, currencyCode) => {
++  const digits = getDecimalDigits(currencyCode);
++  return amount / Math.pow(10, digits);
++};
+ var getLocaleAmount = (amount, currencyCode) => {
+   const formatter = new Intl.NumberFormat([], {
+     style: "currency",
+     currencyDisplay: "narrowSymbol",
+     currency: currencyCode
+   });
+-  return formatter.format(amount);
++  return formatter.format(toMajorUnit(amount, currencyCode));
+ };
+ var getNativeSymbol = (currencyCode) => {
+   const formatted = new Intl.NumberFormat([], {
+@@ -25,11 +29,12 @@ var getNativeSymbol = (currencyCode) => {
+ var getStylizedAmount = (amount, currencyCode) => {
+   const symbol = getNativeSymbol(currencyCode);
+   const decimalDigits = getDecimalDigits(currencyCode);
++  const major = toMajorUnit(amount, currencyCode);
+   const lessThanRoundingPrecission = isAmountLessThenRoundingError(
+-    amount,
++    major,
+     currencyCode
+   );
+-  const total = amount.toLocaleString(void 0, {
++  const total = major.toLocaleString(void 0, {
+     minimumFractionDigits: decimalDigits,
+     maximumFractionDigits: decimalDigits,
+     signDisplay: lessThanRoundingPrecission ? "exceptZero" : "auto"
+diff --git a/node_modules/@medusajs/dashboard/dist/order-create-refund-MY2VRRFA.mjs b/node_modules/@medusajs/dashboard/dist/order-create-refund-MY2VRRFA.mjs
+index d1b3540..abd9a1d 100644
+--- a/node_modules/@medusajs/dashboard/dist/order-create-refund-MY2VRRFA.mjs
++++ b/node_modules/@medusajs/dashboard/dist/order-create-refund-MY2VRRFA.mjs
+@@ -188,7 +188,8 @@ var OrderBalanceSettlementForm = ({
+               t("orders.payment.refundPaymentSuccess", {
+                 amount: formatCurrency(
+                   data.refund.amount.float,
+-                  order.currency_code
++                  order.currency_code,
++                  { fromMinorUnit: false }
+                 )
+               })
+             );
+@@ -492,7 +493,8 @@ var CreateRefundForm = ({ order }) => {
+             t("orders.payment.refundPaymentSuccess", {
+               amount: formatCurrency(
+                 data.amount.float,
+-                payment?.currency_code
++                payment?.currency_code,
++                { fromMinorUnit: false }
+               )
+             })
+           );
+diff --git a/node_modules/@medusajs/dashboard/src/components/common/logo-box/avatar-box.tsx b/node_modules/@medusajs/dashboard/src/components/common/logo-box/avatar-box.tsx
+index 2269ede..7dfd18e 100644
+--- a/node_modules/@medusajs/dashboard/src/components/common/logo-box/avatar-box.tsx
++++ b/node_modules/@medusajs/dashboard/src/components/common/logo-box/avatar-box.tsx
+@@ -44,44 +44,11 @@ export default function AvatarBox({ checked }: { checked?: boolean }) {
+           </svg>
+         </motion.div>
+       )}
+-      <svg
+-        className="rounded-[10px]"
+-        viewBox="0 0 400 400"
+-        fill="none"
+-        xmlns="http://www.w3.org/2000/svg"
+-      >
+-        <rect width="400" height="400" fill="#18181B" />
+-        <path
+-          d="M238.088 51.1218L238.089 51.1223L310.605 92.8101C334.028 106.308 348.526 131.32 347.868 157.953L347.867 157.966V157.978V241.688C347.867 268.68 333.687 293.362 310.271 306.856L310.269 306.858L237.754 348.878C214.336 362.374 185.643 362.374 162.225 348.878L89.7127 306.859C66.6206 293.361 52.1113 268.674 52.1113 241.688V157.978C52.1113 131.326 66.6211 106.307 89.7088 92.8093C89.7101 92.8085 89.7114 92.8078 89.7127 92.807L162.556 51.1233L162.559 51.1218C185.977 37.6261 214.67 37.6261 238.088 51.1218ZM124.634 200C124.634 241.576 158.502 275.372 200.156 275.372C242.142 275.372 276.013 241.578 276.013 200C276.013 158.419 241.805 124.628 200.156 124.628C158.502 124.628 124.634 158.424 124.634 200Z"
+-          fill="url(#paint0_linear_11869_12671)"
+-          stroke="url(#paint1_linear_11869_12671)"
+-          strokeWidth="2"
+-        />
+-        <defs>
+-          <linearGradient
+-            id="paint0_linear_11869_12671"
+-            x1="200"
+-            y1="40"
+-            x2="200"
+-            y2="360"
+-            gradientUnits="userSpaceOnUse"
+-          >
+-            <stop stopColor="white" />
+-            <stop offset="1" stopColor="white" stopOpacity="0.7" />
+-          </linearGradient>
+-          <linearGradient
+-            id="paint1_linear_11869_12671"
+-            x1="200"
+-            y1="40"
+-            x2="200"
+-            y2="360"
+-            gradientUnits="userSpaceOnUse"
+-          >
+-            <stop stopColor="white" stopOpacity="0" />
+-            <stop offset="1" stopColor="white" stopOpacity="0.7" />
+-          </linearGradient>
+-        </defs>
+-      </svg>
++      <img
++        src="/admin/logo"
++        alt="TCS Unified AI Commerce"
++        className="h-full w-full rounded-[10px] object-contain"
++      />
+     </IconAvatar>
+   )
+ }
+diff --git a/node_modules/@medusajs/dashboard/src/hooks/api/invites.tsx b/node_modules/@medusajs/dashboard/src/hooks/api/invites.tsx
+index 3edfd86..4698c66 100644
+--- a/node_modules/@medusajs/dashboard/src/hooks/api/invites.tsx
++++ b/node_modules/@medusajs/dashboard/src/hooks/api/invites.tsx
+@@ -118,13 +118,24 @@ export const useAcceptInvite = (
+   return useMutation({
+     mutationFn: (payload) => {
+       const { auth_token, ...rest } = payload
++      // Register may return { token } - ensure Bearer value is a string, not "[object Object]"
++      const tokenStr =
++        typeof auth_token === "string"
++          ? auth_token
++          : auth_token &&
++              typeof auth_token === "object" &&
++              auth_token !== null &&
++              "token" in auth_token &&
++              typeof auth_token.token === "string"
++            ? auth_token.token
++            : auth_token
+ 
+       return sdk.admin.invite.accept(
+         { invite_token: inviteToken, ...rest },
+         {},
+-        {
+-          Authorization: `Bearer ${auth_token}`,
+-        }
++        typeof tokenStr === "string" && tokenStr
++          ? { Authorization: `Bearer ${tokenStr}` }
++          : {}
+       )
+     },
+     onSuccess: (data, variables, context) => {
+diff --git a/node_modules/@medusajs/dashboard/src/i18n/translations/en.json b/node_modules/@medusajs/dashboard/src/i18n/translations/en.json
+index b3820be..1272fb3 100644
+--- a/node_modules/@medusajs/dashboard/src/i18n/translations/en.json
++++ b/node_modules/@medusajs/dashboard/src/i18n/translations/en.json
+@@ -2912,11 +2912,11 @@
+   },
+   "login": {
+     "forgotPassword": "Forgot password? - <0>Reset</0>",
+-    "title": "Welcome to Medusa",
++    "title": "Welcome to TCS Unified AI Commerce",
+     "hint": "Sign in to access the account area"
+   },
+   "invite": {
+-    "title": "Welcome to Medusa",
++    "title": "Welcome to TCS Unified AI Commerce",
+     "hint": "Create your account below",
+     "backToLogin": "Back to login",
+     "createAccount": "Create account",
+diff --git a/node_modules/@medusajs/dashboard/src/lib/format-currency.ts b/node_modules/@medusajs/dashboard/src/lib/format-currency.ts
+index c8e603f..ab79ad1 100644
+--- a/node_modules/@medusajs/dashboard/src/lib/format-currency.ts
++++ b/node_modules/@medusajs/dashboard/src/lib/format-currency.ts
+@@ -1,7 +1,21 @@
+-export const formatCurrency = (amount: number, currency: string) => {
++import { getDecimalDigits } from "./money-amount-helpers"
++
++/**
++ * Format a numeric amount as currency.
++ * By default treats `amount` as Medusa minor units (e.g. USD cents).
++ * Pass `{ fromMinorUnit: false }` for values already in major units (e.g. CurrencyInput floats).
++ */
++export const formatCurrency = (
++  amount: number,
++  currency: string,
++  options?: { fromMinorUnit?: boolean }
++) => {
++  const digits = getDecimalDigits(currency)
++  const fromMinor = options?.fromMinorUnit !== false
++  const value = fromMinor ? amount / Math.pow(10, digits) : amount
+   return new Intl.NumberFormat(undefined, {
+     style: "currency",
+     currency,
+     signDisplay: "auto",
+-  }).format(amount)
++  }).format(value)
+ }
+diff --git a/node_modules/@medusajs/dashboard/src/lib/money-amount-helpers.ts b/node_modules/@medusajs/dashboard/src/lib/money-amount-helpers.ts
+index a254590..1e372da 100644
+--- a/node_modules/@medusajs/dashboard/src/lib/money-amount-helpers.ts
++++ b/node_modules/@medusajs/dashboard/src/lib/money-amount-helpers.ts
+@@ -4,15 +4,17 @@ export const getDecimalDigits = (currency: string) => {
+   return currencies[currency.toUpperCase()]?.decimal_digits ?? 0
+ }
+ 
++/** Medusa admin/store APIs return money in minor units (e.g. USD cents). */
++export const toMajorUnit = (amount: number, currencyCode: string) => {
++  const digits = getDecimalDigits(currencyCode)
++  return amount / Math.pow(10, digits)
++}
++
+ /**
+  * Returns a formatted amount based on the currency code using the browser's locale
+- * @param amount - The amount to format
++ * @param amount - Minor-unit amount from the Medusa API (e.g. cents for USD)
+  * @param currencyCode - The currency code to format the amount in
+  * @returns - The formatted amount
+- *
+- * @example
+- * getFormattedAmount(10, "usd") // '$10.00' if the browser's locale is en-US
+- * getFormattedAmount(10, "usd") // '10,00 $' if the browser's locale is fr-FR
+  */
+ export const getLocaleAmount = (amount: number, currencyCode: string) => {
+   const formatter = new Intl.NumberFormat([], {
+@@ -21,7 +23,7 @@ export const getLocaleAmount = (amount: number, currencyCode: string) => {
+     currency: currencyCode,
+   })
+ 
+-  return formatter.format(amount)
++  return formatter.format(toMajorUnit(amount, currencyCode))
+ }
+ 
+ export const getNativeSymbol = (currencyCode: string) => {
+@@ -43,13 +45,14 @@ export const getNativeSymbol = (currencyCode: string) => {
+ export const getStylizedAmount = (amount: number, currencyCode: string) => {
+   const symbol = getNativeSymbol(currencyCode)
+   const decimalDigits = getDecimalDigits(currencyCode)
++  const major = toMajorUnit(amount, currencyCode)
+ 
+   const lessThanRoundingPrecission = isAmountLessThenRoundingError(
+-    amount,
++    major,
+     currencyCode
+   )
+ 
+-  const total = amount.toLocaleString(undefined, {
++  const total = major.toLocaleString(undefined, {
+     minimumFractionDigits: decimalDigits,
+     maximumFractionDigits: decimalDigits,
+     signDisplay: lessThanRoundingPrecission ? "exceptZero" : "auto",
+diff --git a/node_modules/@medusajs/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx b/node_modules/@medusajs/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx
+index fe66794..baffe0a 100644
+--- a/node_modules/@medusajs/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx
++++ b/node_modules/@medusajs/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx
+@@ -134,7 +134,8 @@ export const OrderBalanceSettlementForm = ({
+               t("orders.payment.refundPaymentSuccess", {
+                 amount: formatCurrency(
+                   data.refund!.amount!.float!,
+-                  order.currency_code!
++                  order.currency_code!,
++                  { fromMinorUnit: false }
+                 ),
+               })
+             )
+diff --git a/node_modules/@medusajs/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx b/node_modules/@medusajs/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx
+index a55641d..aca59a5 100644
+--- a/node_modules/@medusajs/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx
++++ b/node_modules/@medusajs/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx
+@@ -100,7 +100,8 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
+             t("orders.payment.refundPaymentSuccess", {
+               amount: formatCurrency(
+                 data.amount.float!,
+-                payment?.currency_code!
++                payment?.currency_code!,
++                { fromMinorUnit: false }
+               ),
+             })
+           )
