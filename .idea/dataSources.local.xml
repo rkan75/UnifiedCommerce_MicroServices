@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="DB-253.31033.21">
+    <data-source name="d2ccommerce-db" uuid="78cb3c43-0cf8-4853-ae97-b63017e82527">
+      <database-info product="PostgreSQL" version="18.2" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="18.2" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>d2ccommerce_app</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="d2ccommerce_store">
+            <node kind="schema">
+              <name qname="@" />
+              <name qname="public" />
+            </node>
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>
