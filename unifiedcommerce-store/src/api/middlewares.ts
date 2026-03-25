@@ -142,18 +142,12 @@ async function handlePromotionRequest(req: MedusaRequest, res: MedusaResponse): 
  * from the JWT so that routes that opt out of auth (e.g. DELETE /admin/users/:id) still
  * have auth_context for checkPermissions (which expects auth_context.app_metadata).
  */
-function storeProductApiDisabled(): boolean {
-  return process.env.DISABLE_MEDUSA_STORE_PRODUCT_API === "true"
-}
-
-function rejectDecommissionedStoreProductApi(
+/** Store catalog reads are served only by Java microservices; Medusa must not expose these routes. */
+function rejectDecommissionedCatalogApis(
   req: MedusaRequest,
   res: MedusaResponse,
   next: MedusaNextFunction
 ) {
-  if (!storeProductApiDisabled()) {
-    return next()
-  }
   const method = (req.method || "").toUpperCase()
   if (method !== "GET") {
     return next()
@@ -161,7 +155,20 @@ function rejectDecommissionedStoreProductApi(
   res.status(410).json({
     type: "gone",
     message:
-      "Medusa store product APIs are disabled. Use Java products-service (GET /store/products, /store/product-variants). Set PRODUCTS_SERVICE_URL on the storefront.",
+      "This catalog route is decommissioned on Medusa. Use Java products-service, categories-service, and collections-service from the storefront.",
+  })
+}
+
+/** Store cart is served only by Java cart-service. */
+function rejectDecommissionedStoreCartApis(
+  _req: MedusaRequest,
+  res: MedusaResponse,
+  _next: MedusaNextFunction
+) {
+  res.status(410).json({
+    type: "gone",
+    message:
+      "Store cart API is decommissioned on Medusa. Use Java cart-service (set CART_SERVICE_URL on the storefront).",
   })
 }
 
@@ -169,11 +176,23 @@ export default defineMiddlewares({
   routes: [
     {
       matcher: "/store/products*",
-      middlewares: [rejectDecommissionedStoreProductApi],
+      middlewares: [rejectDecommissionedCatalogApis],
     },
     {
       matcher: "/store/product-variants*",
-      middlewares: [rejectDecommissionedStoreProductApi],
+      middlewares: [rejectDecommissionedCatalogApis],
+    },
+    {
+      matcher: "/store/product-categories*",
+      middlewares: [rejectDecommissionedCatalogApis],
+    },
+    {
+      matcher: "/store/collections*",
+      middlewares: [rejectDecommissionedCatalogApis],
+    },
+    {
+      matcher: "/store/carts*",
+      middlewares: [rejectDecommissionedStoreCartApis],
     },
     // Run promotion override first so we never hit framework policy (promotion:undefined)
     {

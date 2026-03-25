@@ -1,6 +1,7 @@
 "use server"
 
 import { getProductsServiceBaseUrl } from "@lib/config/products-service"
+import { cache } from "react"
 import { getAuthHeaders } from "./cookies"
 
 const getMedusaBackendUrl = () => {
@@ -100,7 +101,7 @@ function normalizeWishlistItem(raw: RawWishlistItem): WishlistItem | null {
  * Normalizes item fields (supports both snake_case and camelCase from API).
  * Requires the customer to be logged in (store JWT).
  */
-export async function getWishlist(): Promise<WishlistResponse | null> {
+async function getWishlistUncached(): Promise<WishlistResponse | null> {
   const auth = await getAuthHeaders()
   if (!("authorization" in auth) || !auth.authorization) {
     return null
@@ -130,6 +131,9 @@ export async function getWishlist(): Promise<WishlistResponse | null> {
     return null
   }
 }
+
+/** Dedupes layout + home (or other RSC) in the same request. */
+export const getWishlist = cache(getWishlistUncached)
 
 /**
  * Adds or updates an item in the customer's wishlist.

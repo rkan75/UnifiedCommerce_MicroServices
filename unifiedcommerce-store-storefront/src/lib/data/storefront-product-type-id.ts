@@ -4,6 +4,9 @@ import {
   getStorefrontProductTypeId,
   getStorefrontProductTypeValue,
 } from "@lib/config/storefront-product-scope"
+import { unstable_cache } from "next/cache"
+import { cache } from "react"
+import { STORE_PRODUCTS_CACHE_TAG } from "./cache-tags"
 
 /** Normalize Medusa product type `value` for comparison ("Health and Wellness" vs "health-and-wellness"). */
 function normalizeProductTypeLabel(s: string): string {
@@ -15,31 +18,36 @@ function normalizeProductTypeLabel(s: string): string {
     .replace(/-+/g, "-")
 }
 
-let resolvedPromise: Promise<string | null> | null = null
-
 /**
  * Resolves the storefront product type id: `getStorefrontProductTypeId()` (env or default HW type), else
  * `STOREFRONT_PRODUCT_TYPE_VALUE` matched against `product.type.value`.
  * Used for PLP/category/collection scoping. Must not be called from `listProducts` while
  * `applyStorefrontProductTypeFilter === false` is the *only* path — that path skips calling this
  * (see `listProducts`) so value-resolution scans do not deadlock.
+ *
+ * Wrapped in React `cache()` so listCollections + listCategories in the same request share one resolution.
  */
-export async function resolveStorefrontProductTypeId(
-  countryCode: string | null | undefined
-): Promise<string | null> {
-  const fromEnvId = getStorefrontProductTypeId()
-  if (fromEnvId) return fromEnvId
+export const resolveStorefrontProductTypeId = cache(
+  async function resolveStorefrontProductTypeId(
+    countryCode: string | null | undefined
+  ): Promise<string | null> {
+    const fromEnvId = getStorefrontProductTypeId()
+    if (fromEnvId) return fromEnvId
 
-  const label = getStorefrontProductTypeValue()
-  if (!label || !countryCode?.trim()) return null
+    const label = getStorefrontProductTypeValue()
+    if (!label || !countryCode?.trim()) return null
 
-  if (!resolvedPromise) {
-    resolvedPromise = lookupProductTypeIdByValue(countryCode.trim(), label)
+    const cc = countryCode.trim()
+    const normalized = normalizeProductTypeLabel(label)
+    return unstable_cache(
+      async () => lookupProductTypeIdByValueUncached(cc, label),
+      ["storefront-product-type-value", cc, normalized],
+      { revalidate: 3600, tags: [STORE_PRODUCTS_CACHE_TAG] }
+    )()
   }
-  return resolvedPromise
-}
+)
 
-async function lookupProductTypeIdByValue(
+async function lookupProductTypeIdByValueUncached(
   countryCode: string,
   wanted: string
 ): Promise<string | null> {

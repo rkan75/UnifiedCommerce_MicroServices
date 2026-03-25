@@ -55,10 +55,10 @@ public class CartController {
     }
 
     @GetMapping("/carts/{id}")
-    public ResponseEntity<CartDto> getCart(@PathVariable String id, @RequestParam(required = false) String fields) {
+    public ResponseEntity<Map<String, CartDto>> getCart(@PathVariable String id, @RequestParam(required = false) String fields) {
         CartDto cart = cartService.retrieve(id);
         if (cart == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.ok(Map.of("cart", cart));
     }
 
     @PostMapping("/carts")
@@ -102,8 +102,10 @@ public class CartController {
             return ResponseEntity.badRequest().build();
         }
         Number quantity = parseQuantity(body.get("quantity"));
+        @SuppressWarnings("unchecked")
+        Map<String, Object> metadata = body.get("metadata") instanceof Map ? (Map<String, Object>) body.get("metadata") : null;
         try {
-            CartDto cart = cartService.createLineItem(id, variantId, quantity);
+            CartDto cart = cartService.createLineItem(id, variantId, quantity, metadata);
             return ResponseEntity.ok(Map.of("cart", cart));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage() != null ? e.getMessage() : "Cart not found"));

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -88,5 +89,68 @@ public class AdminAuthService {
             return false;
         }
         return true;
+    }
+
+    public Optional<String> findUserIdWithCredentialByEmail(String email) {
+        if (email == null || email.isBlank()) return Optional.empty();
+        email = email.trim().toLowerCase();
+        String credTable = authProps.qualifiedCredentialTable(rbacProps.getTableSchema());
+        List<String> ids = jdbc.query(
+            "SELECT user_id FROM " + credTable + " WHERE LOWER(email) = ?",
+            (rs, i) -> rs.getString("user_id"),
+            email
+        );
+        return ids.isEmpty() ? Optional.empty() : Optional.ofNullable(ids.get(0));
+    }
+
+    /**
+     * If the email has an admin credential, returns a short-lived reset JWT (caller may email or return in dev).
+     */
+    public Optional<String> issuePasswordResetToken(String email) {
+        return findUserIdWithCredentialByEmail(email).flatMap(jwtHelper::generatePasswordResetToken);
+    }
+
+    @Transactional
+    public boolean resetPasswordWithToken(String resetJwt, String newPassword) {
+        if (newPassword == null || newPassword.length() < 8) return false;
+        Optional<String> userId = jwtHelper.validatePasswordResetTokenAndGetUserId(resetJwt);
+        if (userId.isEmpty()) return false;
+        String credTable = authProps.qualifiedCredentialTable(rbacProps.getTableSchema());
+        List<String> emails = jdbc.query(
+            "SELECT email FROM " + credTable + " WHERE user_id = ?",
+            (rs, i) -> rs.getString("email"),
+            userId.get()
+        );
+        if (emails.isEmpty()) return false;
+        String email = emails.get(0);
+        String hash = passwordEncoder.encode(newPassword);
+        int n = jdbc.update(
+            "UPDATE " + credTable + " SET password_hash = ?, updated_at = NOW() WHERE user_id = ?",
+            hash,
+            userId.get()
+        );
+        return n > 0 && email != null && !email.isBlank();
+    }
+
+    @Transactional
+    public boolean changePassword(String userId, String currentPassword, String newPassword) {
+        if (userId == null || userId.isBlank() || currentPassword == null || newPassword == null || newPassword.length() < 8) {
+            return false;
+        }
+        String credTable = authProps.qualifiedCredentialTable(rbacProps.getTableSchema());
+        var row = jdbc.query(
+            "SELECT password_hash FROM " + credTable + " WHERE user_id = ?",
+            (rs, i) -> rs.getString("password_hash"),
+            userId
+        );
+        if (row.isEmpty()) return false;
+        String hash = row.get(0);
+        if (hash == null || !passwordEncoder.matches(currentPassword, hash)) return false;
+        String newHash = passwordEncoder.encode(newPassword);
+        return jdbc.update(
+            "UPDATE " + credTable + " SET password_hash = ?, updated_at = NOW() WHERE user_id = ?",
+            newHash,
+            userId
+        ) > 0;
     }
 }

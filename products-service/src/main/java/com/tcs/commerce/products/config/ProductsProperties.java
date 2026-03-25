@@ -17,6 +17,11 @@ public class ProductsProperties {
     private String productCategoryLinkTableCategoryColumn = "product_category_id";
     /** Medusa {@code product_type} table; join for {@code type} on products. Set empty to disable join. */
     private String productTypeTable = "product_type";
+    /**
+     * When non-blank (env {@code STOREFRONT_PRODUCT_TYPE_ID}), all catalog reads are scoped to this Medusa
+     * {@code product.type_id} — lists and variant-by-id resolve only for products of that type (e.g. Health and Wellness).
+     */
+    private String defaultProductTypeId = "";
     private int maxLimit = 100;
     private int defaultLimit = 12;
 
@@ -74,6 +79,14 @@ public class ProductsProperties {
 
     public void setProductTypeTable(String productTypeTable) {
         this.productTypeTable = productTypeTable;
+    }
+
+    public String getDefaultProductTypeId() {
+        return defaultProductTypeId;
+    }
+
+    public void setDefaultProductTypeId(String defaultProductTypeId) {
+        this.defaultProductTypeId = defaultProductTypeId != null ? defaultProductTypeId : "";
     }
 
     public int getMaxLimit() {

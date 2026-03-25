@@ -9,8 +9,8 @@ import { getStorefrontProductTypeConfigKey } from "@lib/config/storefront-produc
 import { sortProducts } from "@lib/util/sort-products"
 import { HttpTypes } from "@medusajs/types"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { getRegion, retrieveRegion } from "./regions"
+import { STORE_PRODUCTS_CACHE_TAG } from "./cache-tags"
 import { resolveStorefrontProductTypeId } from "./storefront-product-type-id"
 
 function appendStoreProductQueryParams(
@@ -32,8 +32,6 @@ function appendStoreProductQueryParams(
   }
 }
 
-/** Cache key for raw product list (no price filter) so price-filter clicks reuse the same data */
-const RAW_PRODUCTS_CACHE_TAG = "store-products-raw"
 /** Revalidate product list after this many seconds so price changes in Admin reflect within a short delay. For immediate refresh, call POST /api/revalidate. */
 const RAW_PRODUCTS_REVALIDATE =
   typeof process.env.NEXT_PRODUCTS_REVALIDATE_SECONDS !== "undefined"
@@ -84,13 +82,14 @@ export const listProducts = async ({
     }
   }
 
-  const headers = {
+  // Public catalog: no customer Authorization — enables Next.js fetch deduplication and full-route caching.
+  const headers: Record<string, string> = {
     ...getMedusaPublishableKeyHeaders(),
-    ...(await getAuthHeaders()),
   }
 
   const next = {
-    ...(await getCacheOptions("products")),
+    revalidate: RAW_PRODUCTS_REVALIDATE,
+    tags: [STORE_PRODUCTS_CACHE_TAG],
   }
 
   const effectiveCountry =
@@ -249,7 +248,7 @@ async function getCachedRawProducts(
   }
 
   const cacheKey = [
-    RAW_PRODUCTS_CACHE_TAG,
+    STORE_PRODUCTS_CACHE_TAG,
     countryCode,
     getStorefrontProductTypeConfigKey(),
     params.category_id?.[0] ?? "",
@@ -261,7 +260,7 @@ async function getCachedRawProducts(
     const cached = unstable_cache(
       doFetch,
       cacheKey,
-      { revalidate: RAW_PRODUCTS_REVALIDATE, tags: [RAW_PRODUCTS_CACHE_TAG] }
+      { revalidate: RAW_PRODUCTS_REVALIDATE, tags: [STORE_PRODUCTS_CACHE_TAG] }
     )
     return await cached()
   } catch (err) {

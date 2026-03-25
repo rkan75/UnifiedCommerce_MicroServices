@@ -6,7 +6,7 @@ spring:
   application:
     name: admin-rbac-service
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gnc_store}
     username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
     password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
     driver-class-name: org.postgresql.Driver
@@ -19,7 +19,13 @@ app:
   admin-auth:
     jwt-secret: ${ADMIN_JWT_SECRET:${JWT_SECRET:}}
     jwt-expires-seconds: ${ADMIN_JWT_EXPIRES_SECONDS:604800}
+    password-reset-expires-seconds: ${ADMIN_PASSWORD_RESET_EXPIRES_SECONDS:3600}
     credential-table: ${ADMIN_CREDENTIAL_TABLE:admin_credential}
+  # Public registration / reset links (set AUTH_PUBLIC_BASE_URL so invite API returns registration_url)
+  auth:
+    public-base-url: ${AUTH_PUBLIC_BASE_URL:}
+    expose-password-reset-token-in-response: ${AUTH_EXPOSE_RESET_TOKEN_IN_RESPONSE:false}
+    default-role-id-on-invite-register: ${AUTH_DEFAULT_ROLE_ID_ON_INVITE:}
   rbac:
     table-schema: ${RBAC_TABLE_SCHEMA:public}
     user-table: ${RBAC_USER_TABLE:user}

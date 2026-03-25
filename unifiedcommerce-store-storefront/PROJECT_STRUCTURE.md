@@ -104,7 +104,7 @@ export default async function DealsPage({
 | Folder        | Purpose | Examples |
 |---------------|--------|----------|
 | **`lib/data/`** | Data fetching & mutations (Medusa Store API, server actions) | `cart.ts`, `products.ts`, `orders.ts`, `regions.ts`, `customer.ts`, `payment.ts`, `fulfillment.ts` |
-| **`lib/util/`** | Pure helpers, formatting, small logic | `money.ts`, `get-product-price.ts`, `medusa-error.ts`, `sort-products.ts` |
+| **`lib/util/`** | Pure helpers, formatting, small logic | `money.ts`, `get-product-price.ts`, `store-api-error.ts`, `sort-products.ts` |
 | **`lib/config.ts`** | App/config (e.g. Medusa SDK, env) | SDK client, base URL |
 | **`lib/hooks/`** | Reusable React hooks | `use-toggle-state.ts`, `use-in-view.ts` |
 | **`lib/i18n/`** | Translations | `translations.ts` |

@@ -45,7 +45,7 @@ Java Spring Boot service that **recreates the Medusa backend dashboard** using y
 | `app.products-url` | http://localhost:8082 | Products service |
 | `app.regions-url` | http://localhost:8084 | Regions service |
 | `app.categories-url` | http://localhost:8083 | Categories service |
-| `app.collections-url` | http://localhost:8085 | Collections service |
+| `app.collections-url` | http://localhost:8086 | Collections service |
 | `app.jwt-secret` | (env JWT_SECRET) | Must match admin-rbac for session validation |
 | `app.cookie-name` | medusa_admin_token | Cookie name for JWT |
 

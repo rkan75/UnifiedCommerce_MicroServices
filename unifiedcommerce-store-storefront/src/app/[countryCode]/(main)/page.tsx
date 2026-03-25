@@ -85,33 +85,34 @@ export default async function Home(props: {
   let carouselProducts: HttpTypes.StoreProduct[] = []
 
   try {
-    region = await getRegion(countryCode)
-    const [collectionsResult, categoriesResult] = await Promise.all([
+    const [
+      regionRes,
+      collectionsResult,
+      categoriesResult,
+      customerRes,
+      carouselProductsRes,
+    ] = await Promise.all([
+      getRegion(countryCode),
       listCollections({ fields: "id, handle, title, metadata" }, countryCode),
       listCategories({ limit: 100 }, countryCode).catch(() => []),
+      retrieveCustomer(),
+      listProducts({ countryCode, queryParams: { limit: 6 } })
+        .then((r) => r.response.products.slice(0, 6))
+        .catch(() => [] as HttpTypes.StoreProduct[]),
     ])
+    region = regionRes
     collections = collectionsResult.collections
     categories = Array.isArray(categoriesResult) ? categoriesResult : null
-
-    const [customerRes, ordersRes, wishlistRes] = await Promise.all([
-      retrieveCustomer(),
-      listOrders(5, 0).catch(() => null),
-      getWishlist().catch(() => null),
-    ])
     customer = customerRes
-    orders = ordersRes
-    wishlistData = wishlistRes
+    carouselProducts = carouselProductsRes
 
-    if (region) {
-      try {
-        const { response } = await listProducts({
-          countryCode,
-          queryParams: { limit: 6 },
-        })
-        carouselProducts = response.products.slice(0, 6)
-      } catch {
-        carouselProducts = []
-      }
+    if (customerRes) {
+      const [ordersRes, wishlistRes] = await Promise.all([
+        listOrders(5, 0).catch(() => null),
+        getWishlist().catch(() => null),
+      ])
+      orders = ordersRes
+      wishlistData = wishlistRes
     }
   } catch (err) {
     if (process.env.NODE_ENV === "development") {
@@ -131,14 +132,15 @@ export default async function Home(props: {
       product_id: i.product_id,
     })) ?? []
 
-  /** Wishlist API often omits product title/thumbnail — same enrichment as /wishlist page */
-  const initialWishlistItems =
-    initialWishlistItemsRaw.length > 0
-      ? await enrichFavoriteDisplayItems(
-          countryCode,
-          initialWishlistItemsRaw
-        ).catch(() => initialWishlistItemsRaw)
-      : []
+  /** Skip extra product batch fetch when wishlist rows already include titles */
+  const needsWishlistEnrich =
+    initialWishlistItemsRaw.length > 0 &&
+    initialWishlistItemsRaw.some((i) => !String(i.title ?? "").trim())
+  const initialWishlistItems = needsWishlistEnrich
+    ? await enrichFavoriteDisplayItems(countryCode, initialWishlistItemsRaw).catch(
+        () => initialWishlistItemsRaw
+      )
+    : initialWishlistItemsRaw
   const onlineOnlyHref = resolvePromoCategoryHref(
     categories ?? [],
     ONLINE_ONLY_CATEGORY
@@ -148,7 +150,11 @@ export default async function Home(props: {
     return (
       <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-fg-muted text-sm">
-          Store is temporarily unavailable. Make sure the Medusa backend is running (e.g. <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">npm run dev</code> in the backend project).
+          Store is temporarily unavailable. The home page needs a region from Medusa (
+          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">MEDUSA_BACKEND_URL</code>
+          , e.g. <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">npm run dev</code> in the Medusa project) and collections from the Java service (
+          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">COLLECTIONS_SERVICE_URL</code>
+          ). Check the server console for errors.
         </p>
       </div>
     )
@@ -192,7 +198,11 @@ export default async function Home(props: {
           carouselProducts={carouselProducts}
         />
       </section>
-      <FarmFreshProduce countryCode={countryCode} />
+      <FarmFreshProduce
+        countryCode={countryCode}
+        region={region}
+        categories={categories ?? undefined}
+      />
     </>
   )
 }

@@ -1,10 +1,12 @@
 package com.tcs.commerce.rbac.web;
 
+import com.tcs.commerce.rbac.config.AuthFlowProperties;
 import com.tcs.commerce.rbac.service.RbacService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,9 +19,11 @@ import java.util.Optional;
 public class InvitesController {
 
     private final RbacService rbacService;
+    private final AuthFlowProperties authFlowProps;
 
-    public InvitesController(RbacService rbacService) {
+    public InvitesController(RbacService rbacService, AuthFlowProperties authFlowProps) {
         this.rbacService = rbacService;
+        this.authFlowProps = authFlowProps;
     }
 
     @GetMapping
@@ -45,6 +49,13 @@ public class InvitesController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                     .body(Map.of("message", "An invite for this email already exists or the user is already registered."));
         }
-        return ResponseEntity.ok(Map.of("invite", created.get()));
+        InviteDto inv = created.get();
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("invite", inv);
+        String regUrl = authFlowProps.registrationPageUrl(inv.getToken() != null ? inv.getToken() : "");
+        if (regUrl != null && !regUrl.isEmpty()) {
+            body.put("registration_url", regUrl);
+        }
+        return ResponseEntity.ok(body);
     }
 }

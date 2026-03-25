@@ -4,6 +4,7 @@ import com.tcs.commerce.products.config.ProductsProperties;
 import com.tcs.commerce.products.web.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.stream.Collectors;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Reads products and variants from Medusa DB (same as Medusa backend).
@@ -30,6 +33,38 @@ public class ProductsService {
     public ProductsService(JdbcTemplate jdbc, ProductsProperties props) {
         this.jdbc = jdbc;
         this.props = props;
+    }
+
+    @PostConstruct
+    void logStorefrontTypeScope() {
+        String tid = configuredStorefrontTypeId();
+        if (tid != null) {
+            log.info("[products-service] Catalog scoped to STOREFRONT_PRODUCT_TYPE_ID={}", tid);
+        }
+    }
+
+    /** Non-null trimmed id when {@link ProductsProperties#getDefaultProductTypeId()} is set. */
+    private String configuredStorefrontTypeId() {
+        String raw = props.getDefaultProductTypeId();
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        return raw.trim();
+    }
+
+    /**
+     * Effective {@code type_id} for SQL: env default wins when configured (single storefront catalog),
+     * otherwise the request param (Medusa-compatible).
+     */
+    private String resolveEffectiveTypeId(String requestTypeId) {
+        String configured = configuredStorefrontTypeId();
+        if (configured != null) {
+            return configured;
+        }
+        if (requestTypeId == null || requestTypeId.isBlank()) {
+            return null;
+        }
+        return requestTypeId.trim();
     }
 
     /**
@@ -62,18 +97,20 @@ public class ProductsService {
         boolean hasCategoryFilter = categoryId != null && !categoryId.isBlank();
         boolean hasCollectionFilter = collectionId != null && !collectionId.isBlank();
 
-        // 1) Try link table first (product_category_product)
-        ProductsResponse withFilter = null;
+        String effectiveTypeId = resolveEffectiveTypeId(typeId);
+
+        // 1) Try link table first (product_category_product). Never fall back to an unfiltered list when the
+        // shopper asked for a category/collection — that surfaced as "category page shows all products" on SQL/config errors.
+        ProductsResponse withFilter;
         try {
-            withFilter = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, typeId, limit, offset, order, true);
+            withFilter = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, effectiveTypeId, limit, offset, order, true);
         } catch (Exception e) {
-            if (hasCategoryFilter || hasCollectionFilter) {
-                try {
-                    return getProductsInternal(handle, ids, q, null, null, regionId, typeId, limit, offset, order, true);
-                } catch (Exception ignored) {
-                    throw e;
-                }
-            }
+            log.error(
+                "[products-service] Filtered product query failed (category_id={}, collection_id={})",
+                categoryId,
+                collectionId,
+                e
+            );
             throw e;
         }
 
@@ -89,7 +126,7 @@ public class ProductsService {
         // 2) Link table returned 0: try direct product.category_id (some schemas have this column)
         if (hasCategoryFilter) {
             try {
-                ProductsResponse direct = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, typeId, limit, offset, order, false);
+                ProductsResponse direct = getProductsInternal(handle, ids, q, categoryId, collectionId, regionId, effectiveTypeId, limit, offset, order, false);
                 if (direct.count() > 0) {
                     return direct;
                 }
@@ -190,8 +227,8 @@ public class ProductsService {
 
         String orderClause = " ORDER BY p." + orderColumn + " " + orderDir + " LIMIT ? OFFSET ?";
         String typeSelect = joinProductType ? ", pt.id AS type_row_id, pt.value AS type_row_value" : "";
-        String dataSqlWithMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.metadata, p.created_at" + typeSelect + " " + fromWhere + orderClause;
-        String dataSqlNoMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.created_at" + typeSelect + " " + fromWhere + orderClause;
+        String dataSqlWithMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.metadata, p.collection_id, p.created_at" + typeSelect + " " + fromWhere + orderClause;
+        String dataSqlNoMeta = "SELECT p.id, p.title, p.handle, p.description, p.thumbnail, p.status, p.collection_id, p.created_at" + typeSelect + " " + fromWhere + orderClause;
 
         // Debug: log SQL when filtering by category (always at INFO when category filter is on; set log level to DEBUG for params too)
         if (categoryId != null && !categoryId.isBlank()) {
@@ -256,7 +293,8 @@ public class ProductsService {
                 typeDto,
                 variants,
                 productOptions.isEmpty() ? null : productOptions,
-                metadata
+                metadata,
+                getString(row, "collection_id")
             );
             products.add(dto);
         }
@@ -267,6 +305,138 @@ public class ProductsService {
     private boolean productTypeJoinEnabled() {
         String t = props.getProductTypeTable();
         return t != null && !t.isBlank();
+    }
+
+    /** When {@link #configuredStorefrontTypeId()} is set, product must have that {@code product.type_id}. */
+    private boolean isProductInStorefrontCatalog(String productId) {
+        String tid = configuredStorefrontTypeId();
+        if (tid == null) {
+            return true;
+        }
+        if (productId == null || productId.isBlank()) {
+            return false;
+        }
+        String pt = sanitize(props.getProductTable());
+        try {
+            List<Map<String, Object>> r = jdbc.queryForList(
+                "SELECT type_id FROM " + pt + " WHERE id = ? AND deleted_at IS NULL",
+                productId.trim()
+            );
+            if (r.isEmpty()) {
+                return false;
+            }
+            String type = getString(r.get(0), "type_id");
+            return tid.equals(type == null ? "" : type.trim());
+        } catch (Exception e) {
+            log.debug("[products-service] Could not resolve product type for id={}: {}", productId, e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @return {@code null} when no storefront type restriction (all variant rows allowed); otherwise product ids allowed
+     */
+    private Set<String> resolveProductIdsMatchingStorefrontType(List<Map<String, Object>> variantRows) {
+        String tid = configuredStorefrontTypeId();
+        if (tid == null) {
+            return null;
+        }
+        Set<String> pids = new HashSet<>();
+        for (Map<String, Object> row : variantRows) {
+            String pid = getString(row, "product_id");
+            if (pid != null && !pid.isBlank()) {
+                pids.add(pid.trim());
+            }
+        }
+        if (pids.isEmpty()) {
+            return Set.of();
+        }
+        String pt = sanitize(props.getProductTable());
+        String placeholders = String.join(",", Collections.nCopies(pids.size(), "?"));
+        List<Object> args = new ArrayList<>(pids);
+        args.add(tid);
+        try {
+            List<Map<String, Object>> prows = jdbc.queryForList(
+                "SELECT id FROM " + pt + " WHERE id IN (" + placeholders + ") AND deleted_at IS NULL AND type_id = ?",
+                args.toArray()
+            );
+            Set<String> allowed = new HashSet<>();
+            for (Map<String, Object> r : prows) {
+                String id = getString(r, "id");
+                if (id != null && !id.isBlank()) {
+                    allowed.add(id.trim());
+                }
+            }
+            return allowed;
+        } catch (Exception e) {
+            log.debug("[products-service] Batch product type filter failed: {}", e.getMessage());
+            return Set.of();
+        }
+    }
+
+    /**
+     * Distinct category ids linked to at least one non-deleted product of {@code typeId} (Medusa link table + product join).
+     * Used by the storefront instead of paginating through every product to build nav scope.
+     */
+    public List<String> listDistinctCategoryIdsForProductType(String typeId) {
+        if (typeId == null || typeId.isBlank()) {
+            return List.of();
+        }
+        String linkTable = sanitizeLower(
+            props.getProductCategoryLinkTable() != null && !props.getProductCategoryLinkTable().isBlank()
+                ? props.getProductCategoryLinkTable()
+                : "product_category_product"
+        );
+        String categoryCol = sanitizeLower(
+            props.getProductCategoryLinkTableCategoryColumn() != null
+                && !props.getProductCategoryLinkTableCategoryColumn().isBlank()
+                ? props.getProductCategoryLinkTableCategoryColumn()
+                : "product_category_id"
+        );
+        String productTable = sanitize(props.getProductTable());
+        String sql = "SELECT DISTINCT pcl." + categoryCol + " AS cid FROM " + linkTable
+            + " pcl INNER JOIN " + productTable + " p ON p.id = pcl.product_id "
+            + "WHERE p.deleted_at IS NULL AND p.type_id = ?";
+        try {
+            List<Map<String, Object>> rows = jdbc.queryForList(sql, typeId.trim());
+            List<String> out = new ArrayList<>();
+            for (Map<String, Object> row : rows) {
+                String id = getString(row, "cid");
+                if (id != null && !id.isBlank()) {
+                    out.add(id.trim());
+                }
+            }
+            return out;
+        } catch (Exception e) {
+            log.warn("[products-service] listDistinctCategoryIdsForProductType failed: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * Distinct non-null {@code product.collection_id} values for products of {@code typeId}.
+     */
+    public List<String> listDistinctCollectionIdsForProductType(String typeId) {
+        if (typeId == null || typeId.isBlank()) {
+            return List.of();
+        }
+        String productTable = sanitize(props.getProductTable());
+        String sql = "SELECT DISTINCT p.collection_id AS cid FROM " + productTable + " p "
+            + "WHERE p.deleted_at IS NULL AND p.type_id = ? AND p.collection_id IS NOT NULL";
+        try {
+            List<Map<String, Object>> rows = jdbc.queryForList(sql, typeId.trim());
+            List<String> out = new ArrayList<>();
+            for (Map<String, Object> row : rows) {
+                String id = getString(row, "cid");
+                if (id != null && !id.isBlank()) {
+                    out.add(id.trim());
+                }
+            }
+            return out;
+        } catch (Exception e) {
+            log.warn("[products-service] listDistinctCollectionIdsForProductType failed: {}", e.getMessage());
+            throw e;
+        }
     }
 
     private List<ProductVariantDto> getVariantsForProduct(String variantTable, String productId, String regionId) {
@@ -503,6 +673,9 @@ public class ProductsService {
         Map<String, Object> row = rows.get(0);
         String id = getString(row, "id");
         String productId = getString(row, "product_id");
+        if (!isProductInStorefrontCatalog(productId)) {
+            return null;
+        }
         CalculatedPriceDto price = resolveVariantPrice(id, regionId);
         Object meta = null;
         try { meta = row.get("metadata"); } catch (Exception ignored) { }
@@ -522,8 +695,13 @@ public class ProductsService {
         } catch (Exception e) {
             rows = jdbc.queryForList("SELECT id, product_id, title, sku FROM " + variantTable + " WHERE id IN (" + placeholders + ") AND deleted_at IS NULL", variantIds.toArray());
         }
+        Set<String> allowedProductIds = resolveProductIdsMatchingStorefrontType(rows);
         List<VariantResponseDto> result = new ArrayList<>();
         for (Map<String, Object> row : rows) {
+            String pid = getString(row, "product_id");
+            if (allowedProductIds != null && (pid == null || !allowedProductIds.contains(pid))) {
+                continue;
+            }
             String id = getString(row, "id");
             CalculatedPriceDto price = resolveVariantPrice(id, regionId);
             Object meta = null;

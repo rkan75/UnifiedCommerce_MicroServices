@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Exposes GET /store/products and GET /store/product-variants compatible with Medusa Store API.
@@ -31,13 +32,16 @@ public class ProductsController {
         @RequestParam(required = false) String handle,
         @RequestParam(required = false) List<String> id,
         @RequestParam(required = false) String q,
-        @RequestParam(required = false, name = "category_id") String categoryId,
+        /** Medusa / storefront often sends repeated category_id=… ; bind as list so the filter is never dropped */
+        @RequestParam(required = false, name = "category_id") List<String> categoryIds,
         @RequestParam(required = false, name = "category_handle") String categoryHandle,
-        @RequestParam(required = false, name = "collection_id") String collectionId,
+        @RequestParam(required = false, name = "collection_id") List<String> collectionIds,
         @RequestParam(required = false, name = "type_id") String typeId,
         @RequestParam(required = false) String order,
         @RequestParam(required = false) String fields
     ) {
+        String categoryId = firstNonBlank(categoryIds);
+        String collectionId = firstNonBlank(collectionIds);
         // "fields" (Medusa sparse fieldset) is ignored; response is full StoreProduct-like shape.
         ProductsResponse response = productsService.getProducts(
             handle,
@@ -53,6 +57,40 @@ public class ProductsController {
             order
         );
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Distinct category ids with at least one product of {@code type_id} — avoids storefront paginating the full catalog.
+     */
+    @GetMapping("/catalog-scope/category-ids")
+    public ResponseEntity<Map<String, List<String>>> catalogScopeCategoryIds(
+        @RequestParam(name = "type_id") String typeId
+    ) {
+        List<String> ids = productsService.listDistinctCategoryIdsForProductType(typeId);
+        return ResponseEntity.ok(Map.of("ids", ids));
+    }
+
+    /**
+     * Distinct {@code product.collection_id} values for products of {@code type_id}.
+     */
+    @GetMapping("/catalog-scope/collection-ids")
+    public ResponseEntity<Map<String, List<String>>> catalogScopeCollectionIds(
+        @RequestParam(name = "type_id") String typeId
+    ) {
+        List<String> ids = productsService.listDistinctCollectionIdsForProductType(typeId);
+        return ResponseEntity.ok(Map.of("ids", ids));
+    }
+
+    private static String firstNonBlank(List<String> values) {
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        return values.stream()
+            .filter(Objects::nonNull)
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .findFirst()
+            .orElse(null);
     }
 
     @GetMapping("/product-variants/{variantId}")

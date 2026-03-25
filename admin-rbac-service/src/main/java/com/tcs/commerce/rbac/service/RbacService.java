@@ -178,6 +178,23 @@ public class RbacService {
         return jdbc.query(sql, INVITE_MAPPER, take, skip);
     }
 
+    /**
+     * Pending invite by raw token (from email link). Not accepted and not expired.
+     */
+    public Optional<InviteDto> findPendingInviteByToken(String token) {
+        if (token == null || token.isBlank()) return Optional.empty();
+        String sql = "SELECT id, email, token, accepted, expires_at, created_at, updated_at FROM " + props.qualifiedInviteTable()
+            + " WHERE token = ? AND (accepted IS NULL OR accepted = false) AND (expires_at IS NULL OR expires_at > NOW())";
+        List<InviteDto> list = jdbc.query(sql, INVITE_MAPPER, token.trim());
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Transactional
+    public void markInviteAccepted(String inviteId) {
+        if (inviteId == null || inviteId.isBlank()) return;
+        jdbc.update("UPDATE " + props.qualifiedInviteTable() + " SET accepted = true, updated_at = NOW() WHERE id = ?", inviteId);
+    }
+
     @Transactional
     public Optional<InviteDto> createInvite(String email) {
         if (email == null || email.isBlank()) return Optional.empty();

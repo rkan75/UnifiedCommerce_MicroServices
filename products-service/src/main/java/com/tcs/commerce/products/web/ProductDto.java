@@ -1,6 +1,7 @@
 package com.tcs.commerce.products.web;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public record ProductDto(
     ProductTypeDto type,
     List<ProductVariantDto> variants,
     List<ProductOptionDto> options,
-    Object metadata
+    Object metadata,
+    /** Used by storefront to scope collections (Shop by Brand) to storefront product type. */
+    @JsonProperty("collection_id") String collectionId
 ) {}

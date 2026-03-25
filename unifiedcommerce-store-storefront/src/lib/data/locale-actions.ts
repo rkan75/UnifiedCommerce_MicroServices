@@ -1,9 +1,9 @@
 "use server"
 
-import { sdk } from "@lib/config"
 import { revalidateTag } from "next/cache"
 import { cookies as nextCookies } from "next/headers"
-import { getAuthHeaders, getCacheTag, getCartId } from "./cookies"
+import { cartServiceFetch, throwIfCartServiceError } from "./cart-service-http"
+import { getCacheTag, getCartId } from "./cookies"
 
 const LOCALE_COOKIE_NAME = "_medusa_locale"
 
@@ -42,11 +42,14 @@ export const updateLocale = async (localeCode: string): Promise<string> => {
   // Update cart with the new locale if a cart exists
   const cartId = await getCartId()
   if (cartId) {
-    const headers = {
-      ...(await getAuthHeaders()),
-    }
-
-    await sdk.store.cart.update(cartId, { locale: localeCode }, {}, headers)
+    const res = await cartServiceFetch(
+      `/store/carts/${encodeURIComponent(cartId)}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ locale: localeCode }),
+      }
+    )
+    await throwIfCartServiceError(res, "Update cart locale")
 
     const cartCacheTag = await getCacheTag("carts")
     if (cartCacheTag) {

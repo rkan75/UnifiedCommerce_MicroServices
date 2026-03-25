@@ -32,5 +32,7 @@ app:
     product-category-link-table: ${MEDUSA_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
     product-category-link-table-category-column: ${MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
     product-type-table: ${MEDUSA_PRODUCT_TYPE_TABLE:product_type}
+    # When set, GET /store/products and variant lookups only include products with this Medusa type_id (overrides client type_id for lists).
+    default-product-type-id: ${STOREFRONT_PRODUCT_TYPE_ID:}
     max-limit: 100
     default-limit: 12

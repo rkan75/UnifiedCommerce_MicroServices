@@ -12,7 +12,7 @@ app:
   products-url: ${PRODUCTS_SERVICE_URL:http://localhost:8082}
   regions-url: ${REGIONS_SERVICE_URL:http://localhost:8084}
   categories-url: ${CATEGORIES_SERVICE_URL:http://localhost:8083}
-  collections-url: ${COLLECTIONS_SERVICE_URL:http://localhost:8085}
+  collections-url: ${COLLECTIONS_SERVICE_URL:http://localhost:8086}
   # JWT secret must match admin-rbac-service for cookie/session validation
   jwt-secret: ${JWT_SECRET:${ADMIN_JWT_SECRET:}}
   cookie-name: ${ADMIN_COOKIE_NAME:medusa_admin_token}

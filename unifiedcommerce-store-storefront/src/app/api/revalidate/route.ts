@@ -1,12 +1,16 @@
+import {
+  STORE_CATEGORIES_CACHE_TAG,
+  STORE_COLLECTIONS_CACHE_TAG,
+  STORE_PRODUCTS_CACHE_TAG,
+} from "@lib/data/cache-tags"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { NextRequest, NextResponse } from "next/server"
 
 /**
- * Cache tag used for raw product list (see src/lib/data/products.ts).
- * Revalidating this tag forces the next product request to refetch from Medusa,
+ * Revalidating this tag forces the next product request to refetch from the catalog API,
  * so price changes in Admin are reflected immediately.
  */
-const PRODUCTS_CACHE_TAG = "store-products-raw"
+const PRODUCTS_CACHE_TAG = STORE_PRODUCTS_CACHE_TAG
 
 /**
  * POST /api/revalidate
@@ -39,11 +43,18 @@ export async function POST(request: NextRequest) {
 
   try {
     revalidateTag(PRODUCTS_CACHE_TAG)
+    revalidateTag(STORE_CATEGORIES_CACHE_TAG)
+    revalidateTag(STORE_COLLECTIONS_CACHE_TAG)
     revalidatePath("/", "layout")
     return NextResponse.json({
       revalidated: true,
-      tag: PRODUCTS_CACHE_TAG,
-      message: "Product and layout caches invalidated. Next request will fetch fresh prices.",
+      tags: [
+        PRODUCTS_CACHE_TAG,
+        STORE_CATEGORIES_CACHE_TAG,
+        STORE_COLLECTIONS_CACHE_TAG,
+      ],
+      message:
+        "Product, category, collection, and layout caches invalidated. Next request will fetch fresh catalog data.",
     })
   } catch (e) {
     return NextResponse.json(

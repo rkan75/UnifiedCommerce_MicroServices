@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin invite — register</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; background: #f4f6f8; }
+    body { max-width: 420px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    h1 { font-size: 1.25rem; margin: 0 0 1rem; }
+    label { display: block; font-size: .85rem; color: #444; margin: .75rem 0 .25rem; }
+    input { width: 100%; box-sizing: border-box; padding: .5rem .65rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+    button { margin-top: 1.25rem; width: 100%; padding: .65rem; border: none; border-radius: 8px; background: #166534; color: #fff; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .err { color: #b91c1c; font-size: .9rem; margin-top: .75rem; }
+    .ok { color: #166534; font-size: .9rem; margin-top: .75rem; }
+    .email-ro { background: #f1f5f9; color: #334155; padding: .5rem .65rem; border-radius: 8px; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Complete your registration</h1>
+    <p id="status">Checking invite…</p>
+    <div id="form-wrap" hidden>
+      <p class="email-ro" id="email-display"></p>
+      <label for="first_name">First name (optional)</label>
+      <input id="first_name" autocomplete="given-name" />
+      <label for="last_name">Last name (optional)</label>
+      <input id="last_name" autocomplete="family-name" />
+      <label for="password">Password (min 8 characters)</label>
+      <input id="password" type="password" autocomplete="new-password" />
+      <label for="password2">Confirm password</label>
+      <input id="password2" type="password" autocomplete="new-password" />
+      <button type="button" id="submit">Create account</button>
+    </div>
+    <p class="err" id="err" hidden></p>
+    <p class="ok" id="ok" hidden></p>
+  </div>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      const statusEl = document.getElementById("status");
+      const formWrap = document.getElementById("form-wrap");
+      const emailDisplay = document.getElementById("email-display");
+      const errEl = document.getElementById("err");
+      const okEl = document.getElementById("ok");
+
+      function showErr(msg) {
+        errEl.textContent = msg;
+        errEl.hidden = false;
+        okEl.hidden = true;
+      }
+
+      if (!token) {
+        statusEl.textContent = "Missing invite token. Open the link from your invitation email.";
+        return;
+      }
+
+      fetch("/auth/invite/info?token=" + encodeURIComponent(token))
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (_ref) {
+          var j = _ref.j;
+          if (!j.valid) {
+            statusEl.textContent = j.message || "This invite is not valid.";
+            return;
+          }
+          statusEl.hidden = true;
+          formWrap.hidden = false;
+          emailDisplay.textContent = j.email;
+          document.getElementById("submit").onclick = function () {
+            errEl.hidden = true;
+            var p1 = document.getElementById("password").value;
+            var p2 = document.getElementById("password2").value;
+            if (p1.length < 8) { showErr("Password must be at least 8 characters."); return; }
+            if (p1 !== p2) { showErr("Passwords do not match."); return; }
+            var btn = document.getElementById("submit");
+            btn.disabled = true;
+            fetch("/auth/invite/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                token: token,
+                password: p1,
+                first_name: document.getElementById("first_name").value || undefined,
+                last_name: document.getElementById("last_name").value || undefined
+              })
+            })
+              .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+              .then(function (res) {
+                btn.disabled = false;
+                if (!res.ok) {
+                  showErr(res.j.message || "Registration failed.");
+                  return;
+                }
+                formWrap.hidden = true;
+                okEl.textContent = res.j.message || "You can sign in. An administrator will assign your roles.";
+                okEl.hidden = false;
+              })
+              .catch(function () {
+                btn.disabled = false;
+                showErr("Network error.");
+              });
+          };
+        })
+        .catch(function () {
+          statusEl.textContent = "Could not verify invite. Try again later.";
+        });
+    })();
+  </script>
+</body>
+</html>

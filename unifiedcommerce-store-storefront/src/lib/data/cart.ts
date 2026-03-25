@@ -2,10 +2,14 @@
 
 import { sdk } from "@lib/config"
 import { parseSubscribeSaveFromLineMetadata } from "@lib/config/subscribe-save-metadata"
-import medusaError from "@lib/util/medusa-error"
+import storeApiError from "@lib/util/store-api-error"
 import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
+import {
+  cartServiceFetch,
+  throwIfCartServiceError,
+} from "./cart-service-http"
 import {
   getAuthHeaders,
   getCacheOptions,
@@ -16,18 +20,70 @@ import {
   setCartId,
   setDeliveryZip,
 } from "./cookies"
-import { getRegion } from "./regions"
 import { getLocale } from "@lib/data/locale-actions"
+import { cache } from "react"
+import { getRegion } from "./regions"
 
 const DEFAULT_CART_FIELDS =
   "*items, *region, *items.product, *items.product.categories, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name, +metadata"
+
+/**
+ * Java cart-service returns line items compatible with Medusa; ensure fields the storefront reads
+ * for mini-cart / checkout (product_handle, thumbnail, variant.product.images) are populated.
+ */
+function normalizeCartLineItemsFromJava(
+  cart: HttpTypes.StoreCart | null | undefined
+): HttpTypes.StoreCart | null {
+  if (!cart?.items?.length) return cart ?? null
+  type NestedProduct = {
+    handle?: string
+    thumbnail?: string | null
+    images?: { url?: string }[]
+  }
+  type Line = HttpTypes.StoreCartLineItem & {
+    product?: NestedProduct
+    product_handle?: string
+    thumbnail?: string | null
+  }
+  for (const raw of cart.items as Line[]) {
+    const variant = raw.variant as
+      | (NonNullable<HttpTypes.StoreCartLineItem["variant"]> & {
+          product?: NestedProduct
+          thumbnail?: string | null
+        })
+      | null
+      | undefined
+    const topProduct = raw.product
+
+    if (variant && topProduct && !variant.product) {
+      ;(variant as { product?: NestedProduct }).product = topProduct
+    }
+    const nestedProduct = variant?.product ?? topProduct
+    if (!raw.product_handle?.trim() && nestedProduct?.handle) {
+      raw.product_handle = String(nestedProduct.handle).trim()
+    }
+    const thumbMissing = !raw.thumbnail || String(raw.thumbnail).trim() === ""
+    if (thumbMissing && nestedProduct) {
+      const fromP = nestedProduct.thumbnail
+      const fromV = variant?.thumbnail
+      const fromImg = nestedProduct.images?.[0]?.url
+      const t =
+        (typeof fromP === "string" && fromP.trim()) ||
+        (typeof fromV === "string" && fromV.trim()) ||
+        (typeof fromImg === "string" && fromImg.trim()) ||
+        ""
+      if (t) raw.thumbnail = t
+    }
+  }
+  return cart
+}
 
 /**
  * Retrieves a cart by its ID. If no ID is provided, it will use the cart ID from the cookies.
  * @param cartId - optional - The ID of the cart to retrieve.
  * @returns The cart object if found, or null if not found.
  */
-export async function retrieveCart(cartId?: string, fields?: string) {
+async function retrieveCartUncached(cartId?: string, fields?: string) {
   const id = cartId || (await getCartId())
   fields ??= DEFAULT_CART_FIELDS
 
@@ -35,27 +91,21 @@ export async function retrieveCart(cartId?: string, fields?: string) {
     return null
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
+  const next = await getCacheOptions("carts")
 
-  const next = {
-    ...(await getCacheOptions("carts")),
-  }
-
-  return await sdk.client
-    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${id}`, {
-      method: "GET",
-      query: {
-        fields,
-      },
-      headers,
-      next,
-      cache: "force-cache",
-    })
-    .then(({ cart }: { cart: HttpTypes.StoreCart }) => cart)
-    .catch(() => null)
+  const res = await cartServiceFetch(`/store/carts/${encodeURIComponent(id)}`, {
+    method: "GET",
+    query: { fields },
+    next: Object.keys(next).length > 0 ? (next as { tags: string[] }) : undefined,
+    cache: "force-cache",
+  })
+  if (!res.ok) return null
+  const data = (await res.json()) as { cart?: HttpTypes.StoreCart }
+  return normalizeCartLineItemsFromJava(data.cart ?? null)
 }
+
+/** Same cart cookie + fields → one Java cart call per request when multiple RSCs call this. */
+export const retrieveCart = cache(retrieveCartUncached)
 
 /**
  * Live cart for client refresh (mini-cart, /api/cart). Do not use Next.js Data Cache here —
@@ -69,18 +119,17 @@ export async function retrieveCartLive(
   if (!id) {
     return null
   }
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-  return await sdk.client
-    .fetch<HttpTypes.StoreCartResponse>(`/store/carts/${id}`, {
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(id)}`,
+    {
       method: "GET",
       query: { fields },
-      headers,
       cache: "no-store",
-    })
-    .then(({ cart }: { cart: HttpTypes.StoreCart }) => cart)
-    .catch(() => null)
+    }
+  )
+  if (!res.ok) return null
+  const data = (await res.json()) as { cart?: HttpTypes.StoreCart }
+  return normalizeCartLineItemsFromJava(data.cart ?? null)
 }
 
 export async function getOrSetCart(countryCode: string) {
@@ -92,18 +141,18 @@ export async function getOrSetCart(countryCode: string) {
 
   let cart = await retrieveCart(undefined, "id,region_id")
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
   if (!cart) {
     const locale = await getLocale()
-    const cartResp = await sdk.store.cart.create(
-      { region_id: region.id, locale: locale || undefined },
-      {},
-      headers
-    )
-    cart = cartResp.cart
+    const createRes = await cartServiceFetch("/store/carts", {
+      method: "POST",
+      body: JSON.stringify({
+        region_id: region.id,
+        ...(locale ? { locale } : {}),
+      }),
+    })
+    await throwIfCartServiceError(createRes, "Create cart")
+    const created = (await createRes.json()) as { cart: HttpTypes.StoreCart }
+    cart = created.cart
 
     await setCartId(cart.id)
 
@@ -112,7 +161,14 @@ export async function getOrSetCart(countryCode: string) {
   }
 
   if (cart && cart?.region_id !== region.id) {
-    await sdk.store.cart.update(cart.id, { region_id: region.id }, {}, headers)
+    const upd = await cartServiceFetch(
+      `/store/carts/${encodeURIComponent(cart.id)}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ region_id: region.id }),
+      }
+    )
+    await throwIfCartServiceError(upd, "Update cart region")
     const cartCacheTag = await getCacheTag("carts")
     revalidateTag(cartCacheTag)
   }
@@ -173,15 +229,17 @@ export async function updateDeliveryZip(
           delete prevMeta[k]
         }
       }
-      await sdk.store.cart.update(
-        cartId,
+      const upd = await cartServiceFetch(
+        `/store/carts/${encodeURIComponent(cartId)}`,
         {
-          shipping_address: minimalAddress as any,
-          metadata: prevMeta,
-        },
-        {},
-        await getAuthHeaders()
+          method: "POST",
+          body: JSON.stringify({
+            shipping_address: minimalAddress,
+            metadata: prevMeta,
+          }),
+        }
       )
+      await throwIfCartServiceError(upd, "Update cart delivery zip")
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)
       const fulfillmentCacheTag = await getCacheTag("fulfillment")
@@ -201,22 +259,24 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
     throw new Error("No existing cart found, please create one before updating")
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cartId)}`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  )
+  await throwIfCartServiceError(res, "Update cart")
+  const body = (await res.json()) as { cart: HttpTypes.StoreCart }
+  const cart = normalizeCartLineItemsFromJava(body.cart) ?? body.cart
 
-  return sdk.store.cart
-    .update(cartId, data, {}, headers)
-    .then(async ({ cart }: { cart: HttpTypes.StoreCart }) => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
 
-      const fulfillmentCacheTag = await getCacheTag("fulfillment")
-      revalidateTag(fulfillmentCacheTag)
+  const fulfillmentCacheTag = await getCacheTag("fulfillment")
+  revalidateTag(fulfillmentCacheTag)
 
-      return cart
-    })
-    .catch(medusaError)
+  return cart
 }
 
 export async function addToCart({
@@ -244,10 +304,6 @@ export async function addToCart({
 
   const qty = Math.max(1, Math.round(Number(quantity)) || 1)
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
   const lineBody: {
     variant_id: string
     quantity: number
@@ -260,16 +316,19 @@ export async function addToCart({
     lineBody.metadata = lineItemMetadata
   }
 
-  await sdk.store.cart
-    .createLineItem(cart.id, lineBody, {}, headers)
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cart.id)}/line-items`,
+    {
+      method: "POST",
+      body: JSON.stringify(lineBody),
+    }
+  )
+  await throwIfCartServiceError(res, "Add line item")
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
 
-      const fulfillmentCacheTag = await getCacheTag("fulfillment")
-      revalidateTag(fulfillmentCacheTag)
-    })
-    .catch(medusaError)
+  const fulfillmentCacheTag = await getCacheTag("fulfillment")
+  revalidateTag(fulfillmentCacheTag)
 }
 
 export async function updateLineItem({
@@ -291,10 +350,6 @@ export async function updateLineItem({
     throw new Error("Missing cart ID when updating line item")
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
   const body: { quantity: number; metadata?: Record<string, unknown> } = {
     quantity,
   }
@@ -302,16 +357,19 @@ export async function updateLineItem({
     body.metadata = metadata
   }
 
-  await sdk.store.cart
-    .updateLineItem(cartId, lineId, body, {}, headers)
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cartId)}/line-items/${encodeURIComponent(lineId)}`,
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    }
+  )
+  await throwIfCartServiceError(res, "Update line item")
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
 
-      const fulfillmentCacheTag = await getCacheTag("fulfillment")
-      revalidateTag(fulfillmentCacheTag)
-    })
-    .catch(medusaError)
+  const fulfillmentCacheTag = await getCacheTag("fulfillment")
+  revalidateTag(fulfillmentCacheTag)
 }
 
 export async function deleteLineItem(lineId: string) {
@@ -325,20 +383,16 @@ export async function deleteLineItem(lineId: string) {
     throw new Error("Missing cart ID when deleting line item")
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cartId)}/line-items/${encodeURIComponent(lineId)}`,
+    { method: "DELETE" }
+  )
+  await throwIfCartServiceError(res, "Delete line item")
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
 
-  await sdk.store.cart
-    .deleteLineItem(cartId, lineId, {}, headers)
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
-
-      const fulfillmentCacheTag = await getCacheTag("fulfillment")
-      revalidateTag(fulfillmentCacheTag)
-    })
-    .catch(medusaError)
+  const fulfillmentCacheTag = await getCacheTag("fulfillment")
+  revalidateTag(fulfillmentCacheTag)
 }
 
 export async function setShippingMethod({
@@ -348,17 +402,16 @@ export async function setShippingMethod({
   cartId: string
   shippingMethodId: string
 }) {
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
-  return sdk.store.cart
-    .addShippingMethod(cartId, { option_id: shippingMethodId }, {}, headers)
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
-    })
-    .catch(medusaError)
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cartId)}/shipping-methods`,
+    {
+      method: "POST",
+      body: JSON.stringify({ option_id: shippingMethodId }),
+    }
+  )
+  await throwIfCartServiceError(res, "Add shipping method")
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
 }
 
 export async function initiatePaymentSession(
@@ -376,7 +429,7 @@ export async function initiatePaymentSession(
       revalidateTag(cartCacheTag)
       return resp
     })
-    .catch(medusaError)
+    .catch(storeApiError)
 }
 
 export async function applyPromotions(codes: string[]) {
@@ -386,20 +439,19 @@ export async function applyPromotions(codes: string[]) {
     throw new Error("No existing cart found")
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cartId)}`,
+    {
+      method: "POST",
+      body: JSON.stringify({ promo_codes: codes }),
+    }
+  )
+  await throwIfCartServiceError(res, "Apply promotions")
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
 
-  return sdk.store.cart
-    .update(cartId, { promo_codes: codes }, {}, headers)
-    .then(async () => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
-
-      const fulfillmentCacheTag = await getCacheTag("fulfillment")
-      revalidateTag(fulfillmentCacheTag)
-    })
-    .catch(medusaError)
+  const fulfillmentCacheTag = await getCacheTag("fulfillment")
+  revalidateTag(fulfillmentCacheTag)
 }
 
 export async function applyGiftCard(code: string) {
@@ -463,7 +515,7 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
     if (!formData) {
       throw new Error("No form data found when setting addresses")
     }
-    const cartId = getCartId()
+    const cartId = await getCartId()
     if (!cartId) {
       throw new Error("No existing cart found when setting addresses")
     }
@@ -591,16 +643,18 @@ export async function ensureMinimalShippingAddressForShippingOptions(
   }
   try {
     const prevMeta = { ...((live.metadata ?? {}) as Record<string, unknown>) }
-    await sdk.store.cart.update(
-      cartId,
+    const upd = await cartServiceFetch(
+      `/store/carts/${encodeURIComponent(cartId)}`,
       {
-        shipping_address: minimalAddress as any,
-        billing_address: minimalAddress as any,
-        metadata: prevMeta,
-      },
-      {},
-      await getAuthHeaders()
+        method: "POST",
+        body: JSON.stringify({
+          shipping_address: minimalAddress,
+          billing_address: minimalAddress,
+          metadata: prevMeta,
+        }),
+      }
     )
+    await throwIfCartServiceError(upd, "Ensure minimal shipping address")
     const cartCacheTag = await getCacheTag("carts")
     revalidateTag(cartCacheTag)
     const fulfillmentCacheTag = await getCacheTag("fulfillment")
@@ -811,10 +865,6 @@ export async function placeOrder(cartId?: string) {
     throw new Error("No existing cart found when placing an order")
   }
 
-  const headers = {
-    ...(await getAuthHeaders()),
-  }
-
   try {
     const live = await retrieveCartLive(id)
     if (live?.items?.length) {
@@ -847,27 +897,38 @@ export async function placeOrder(cartId?: string) {
     // Checkout can still proceed; line-level metadata remains on items.
   }
 
-  const cartRes = await sdk.store.cart
-    .complete(id, {}, headers)
-    .then(async (cartRes) => {
-      const cartCacheTag = await getCacheTag("carts")
-      revalidateTag(cartCacheTag)
-      return cartRes
-    })
-    .catch(medusaError)
+  const completeRes = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(id)}/complete`,
+    {
+      method: "POST",
+      body: "{}",
+    }
+  )
+  await throwIfCartServiceError(completeRes, "Complete cart")
+  const cartRes = (await completeRes.json()) as {
+    type?: string
+    order?: {
+      id?: string
+      shipping_address?: { country_code?: string | null }
+    }
+    cart?: HttpTypes.StoreCart
+  }
 
-  if (cartRes?.type === "order") {
+  const cartCacheTag = await getCacheTag("carts")
+  revalidateTag(cartCacheTag)
+
+  if (cartRes?.type === "order" && cartRes.order?.id) {
     const countryCode =
-      cartRes.order.shipping_address?.country_code?.toLowerCase()
+      cartRes.order.shipping_address?.country_code?.toLowerCase() ?? "us"
 
     const orderCacheTag = await getCacheTag("orders")
     revalidateTag(orderCacheTag)
 
     removeCartId()
-    redirect(`/${countryCode}/order/${cartRes?.order.id}/confirmed`)
+    redirect(`/${countryCode}/order/${cartRes.order.id}/confirmed`)
   }
 
-  return cartRes.cart
+  return cartRes.cart ?? null
 }
 
 /**
@@ -898,7 +959,7 @@ export async function updateRegion(countryCode: string, currentPath: string) {
   redirect(`/${countryCode}${currentPath}`)
 }
 
-export async function listCartOptions() {
+async function listCartOptionsUncached() {
   const cartId = await getCartId()
   const headers = {
     ...(await getAuthHeaders()),
@@ -916,3 +977,5 @@ export async function listCartOptions() {
     cache: "force-cache",
   })
 }
+
+export const listCartOptions = cache(listCartOptionsUncached)

@@ -33,15 +33,28 @@ const PREFERRED_BRAND_HANDLES = [
   "gorilla-mind",
 ]
 
+function coerceImageUrl(value: unknown): string | null {
+  if (typeof value === "string") {
+    const t = value.trim()
+    return t.length > 0 ? t : null
+  }
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const o = value as Record<string, unknown>
+    const nested = o.url ?? o.src ?? o.href
+    return coerceImageUrl(nested)
+  }
+  return null
+}
+
 function getMetadataImage(collection: HttpTypes.StoreCollection): string | null {
   const metadata = (collection.metadata ?? {}) as Record<string, unknown>
-  const image =
-    metadata.brand_image ??
-    metadata.brandImage ??
-    metadata.thumbnail ??
-    metadata.image ??
+  return (
+    coerceImageUrl(metadata.brand_image) ??
+    coerceImageUrl(metadata.brandImage) ??
+    coerceImageUrl(metadata.thumbnail) ??
+    coerceImageUrl(metadata.image) ??
     null
-  return typeof image === "string" && image.length > 0 ? image : null
+  )
 }
 
 function shouldUseUnoptimizedImage(src: string) {
@@ -61,6 +74,24 @@ function shouldUseUnoptimizedImage(src: string) {
  * `next/image` needs a direct file URL. Collection metadata often mistakenly stores a brand *page* URL
  * (e.g. https://www.gnc.com/brands/barebells/) which is HTML, not an image.
  */
+function isKnownImageCdnUrl(src: string): boolean {
+  try {
+    const u = new URL(src.trim())
+    if (u.protocol !== "http:" && u.protocol !== "https:") return false
+    const h = u.hostname.toLowerCase()
+    const p = u.pathname
+    if (p === "" || p.endsWith("/")) return false
+    if (h.includes("cloudinary.com") && p.includes("/image/upload/")) return true
+    if (h.endsWith(".imgix.net") || h === "imgix.com") return true
+    if (h === "cdn.shopify.com" || h.endsWith(".cdn.shopify.com")) return true
+    if (h.endsWith(".googleusercontent.com")) return true
+    if (h.includes("media-amazon.com") || h.includes("ssl-images-amazon.com")) return true
+    return false
+  } catch {
+    return false
+  }
+}
+
 function isLikelyDirectImageUrl(src: string): boolean {
   const trimmed = src.trim()
   if (!trimmed) return false
@@ -74,7 +105,8 @@ function isLikelyDirectImageUrl(src: string): boolean {
     if (u.protocol !== "http:" && u.protocol !== "https:") return false
     const path = u.pathname
     if (path.endsWith("/") || path === "") return false
-    return /\.(avif|bmp|gif|jpe?g|png|svg|webp)(\?.*)?$/i.test(path)
+    if (/\.(avif|bmp|gif|jpe?g|png|svg|webp)(\?.*)?$/i.test(path)) return true
+    return isKnownImageCdnUrl(trimmed)
   } catch {
     return false
   }

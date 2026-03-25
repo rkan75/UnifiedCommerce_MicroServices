@@ -1,7 +1,7 @@
 /**
- * API client for unifiedcommerce-grocery-store backend (Medusa admin APIs).
- * Uses VITE_MEDUSA_BACKEND_URL when set; otherwise relative URLs (rely on Vite proxy in dev).
- * Sends Authorization: Bearer <token> when getToken() returns a value (store associate login).
+ * API client for the store backend (Medusa admin for orders/users/etc.).
+ * Product substitution search uses Java products-service only (VITE_PRODUCTS_SERVICE_URL).
+ * Uses VITE_MEDUSA_BACKEND_URL when set; otherwise relative URLs (Vite proxy in dev).
  */
 
 import { getToken } from "./auth"
@@ -75,6 +75,46 @@ export type OrderListResponse = {
   count?: number
   offset?: number
   limit?: number
+}
+
+/** Map Java GET /store/products row to substitution-search shape (prices in minor units). */
+function mapJavaStoreProductToSearchRow(p: {
+  id?: string
+  title?: string
+  variants?: Array<{
+    id?: string
+    title?: string
+    sku?: string
+    calculated_price?: { calculated_amount?: number; currency_code?: string }
+  }>
+}): {
+  id: string
+  title: string
+  variants: {
+    id: string
+    title?: string
+    sku?: string
+    prices?: { amount: number; currency_code?: string }[]
+  }[]
+} {
+  return {
+    id: p.id ?? "",
+    title: p.title ?? "",
+    variants: (p.variants ?? []).map((v) => ({
+      id: v.id ?? "",
+      title: v.title,
+      sku: v.sku,
+      prices:
+        v.calculated_price?.calculated_amount != null
+          ? [
+              {
+                amount: Number(v.calculated_price.calculated_amount),
+                currency_code: v.calculated_price.currency_code,
+              },
+            ]
+          : [],
+    })),
+  }
 }
 
 async function fetchApi<T>(path: string, options?: RequestInit & { skipAuth?: boolean }): Promise<T> {
@@ -189,9 +229,41 @@ export const api = {
         { method: "POST" }
       ),
   },
-  /** Search products/variants for substitution (uses admin price-update search). */
-  searchProducts: (q: string) =>
-    fetchApi<{ products: { id: string; title: string; variants: { id: string; title?: string; sku?: string; prices?: { amount: number; currency_code?: string }[] }[] }[] }>(
-      `/admin/price-update/search?q=${encodeURIComponent(q.trim())}`
-    ),
+  /**
+   * Search products for substitution (Java products-service GET /store/products only).
+   * Optional VITE_PRODUCTS_SEARCH_REGION_ID for variant prices.
+   */
+  searchProducts: async (q: string) => {
+    const trimmed = q.trim()
+    if (!trimmed) return { products: [] }
+
+    const productsBase = import.meta.env.VITE_PRODUCTS_SERVICE_URL?.replace(/\/$/, "")
+    if (!productsBase) {
+      throw new Error(
+        "Set VITE_PRODUCTS_SERVICE_URL to your Java products-service base URL (e.g. http://localhost:8082)."
+      )
+    }
+
+    const sp = new URLSearchParams()
+    const region = import.meta.env.VITE_PRODUCTS_SEARCH_REGION_ID?.trim()
+    if (region) sp.set("region_id", region)
+    if (/^prod_[a-z0-9]+$/i.test(trimmed)) {
+      sp.append("id", trimmed)
+      sp.set("limit", "5")
+    } else {
+      sp.set("q", trimmed)
+      sp.set("limit", "20")
+    }
+    const url = `${productsBase}/store/products?${sp.toString()}`
+    const res = await fetch(url, { headers: { Accept: "application/json" } })
+    if (!res.ok) {
+      const err = await res.text().catch(() => res.statusText)
+      throw new Error(err.slice(0, 160) || "Product search failed")
+    }
+    const data = (await res.json()) as { products?: unknown[] }
+    const products = (data.products ?? []).map((p) =>
+      mapJavaStoreProductToSearchRow(p as Parameters<typeof mapJavaStoreProductToSearchRow>[0])
+    )
+    return { products }
+  },
 }

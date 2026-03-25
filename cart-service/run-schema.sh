@@ -5,9 +5,18 @@
 
 set -e
 cd "$(dirname "$0")"
-# Use same DB as start-all.sh: load repo .env if present (SPRING_DATASOURCE_URL, etc.)
+# Load env: repo root, Medusa app (DATABASE_URL), then cart-service/.env
 if [[ -f "../.env" ]]; then
   set -a && source "../.env" && set +a
+fi
+# shellcheck source=/dev/null
+source "$(dirname "$0")/scripts/load-database-url-from-file.sh"
+load_database_url_from_file "../unifiedcommerce-store/.env"
+if [[ -z "${SPRING_DATASOURCE_URL:-}" && -n "${DATABASE_URL:-}" ]]; then
+  eval "$(node scripts/database-url-to-spring.mjs)"
+fi
+if [[ -f ".env" ]]; then
+  set -a && source ".env" && set +a
 fi
 
 SCHEMA_FILE="src/main/resources/schema.sql"
@@ -25,9 +34,9 @@ if [[ -n "$SPRING_DATASOURCE_URL" ]]; then
   fi
 fi
 
-DB_HOST="${DB_HOST:-127.0.0.1}"
-DB_PORT="${DB_PORT:-5433}"
-DB_NAME="${DB_NAME:-grocery_store}"
+DB_HOST="${DB_HOST:-localhost}"
+DB_PORT="${DB_PORT:-5432}"
+DB_NAME="${DB_NAME:-gnc_store}"
 DB_USER="${SPRING_DATASOURCE_USERNAME:-grocery_app}"
 export PGPASSWORD="${SPRING_DATASOURCE_PASSWORD:-UnifiedCommerce@1}"
 

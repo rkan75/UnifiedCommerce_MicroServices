@@ -6,13 +6,12 @@ import {
 } from "@lib/config/products-service"
 import { HttpTypes } from "@medusajs/types"
 
-import { getCacheOptions } from "./cookies"
-
 export const retrieveVariant = async (
   variant_id: string
 ): Promise<HttpTypes.StoreProductVariant | null> => {
   const next = {
-    ...(await getCacheOptions("variants")),
+    revalidate: 120,
+    tags: ["store-product-variants"],
   }
 
   try {

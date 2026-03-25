@@ -6,18 +6,28 @@ import { getRegion } from "@lib/data/regions"
 import { HttpTypes } from "@medusajs/types"
 import FarmFreshProduceClient from "./client"
 
+type FarmFreshProduceProps = {
+  countryCode: string
+  /** When set (e.g. from home page), avoids a second getRegion call */
+  region?: HttpTypes.StoreRegion | null
+  /** When set (e.g. from home page), avoids a second listCategories call */
+  categories?: HttpTypes.StoreProductCategory[] | null
+}
+
 export default async function FarmFreshProduce({
   countryCode,
-}: {
-  countryCode: string
-}) {
-  const region = await getRegion(countryCode)
+  region: regionProp,
+  categories: categoriesProp,
+}: FarmFreshProduceProps) {
+  const region = regionProp ?? (await getRegion(countryCode))
   if (!region) {
     return null
   }
 
-  // Get all categories
-  const categories = await listCategories().catch(() => [])
+  const categories =
+    categoriesProp !== undefined && categoriesProp !== null
+      ? categoriesProp
+      : await listCategories().catch(() => [])
 
   // Find category handles (case-insensitive)
   const findCategory = (searchTerms: string[]) => {

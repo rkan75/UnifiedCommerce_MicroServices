@@ -29,12 +29,14 @@ type NavProps = {
 }
 
 export default async function Nav({ countryCode, cart, customer }: NavProps) {
-  const [categories, collectionsResult] = await Promise.all([
+  const [categories, collectionsResult, categoriesForPromoLinks] = await Promise.all([
     listCategories({ limit: 100 }, countryCode).catch(() => []),
     listCollections({}, countryCode).catch(() => ({ collections: [] as HttpTypes.StoreCollection[] })),
+    /** Unfiltered tree so promo links (e.g. Best Sellers) still resolve when the PLP tree hides empty categories */
+    listCategories({ limit: 100 }).catch(() => []),
   ])
   const headerPromo = resolveHeaderPromoDestinations(
-    categories || [],
+    categoriesForPromoLinks || [],
     collectionsResult.collections ?? []
   )
   const localeCookie = await getLocale()

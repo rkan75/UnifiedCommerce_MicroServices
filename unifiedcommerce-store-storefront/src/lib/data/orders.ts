@@ -1,9 +1,10 @@
 "use server"
 
 import { sdk } from "@lib/config"
-import medusaError from "@lib/util/medusa-error"
+import storeApiError from "@lib/util/store-api-error"
 import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { HttpTypes } from "@medusajs/types"
+import { cache } from "react"
 
 export const retrieveOrder = async (id: string) => {
   const headers = {
@@ -26,14 +27,14 @@ export const retrieveOrder = async (id: string) => {
       cache: "no-store",
     })
     .then(({ order }) => order)
-    .catch((err) => medusaError(err))
+    .catch((err) => storeApiError(err))
 }
 
-export const listOrders = async (
+async function listOrdersUncached(
   limit: number = 10,
   offset: number = 0,
   filters?: Record<string, any>
-) => {
+) {
   const headers = {
     ...(await getAuthHeaders()),
   }
@@ -57,8 +58,11 @@ export const listOrders = async (
       cache: "no-store",
     })
     .then(({ orders }) => orders)
-    .catch((err) => medusaError(err))
+    .catch((err) => storeApiError(err))
 }
+
+/** Dedupes identical listOrders args within one RSC request (e.g. layout + page). */
+export const listOrders = cache(listOrdersUncached)
 
 export const createTransferRequest = async (
   state: {

@@ -113,6 +113,26 @@ const nextConfig = {
         hostname: "gnc.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.imgix.net",
+        pathname: "/**",
+      },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [
             {

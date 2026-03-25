@@ -1,8 +1,9 @@
 "use server"
 
 import { sdk } from "@lib/config"
-import medusaError from "@lib/util/medusa-error"
+import storeApiError from "@lib/util/store-api-error"
 import { HttpTypes } from "@medusajs/types"
+import { cache } from "react"
 import { getCacheOptions } from "./cookies"
 
 export const listRegions = async () => {
@@ -17,7 +18,7 @@ export const listRegions = async () => {
       cache: "force-cache",
     })
     .then(({ regions }) => regions)
-    .catch(medusaError)
+    .catch(storeApiError)
 }
 
 export const retrieveRegion = async (id: string) => {
@@ -32,12 +33,15 @@ export const retrieveRegion = async (id: string) => {
       cache: "force-cache",
     })
     .then(({ region }) => region)
-    .catch(medusaError)
+    .catch(storeApiError)
 }
 
 const regionMap = new Map<string, HttpTypes.StoreRegion>()
 
-export const getRegion = async (countryCode: string) => {
+/** Dedupe region resolution within a single RSC tree (many listProducts calls share one listRegions). */
+export const getRegion = cache(async function getRegion(
+  countryCode: string
+): Promise<HttpTypes.StoreRegion | null | undefined> {
   try {
     if (regionMap.has(countryCode)) {
       return regionMap.get(countryCode)
@@ -63,4 +67,4 @@ export const getRegion = async (countryCode: string) => {
   } catch (e: any) {
     return null
   }
-}
+})

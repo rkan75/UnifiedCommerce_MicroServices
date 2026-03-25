@@ -36,11 +36,15 @@ export default async function PageLayout(props: {
   let shippingOptions: StoreCartShippingOption[] = []
 
   try {
-    customer = await retrieveCustomer()
-    cart = await retrieveCart()
-    wishlist = customer ? await getWishlist().catch(() => null) : null
+    ;[customer, cart, wishlist] = await Promise.all([
+      retrieveCustomer(),
+      retrieveCart(),
+      getWishlist().catch(() => null),
+    ])
     if (cart) {
-      const result = await listCartOptions().catch(() => ({ shipping_options: [] as StoreCartShippingOption[] }))
+      const result = await listCartOptions().catch(() => ({
+        shipping_options: [] as StoreCartShippingOption[],
+      }))
       shippingOptions = result?.shipping_options ?? []
     }
   } catch (err) {

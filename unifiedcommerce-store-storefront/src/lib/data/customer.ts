@@ -1,10 +1,12 @@
 "use server"
 
 import { sdk } from "@lib/config"
-import medusaError from "@lib/util/medusa-error"
+import storeApiError from "@lib/util/store-api-error"
 import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
+import { cache } from "react"
+import { cartServiceFetch, throwIfCartServiceError } from "./cart-service-http"
 import {
   getAuthHeaders,
   getCacheOptions,
@@ -15,31 +17,33 @@ import {
   setAuthToken,
 } from "./cookies"
 
-export const retrieveCustomer =
-  async (): Promise<HttpTypes.StoreCustomer | null> => {
-    const authHeaders = await getAuthHeaders()
+/** One Medusa call per request when layout + home (or other RSC) both need the customer. */
+async function retrieveCustomerUncached(): Promise<HttpTypes.StoreCustomer | null> {
+  const authHeaders = await getAuthHeaders()
 
-    if (!authHeaders) return null
+  if (!authHeaders) return null
 
-    const headers = {
-      ...authHeaders,
-    }
-
-    const next = {
-      ...(await getCacheOptions("customers")),
-    }
-
-    return await sdk.client
-      .fetch<{ customer: HttpTypes.StoreCustomer }>(`/store/customers/me`, {
-        method: "GET",
-        // Omit restrictive `fields` so first_name, last_name, metadata (e.g. loyalty_points), addresses, etc. are returned.
-        headers,
-        next,
-        cache: "no-store",
-      })
-      .then(({ customer }) => customer)
-      .catch(() => null)
+  const headers = {
+    ...authHeaders,
   }
+
+  const next = {
+    ...(await getCacheOptions("customers")),
+  }
+
+  return await sdk.client
+    .fetch<{ customer: HttpTypes.StoreCustomer }>(`/store/customers/me`, {
+      method: "GET",
+      // Omit restrictive `fields` so first_name, last_name, metadata (e.g. loyalty_points), addresses, etc. are returned.
+      headers,
+      next,
+      cache: "no-store",
+    })
+    .then(({ customer }) => customer)
+    .catch(() => null)
+}
+
+export const retrieveCustomer = cache(retrieveCustomerUncached)
 
 export const updateCustomer = async (body: HttpTypes.StoreUpdateCustomer) => {
   const headers = {
@@ -49,7 +53,7 @@ export const updateCustomer = async (body: HttpTypes.StoreUpdateCustomer) => {
   const updateRes = await sdk.store.customer
     .update(body, {}, headers)
     .then(({ customer }) => customer)
-    .catch(medusaError)
+    .catch(storeApiError)
 
   const cacheTag = await getCacheTag("customers")
   revalidateTag(cacheTag)
@@ -207,9 +211,19 @@ export async function transferCart() {
     return
   }
 
-  const headers = await getAuthHeaders()
+  const customer = await retrieveCustomer()
+  if (!customer?.id) {
+    return
+  }
 
-  await sdk.store.cart.transferCart(cartId, {}, headers)
+  const res = await cartServiceFetch(
+    `/store/carts/${encodeURIComponent(cartId)}/transfer`,
+    {
+      method: "POST",
+      body: JSON.stringify({ customer_id: customer.id }),
+    }
+  )
+  await throwIfCartServiceError(res, "Transfer cart")
 
   const cartCacheTag = await getCacheTag("carts")
   revalidateTag(cartCacheTag)

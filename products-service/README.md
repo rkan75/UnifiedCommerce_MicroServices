@@ -20,13 +20,17 @@ Query parameters (aligned with Medusa Store API):
 | `q`            | string   | Search in title/description (AND of words). |
 | `category_id`  | string   | Filter by category (uses `product_category_product` link table: product_id, product_category_id). |
 | `collection_id`| string   | Filter by collection (requires `product.collection_id` column). |
-| `type_id`      | string   | Filter by Medusa product type (`product.type_id`). |
+| `type_id`      | string   | Filter by Medusa product type (`product.type_id`). Ignored for listing when **`STOREFRONT_PRODUCT_TYPE_ID`** is set (server forces that type). |
 | `order`        | string   | Sort: `created_at`, `-created_at`, `title`, `-title`, `handle`, `-handle`. |
 | `fields`       | string   | Ignored; response is full StoreProduct-like shape. Each product includes `type: { id, value }` when `product_type` join is enabled (default). |
 
 **Response:** `{ "products": [ { "id", "title", "handle", "description", "thumbnail", "status", "variants", "metadata" }, ... ], "count": N }`
 
 Each product includes `variants[]` with `id`, `title`, `sku`, and `calculated_price: { calculated_amount, currency_code }` (when available from `price_set_money_amount`).
+
+### GET /store/catalog-scope/category-ids & GET /store/catalog-scope/collection-ids
+
+Storefront-only helpers: **one SQL query** each to list distinct category or collection ids that appear on at least one non-deleted product with the given `type_id`. Query: `type_id` (required). Response: `{ "ids": [ "..." ] }`. This avoids the storefront paginating through tens of thousands of products to build nav/collection scope (which could take minutes). Link table and column names follow `MEDUSA_PRODUCT_CATEGORY_LINK_*` app properties.
 
 ### GET /store/product-variants/:variantId (replaces Medusa GET /store/product-variants/:id)
 
@@ -75,6 +79,7 @@ Environment variables (or `application.yml`):
 | `MEDUSA_REGION_TABLE`  | Region table name (default `region`); used to resolve `currency_code` when `region_id` is sent (same as Medusa Store API). |
 | `MEDUSA_PRODUCT_CATEGORY_LINK_TABLE` | Link table name (default `product_category_product`). Must have columns `product_id`, `product_category_id`. SQL uses lowercase. |
 | `MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN` | Category column in link table (default `product_category_id`). |
+| `STOREFRONT_PRODUCT_TYPE_ID` | **Optional.** When set (e.g. `ptyp_01KM44HB9H03N9JPVC3Q79Y4XE`), **GET /store/products** always adds `AND p.type_id = ?` with this id, and variant endpoints only return variants whose product matches this type. Unset = no extra type filter (client `type_id` query param applies as before). |
 
 ## Category filter and fallback
 

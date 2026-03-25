@@ -190,7 +190,7 @@ public class CartService {
             } catch (Exception ignored) { }
             if (qty == null || qty.compareTo(BigDecimal.ZERO) <= 0) qty = BigDecimal.ONE;
         }
-        return new LineItemInsertData(unitPrice != null ? unitPrice : 0, title != null ? title : "Item", productId != null ? productId : "", qty);
+        return new LineItemInsertData(unitPrice != null ? unitPrice : 0, title != null ? title : "Item", productId != null ? productId : "", qty, null);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
@@ -203,10 +203,18 @@ public class CartService {
         String title = data.title != null ? data.title : "Item";
         BigDecimal qty = data.quantity != null ? data.quantity : BigDecimal.ONE;
         int unitPrice = data.unitPrice;
-        jdbc.update(
-            "INSERT INTO " + lineItemTable + " (id, cart_id, variant_id, product_id, title, quantity, unit_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())",
-            id, cartId, variantId, productId, title, qty, unitPrice
-        );
+        String metaJson = data.metadata != null && !data.metadata.isEmpty() ? toJson(data.metadata) : null;
+        if (metaJson != null) {
+            jdbc.update(
+                "INSERT INTO " + lineItemTable + " (id, cart_id, variant_id, product_id, title, quantity, unit_price, metadata, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?::jsonb, NOW(), NOW())",
+                id, cartId, variantId, productId, title, qty, unitPrice, metaJson
+            );
+        } else {
+            jdbc.update(
+                "INSERT INTO " + lineItemTable + " (id, cart_id, variant_id, product_id, title, quantity, unit_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())",
+                id, cartId, variantId, productId, title, qty, unitPrice
+            );
+        }
     }
 
     public CartDto doInsertLineItem(String cartId, String variantId, LineItemInsertData data) {
@@ -214,9 +222,12 @@ public class CartService {
         return retrieve(cartId);
     }
 
-    public CartDto createLineItem(String cartId, String variantId, Number quantity) {
+    public CartDto createLineItem(String cartId, String variantId, Number quantity, Map<String, Object> lineMetadata) {
         try {
             LineItemInsertData data = prepareLineItemData(cartId, variantId, quantity);
+            if (lineMetadata != null && !lineMetadata.isEmpty()) {
+                data = new LineItemInsertData(data.unitPrice, data.title, data.productId, data.quantity, lineMetadata);
+            }
             return doInsertLineItem(cartId, variantId, data);
         } catch (NoSuchElementException | IllegalArgumentException e) {
             throw e;
@@ -322,7 +333,9 @@ public class CartService {
         if (cart.items() == null || cart.items().isEmpty()) throw new IllegalStateException("Cart has no items");
         String orderId = "order_" + UUID.randomUUID();
         completeWritesOnly(cartId, cart, orderId);
-        OrderDto order = new OrderDto(orderId, cart.region_id(), cart.customer_id(), cart.email(), null, null, cart.metadata());
+        Map<String, Object> shipMap = addressDtoToMap(cart.shipping_address());
+        Map<String, Object> billMap = addressDtoToMap(cart.billing_address());
+        OrderDto order = new OrderDto(orderId, cart.region_id(), cart.customer_id(), cart.email(), shipMap, billMap, cart.metadata());
         return new CompleteCartResponseDto("order", order, cart);
     }
 
@@ -459,39 +472,158 @@ public class CartService {
         return null;
     }
 
-    /** Build variant object for storefront (item.variant). */
-    private Map<String, Object> resolveVariantForLineItem(String variantId) {
+    /**
+     * Build variant for storefront: includes nested {@code product} (Medusa shape) so
+     * {@code item.variant.product.images} and subscribe checks work.
+     */
+    private Map<String, Object> resolveVariantForLineItem(String variantId, Map<String, Object> productObj) {
         if (variantId == null || variantId.isBlank()) return Map.of();
         try {
-            List<Map<String, Object>> rows = jdbc.queryForList("SELECT id, title, product_id FROM product_variant WHERE id = ? LIMIT 1", variantId);
+            List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT id, title, product_id, thumbnail FROM product_variant WHERE id = ? LIMIT 1",
+                variantId
+            );
             if (!rows.isEmpty()) {
                 Map<String, Object> row = rows.get(0);
-                Map<String, Object> variant = new HashMap<>();
+                Map<String, Object> variant = new LinkedHashMap<>();
                 variant.put("id", row.get("id"));
                 variant.put("title", row.get("title"));
                 variant.put("product_id", row.get("product_id"));
+                Object vthumb = row.get("thumbnail");
+                if (vthumb != null && !vthumb.toString().isBlank()) {
+                    variant.put("thumbnail", vthumb.toString().trim());
+                }
+                if (productObj != null && !productObj.isEmpty()) {
+                    variant.put("product", productObj);
+                }
                 return variant;
             }
         } catch (Exception ignored) { }
-        return Map.of("id", variantId, "title", "Item", "product_id", "");
+        Map<String, Object> fallback = new LinkedHashMap<>();
+        fallback.put("id", variantId);
+        fallback.put("title", "Item");
+        fallback.put("product_id", "");
+        if (productObj != null && !productObj.isEmpty()) {
+            fallback.put("product", productObj);
+        }
+        return fallback;
     }
 
-    /** Build product object for storefront (item.product with handle for links). */
+    private List<Map<String, Object>> buildProductImagesList(String thumbnailUrl, String productId) {
+        List<Map<String, Object>> images = new ArrayList<>();
+        LinkedHashSet<String> seen = new LinkedHashSet<>();
+        if (thumbnailUrl != null && !thumbnailUrl.isBlank()) {
+            String t = thumbnailUrl.trim();
+            images.add(Map.of("url", t));
+            seen.add(t);
+        }
+        if (productId == null || productId.isBlank()) {
+            return images;
+        }
+        try {
+            List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT i.url AS url FROM product_image pi JOIN image i ON i.id = pi.image_id "
+                    + "WHERE pi.product_id = ? ORDER BY pi.rank ASC NULLS LAST, pi.id ASC LIMIT 12",
+                productId.trim()
+            );
+            for (Map<String, Object> r : rows) {
+                Object u = r.get("url");
+                if (u == null) continue;
+                String url = u.toString().trim();
+                if (!url.isEmpty() && seen.add(url)) {
+                    images.add(Map.of("url", url));
+                }
+            }
+        } catch (Exception ignored) { }
+        if (images.isEmpty() || seen.size() <= 1) {
+            try {
+                List<Map<String, Object>> rows = jdbc.queryForList(
+                    "SELECT url FROM image WHERE product_id = ? ORDER BY rank ASC NULLS LAST, id ASC LIMIT 12",
+                    productId.trim()
+                );
+                for (Map<String, Object> r : rows) {
+                    Object u = r.get("url");
+                    if (u == null) continue;
+                    String url = u.toString().trim();
+                    if (!url.isEmpty() && seen.add(url)) {
+                        images.add(Map.of("url", url));
+                    }
+                }
+            } catch (Exception ignored) { }
+        }
+        return images;
+    }
+
+    /** Build product object for storefront (top-level item.product and variant.product). */
     private Map<String, Object> resolveProductForLineItem(String productId) {
         if (productId == null || productId.isBlank()) return Map.of();
         try {
-            List<Map<String, Object>> rows = jdbc.queryForList("SELECT id, title, handle, thumbnail FROM product WHERE id = ? LIMIT 1", productId);
+            List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT id, title, handle, thumbnail FROM product WHERE id = ? LIMIT 1",
+                productId.trim()
+            );
             if (!rows.isEmpty()) {
                 Map<String, Object> row = rows.get(0);
-                Map<String, Object> product = new HashMap<>();
+                Map<String, Object> product = new LinkedHashMap<>();
                 product.put("id", row.get("id"));
                 product.put("title", row.get("title"));
                 product.put("handle", row.get("handle"));
-                product.put("thumbnail", row.get("thumbnail"));
+                Object th = row.get("thumbnail");
+                String thumbStr = th != null ? th.toString().trim() : "";
+                List<Map<String, Object>> images = buildProductImagesList(
+                    thumbStr.isEmpty() ? null : thumbStr,
+                    productId.trim()
+                );
+                if (thumbStr.isEmpty() && !images.isEmpty()) {
+                    Object u = images.get(0).get("url");
+                    if (u != null && !u.toString().isBlank()) {
+                        thumbStr = u.toString().trim();
+                    }
+                }
+                product.put("thumbnail", thumbStr.isEmpty() ? null : thumbStr);
+                product.put("images", images);
                 return product;
             }
         } catch (Exception ignored) { }
-        return Map.of("id", productId, "title", "Product", "handle", "", "thumbnail", null);
+        Map<String, Object> empty = new LinkedHashMap<>();
+        empty.put("id", productId);
+        empty.put("title", "Product");
+        empty.put("handle", "");
+        empty.put("thumbnail", null);
+        empty.put("images", List.of());
+        return empty;
+    }
+
+    private static String lineItemThumbnail(String variantThumb, String productThumb) {
+        if (variantThumb != null && !variantThumb.isBlank()) {
+            return variantThumb.trim();
+        }
+        if (productThumb != null && !productThumb.isBlank()) {
+            return productThumb.trim();
+        }
+        return null;
+    }
+
+    private static String productHandleFromMap(Map<String, Object> productObj) {
+        if (productObj == null || productObj.isEmpty()) return "";
+        Object h = productObj.get("handle");
+        return h != null ? h.toString().trim() : "";
+    }
+
+    private static String productThumbnailFromMap(Map<String, Object> productObj) {
+        if (productObj == null || productObj.isEmpty()) return null;
+        Object t = productObj.get("thumbnail");
+        if (t == null) return null;
+        String s = t.toString().trim();
+        return s.isEmpty() ? null : s;
+    }
+
+    private static String variantThumbnailFromMap(Map<String, Object> variantObj) {
+        if (variantObj == null || variantObj.isEmpty()) return null;
+        Object t = variantObj.get("thumbnail");
+        if (t == null) return null;
+        String s = t.toString().trim();
+        return s.isEmpty() ? null : s;
     }
 
     private static int safeInt(Object value, int defaultValue) {
@@ -533,21 +665,34 @@ public class CartService {
             String itemId = getStr(ir, "id");
             String variantId = getStr(ir, "variant_id");
             String productId = getStr(ir, "product_id");
+            if (productId == null || productId.isBlank()) {
+                productId = resolveProductId(variantId);
+            }
             String title = getStr(ir, "title");
             Number qty = safeQuantity(ir.get("quantity"));
             int unitPrice = safeInt(ir.get("unit_price"), 0);
             int total = unitPrice * (qty != null ? qty.intValue() : 1);
             itemSubtotal += total;
             Map<String, Object> itemMeta = fromJson(getStr(ir, "metadata"), MAP_TYPE);
-            Map<String, Object> variantObj = resolveVariantForLineItem(variantId);
-            Map<String, Object> productObj = resolveProductForLineItem(productId);
+            Map<String, Object> productObj = resolveProductForLineItem(productId != null ? productId : "");
+            Map<String, Object> variantObj = resolveVariantForLineItem(variantId, productObj);
+            String lineThumb = lineItemThumbnail(
+                variantThumbnailFromMap(variantObj),
+                productThumbnailFromMap(productObj)
+            );
+            String productHandle = productHandleFromMap(productObj);
             items.add(new LineItemDto(
                 itemId != null ? itemId : "",
                 id != null ? id : "",
                 variantId != null ? variantId : "",
                 productId != null ? productId : "",
                 title != null ? title : "Item",
-                null, null, qty, unitPrice, total,
+                null,
+                lineThumb,
+                productHandle,
+                qty,
+                unitPrice,
+                total,
                 itemMeta != null ? itemMeta : Map.of(),
                 variantObj != null ? variantObj : Map.of(),
                 productObj != null ? productObj : Map.of()));
@@ -620,6 +765,29 @@ public class CartService {
         }
     }
 
+    private Map<String, Object> addressDtoToMap(AddressDto a) {
+        if (a == null) return null;
+        Map<String, Object> m = new LinkedHashMap<>();
+        putIfPresent(m, "id", a.id());
+        putIfPresent(m, "first_name", a.first_name());
+        putIfPresent(m, "last_name", a.last_name());
+        putIfPresent(m, "address_1", a.address_1());
+        putIfPresent(m, "address_2", a.address_2());
+        putIfPresent(m, "city", a.city());
+        putIfPresent(m, "province", a.province());
+        putIfPresent(m, "postal_code", a.postal_code());
+        putIfPresent(m, "country_code", a.country_code());
+        putIfPresent(m, "phone", a.phone());
+        putIfPresent(m, "company", a.company());
+        return m.isEmpty() ? null : m;
+    }
+
+    private static void putIfPresent(Map<String, Object> m, String key, String value) {
+        if (value != null && !value.isBlank()) {
+            m.put(key, value);
+        }
+    }
+
     private String toJson(Object o) {
         if (o == null) return "{}";
         try {
@@ -640,12 +808,14 @@ public class CartService {
         final String title;
         final String productId;
         final BigDecimal quantity;
+        final Map<String, Object> metadata;
 
-        LineItemInsertData(int unitPrice, String title, String productId, BigDecimal quantity) {
+        LineItemInsertData(int unitPrice, String title, String productId, BigDecimal quantity, Map<String, Object> metadata) {
             this.unitPrice = unitPrice;
             this.title = title;
             this.productId = productId;
             this.quantity = quantity;
+            this.metadata = metadata;
         }
     }
 }

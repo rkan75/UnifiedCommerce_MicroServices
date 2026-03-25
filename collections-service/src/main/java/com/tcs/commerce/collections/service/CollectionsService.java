@@ -1,11 +1,13 @@
 package com.tcs.commerce.collections.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.commerce.collections.config.CollectionsProperties;
 import com.tcs.commerce.collections.web.CollectionDto;
+import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ public class CollectionsService {
 
     private final JdbcTemplate jdbc;
     private final CollectionsProperties props;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public CollectionsService(JdbcTemplate jdbc, CollectionsProperties props) {
         this.jdbc = jdbc;
@@ -33,6 +36,39 @@ public class CollectionsService {
         if (o == null) return null;
         String s = o.toString().trim();
         return s.isEmpty() ? null : s;
+    }
+
+    /**
+     * JDBC often returns JSON/JSONB as {@link PGobject} or a JSON string, not a {@link Map}.
+     * Without parsing, collection metadata (e.g. brand_image) is dropped from the API.
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseMetadata(Object raw) {
+        if (raw == null) {
+            return null;
+        }
+        if (raw instanceof Map<?, ?> m) {
+            return (Map<String, Object>) m;
+        }
+        String json = null;
+        if (raw instanceof PGobject pg) {
+            String type = pg.getType();
+            if (type == null
+                || (!type.equalsIgnoreCase("json") && !type.equalsIgnoreCase("jsonb"))) {
+                return null;
+            }
+            json = pg.getValue();
+        } else if (raw instanceof String s) {
+            json = s;
+        }
+        if (json == null || json.isBlank()) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /** List collections with limit/offset. Compatible with Medusa GET /store/collections. */
@@ -128,11 +164,10 @@ public class CollectionsService {
         String handle = str(row.get("handle"));
         String createdAt = row.get("created_at") != null ? row.get("created_at").toString() : null;
         String updatedAt = row.get("updated_at") != null ? row.get("updated_at").toString() : null;
-        Map<String, Object> metadata = row.get("metadata") instanceof Map ? (Map<String, Object>) row.get("metadata") : null;
+        Map<String, Object> metadata = parseMetadata(row.get("metadata"));
         return new CollectionDto(id, title, handle, createdAt, updatedAt, metadata);
     }
 
-    @SuppressWarnings("unchecked")
     private CollectionDto mapRowFromName(Map<String, Object> row) {
         String id = str(row.get("id"));
         if (id == null) return null;
@@ -140,7 +175,7 @@ public class CollectionsService {
         String handle = str(row.get("handle"));
         String createdAt = row.get("created_at") != null ? row.get("created_at").toString() : null;
         String updatedAt = row.get("updated_at") != null ? row.get("updated_at").toString() : null;
-        Map<String, Object> metadata = row.get("metadata") instanceof Map ? (Map<String, Object>) row.get("metadata") : null;
+        Map<String, Object> metadata = parseMetadata(row.get("metadata"));
         return new CollectionDto(id, title, handle, createdAt, updatedAt, metadata);
     }
 }
