@@ -1,0 +1,91 @@
+REQ_ID,Requirement_Name,Task_ID,Task_Description,Task_Type,BRD_Section_Reference,Fitment_Classification,Gap_or_Notes,Complexity,PD_UI,PD_Configuration,PD_Service_Development,PD_Integration_Development,PD_Third_Party_Coordination,PD_Unit_Testing,PD_Total
+REQ-01,Promotion Engine & Subscription Kits,T01-01,Define coupon types (% fixed BOGO free delivery SKU bundles),Functional,REQ-01 §3,Out Of Box,Medusa promotions cover many types; BOGO/bundle depth may need rules,Low,0.5,3.0,0.5,0.0,0.0,0.5,4.5
+REQ-01,Promotion Engine & Subscription Kits,T01-02,Configure triggers (campaign event sale segment),Functional,REQ-01 §3,Out Of Box,Customer groups/campaigns partial vs full segment engine,Low,0.5,2.0,1.0,0.0,0.0,0.5,4.0
+REQ-01,Promotion Engine & Subscription Kits,T01-03,Validate cart value SKUs segment usage limits,Functional,REQ-01 §3,Out Of Box,Custom validators/workflows on Medusa cart,Medium,1.0,1.0,4.0,0.5,0.0,2.0,8.5
+REQ-01,Promotion Engine & Subscription Kits,T01-04,Model kit SKU and credit N units on purchase,Functional,REQ-01 §3,Customization,No prepaid unit ledger in UC,Very High,2.0,1.0,15.0,2.0,1.0,5.0,26.0
+REQ-01,Promotion Engine & Subscription Kits,T01-05,Checkout redeem from kit as zero-cost payment method,Functional,REQ-01 §3,Customization,Custom payment provider or line-level logic,Very High,3.0,1.0,20.0,3.0,2.0,6.0,35.0
+REQ-01,Promotion Engine & Subscription Kits,T01-06,App dashboard remaining units (e.g. 12/50),Functional,REQ-01 §3,Customization,New UI + API,Medium,4.0,0.5,6.0,1.0,0.0,3.0,14.5
+REQ-01,Promotion Engine & Subscription Kits,T01-07,Cart calculation latency target under 200ms,NFR,REQ-01 §4,Partial fitment,Requires performance test + infra,Medium,0.5,1.0,3.0,1.0,1.0,4.0,10.5
+REQ-02,Wallet Management (Decoupled),T02-01,Implement double-entry ledger per customer,Functional,REQ-02 §3,Customization,Greenfield service,Very High,2.0,2.0,25.0,3.0,2.0,8.0,42.0
+REQ-02,Wallet Management (Decoupled),T02-02,Transaction types top-up refund purchase manual expiry,Functional,REQ-02 §3,Customization,,High,2.0,2.0,15.0,2.0,2.0,6.0,29.0
+REQ-02,Wallet Management (Decoupled),T02-03,No SAP query during checkout validation,Integration,REQ-02 §3,Customization,Architecture decision + implementation,Medium,0.0,2.0,4.0,2.0,1.0,2.0,11.0
+REQ-02,Wallet Management (Decoupled),T02-04,Low balance alerts configurable,Functional,REQ-02 §3,Customization,Notification service,Medium,3.0,3.0,5.0,2.0,1.0,3.0,17.0
+REQ-02,Wallet Management (Decoupled),T02-05,Daily reconciliation export to SAP,Integration,REQ-02 §4,Customization,Batch + mapping,High,1.0,2.0,8.0,12.0,8.0,5.0,36.0
+REQ-02,Wallet Management (Decoupled),T02-06,Conflict resolution app master SAP adjusted,Integration,REQ-02 §4,Customization,Process + tooling,High,0.5,4.0,5.0,6.0,10.0,3.0,28.5
+REQ-03,Subscription Management,T03-01,1:N subscriptions per customer with unique subscription ID,Functional,REQ-03 §3,Out Of Box,SMP data model,Medium,1.0,2.0,8.0,1.0,0.0,3.0,15.0
+REQ-03,Subscription Management,T03-02,Lifecycle states and edits pause skip address payment SKU,Functional,REQ-03 §3,Customization,,High,4.0,2.0,20.0,4.0,2.0,8.0,40.0
+REQ-03,Subscription Management,T03-03,Custom frequency (e.g. Tue Fri),Functional,REQ-03 §3,Customization,,High,2.0,1.0,12.0,1.0,0.0,5.0,21.0
+REQ-03,Subscription Management,T03-04,Daily cron generate next-day orders,Functional,REQ-03 §4,Customization,Job + idempotency,High,1.0,2.0,12.0,3.0,2.0,5.0,25.0
+REQ-03,Subscription Management,T03-05,Validate delivery day vs route plan,Functional,REQ-03 §3,Customization,Depends REQ-05/09,High,2.0,1.0,10.0,4.0,1.0,4.0,22.0
+REQ-03,Subscription Management,T03-06,Push orders to fulfillment with subscription ID,Integration,REQ-03 §4,Customization,SalesWorx/SAP adapters,Very High,1.0,2.0,10.0,20.0,15.0,5.0,53.0
+REQ-03,Subscription Management,T03-07,Retention prompt on cancel,Functional,REQ-03 §2,Customization,UX + rules,Medium,3.0,1.0,5.0,0.0,0.0,2.0,11.0
+REQ-04,Bottle Deposit Handling,T04-01,Maintain held bottle count per customer,Functional,REQ-04 §3,Customization,,Medium,1.0,1.0,8.0,1.0,1.0,3.0,15.0
+REQ-04,Bottle Deposit Handling,T04-02,Checkout net deposit charge credit rules,Functional,REQ-04 §3,Customization,,High,2.0,2.0,15.0,3.0,2.0,6.0,30.0
+REQ-04,Bottle Deposit Handling,T04-03,Cap returns at held count,Functional,REQ-04 §3,Customization,,Low,0.5,1.0,4.0,0.0,0.0,2.0,7.5
+REQ-04,Bottle Deposit Handling,T04-04,Driver confirm actual returns wallet adjust,Functional,REQ-04 §3,Customization,Driver app or integration,High,4.0,1.0,10.0,8.0,6.0,4.0,33.0
+REQ-04,Bottle Deposit Handling,T04-05,SAP bulk import liabilities at cutover,Integration,REQ-04 §4,Customization,ETL,High,0.5,3.0,6.0,15.0,10.0,4.0,38.5
+REQ-04,Bottle Deposit Handling,T04-06,Daily SAP finance sync deposit GL,Integration,REQ-04 §4,Customization,,High,0.5,2.0,6.0,12.0,8.0,4.0,32.5
+REQ-05,Dormant Account & Journey Plan Management,T05-01,Route master admin (days driver capacity),Functional,REQ-05 §3,Customization,,High,6.0,2.0,12.0,2.0,1.0,4.0,27.0
+REQ-05,Dormant Account & Journey Plan Management,T05-02,Draw polygons link to route IDs,Functional,REQ-05 §3,Customization,GIS UI,Very High,10.0,2.0,15.0,5.0,3.0,6.0,41.0
+REQ-05,Dormant Account & Journey Plan Management,T05-03,Auto-assign customer on address or first order,Functional,REQ-05 §3,Out Of Box,Spatial query,High,2.0,2.0,12.0,3.0,1.0,4.0,24.0
+REQ-05,Dormant Account & Journey Plan Management,T05-04,Push journey plan to SalesWorx,Integration,REQ-05 §4,Customization,,High,0.5,1.0,5.0,18.0,15.0,4.0,43.5
+REQ-05,Dormant Account & Journey Plan Management,T05-05,Push customer active to SAP un-archive,Integration,REQ-05 §4,Customization,,Medium,0.5,2.0,4.0,10.0,8.0,3.0,27.5
+REQ-06,Order Tracking & Status Management,T06-01,Unified status workflow through delivered,Functional,REQ-06 §3,Out Of Box,Medusa fulfillment states extensible,Low,2.0,2.0,4.0,1.0,0.0,2.0,11.0
+REQ-06,Order Tracking & Status Management,T06-02,Live driver map ETA express,Functional,REQ-06 §3,Customization,Driver SDK,Very High,8.0,1.0,25.0,15.0,12.0,8.0,69.0
+REQ-06,Order Tracking & Status Management,T06-03,Push out for delivery notification,Functional,REQ-06 §3,Customization,FCM/APNs + rules,Medium,2.0,3.0,6.0,4.0,3.0,3.0,21.0
+REQ-06,Order Tracking & Status Management,T06-04,Masked driver customer chat,Functional,REQ-06 §3,Customization,Twilio etc.,High,4.0,2.0,10.0,8.0,6.0,4.0,34.0
+REQ-06,Order Tracking & Status Management,T06-05,CS delivered timestamp disputes,Functional,REQ-06 §2,Partial fitment,May need audit fields,Low,1.0,1.0,3.0,0.0,0.0,1.5,6.5
+REQ-06,Order Tracking & Status Management,T06-06,CRM embedded widget,Integration,REQ-06 §4,Customization,Dynamics,High,3.0,1.0,5.0,12.0,10.0,3.0,34.0
+REQ-07,Self-Service Cancellations & Withdrawals,T07-01,Cancel subscription with retention flow,Functional,REQ-07 §3,Out Of Box,Tied REQ-03,Medium,3.0,1.0,8.0,2.0,0.0,2.0,16.0
+REQ-07,Self-Service Cancellations & Withdrawals,T07-02,Settle bottle liability to wallet on cancel,Functional,REQ-07 §3,Customization,Tied REQ-04,High,2.0,1.0,10.0,4.0,2.0,4.0,23.0
+REQ-07,Self-Service Cancellations & Withdrawals,T07-03,Wallet withdrawal request freeze balance,Functional,REQ-07 §3,Customization,Tied REQ-02,High,4.0,2.0,12.0,5.0,3.0,5.0,31.0
+REQ-07,Self-Service Cancellations & Withdrawals,T07-04,Finance approve reject gateway refund,Functional,REQ-07 §3,Customization,Admin + PG,High,8.0,3.0,12.0,8.0,4.0,5.0,40.0
+REQ-07,Self-Service Cancellations & Withdrawals,T07-05,D365 case on withdrawal,Integration,REQ-07 §4,Customization,,Medium,0.5,2.0,4.0,8.0,6.0,2.0,22.5
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-01,RFM segmentation engine batch daily,Functional,REQ-08 §4.1,Customization,Analytics job,High,1.0,2.0,20.0,4.0,2.0,6.0,35.0
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-02,Store segment on customer profile API checkout,Functional,REQ-08 §4.1,Out Of Box,Customer metadata + API,Medium,2.0,2.0,8.0,4.0,1.0,4.0,21.0
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-03,Segment price override priority rules,Functional,REQ-08 §4.2,Out Of Box,Price lists + rules engine,High,2.0,4.0,15.0,6.0,2.0,6.0,35.0
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-04,Segment offers stacking policy,Functional,REQ-08 §4.3,Out Of Box,Promotions config,Medium,2.0,5.0,6.0,2.0,0.5,4.0,19.5
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-05,Admin segment dashboard export CSV,Functional,REQ-08 §4.4,Customization,Admin UI,High,10.0,2.0,12.0,3.0,0.0,5.0,32.0
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-06,Reporting revenue AOV redemption by segment,Reporting,REQ-08 §6,Customization,BI or custom reports,Medium,8.0,1.0,6.0,8.0,2.0,3.0,28.0
+REQ-08,Segment-Based Dynamic Pricing & Offers,T08-07,Checkout segment validation performance 200ms,NFR,REQ-08 §5,Partial fitment,Load test,Medium,0.5,1.0,3.0,2.0,1.0,5.0,12.5
+REQ-09,Route Assignment & Address Management,T09-01,Zone polygon CRUD on map,Functional,REQ-9 §3,Customization,,Very High,12.0,2.0,10.0,5.0,2.0,5.0,36.0
+REQ-09,Route Assignment & Address Management,T09-02,Point in polygon assign route and delivery days,Functional,REQ-9 §3,Customization,PostGIS,High,2.0,3.0,15.0,5.0,2.0,6.0,33.0
+REQ-09,Route Assignment & Address Management,T09-03,Block subscription OOS area,Functional,REQ-9 §3,Customization,,Medium,3.0,2.0,6.0,2.0,0.0,3.0,16.0
+REQ-10,Invoice Generation,T10-01,HTML CSS invoice template TRN VAT deposit,Functional,REQ-10 §3,Out Of Box,Custom doc service,Medium,4.0,1.0,8.0,2.0,0.0,3.0,18.0
+REQ-10,Invoice Generation,T10-02,Generate on delivered PDF email,Functional,REQ-10 §3,Out Of Box,Subscriber/workflow,Medium,1.0,2.0,10.0,4.0,2.0,4.0,23.0
+REQ-10,Invoice Generation,T10-03,5 year retention storage,Functional,REQ-10 §4,Out Of Box,Archive policy,Low,0.0,3.0,2.0,4.0,2.0,1.0,12.0
+REQ-10,Invoice Generation,T10-04,Invoice numbering SAP alignment policy,Integration,REQ-10 §4,Customization,,Medium,0.5,2.0,4.0,10.0,8.0,2.0,26.5
+REQ-11,Surveys Ratings Reviews,T11-01,SurveyMonkey triggers cancel post-delivery,Integration,REQ-11 §3,Customization,,Medium,1.0,1.0,4.0,8.0,10.0,2.0,26.0
+REQ-11,Surveys Ratings Reviews,T11-02,Hidden fields metadata to SurveyMonkey,Integration,REQ-11 §3,Customization,,Medium,0.5,1.0,4.0,6.0,8.0,2.0,21.5
+REQ-11,Surveys Ratings Reviews,T11-03,Webhook survey complete to CRM,Integration,REQ-11 §4,Customization,,Medium,0.5,1.0,5.0,10.0,8.0,2.0,26.5
+REQ-11,Surveys Ratings Reviews,T11-04,Native product reviews PLP PDP,Functional,REQ-11 §3,Out Of Box,,High,12.0,2.0,10.0,2.0,0.0,5.0,31.0
+REQ-12,Loyalty & Referral Program,T12-01,Clip the Deal real-time cart validation,Integration,REQ-12 §3,Customization,,High,1.0,1.0,6.0,12.0,15.0,4.0,39.0
+REQ-12,Loyalty & Referral Program,T12-02,Referral code generation attribution delivered,Functional,REQ-12 §3,Customization,,High,4.0,1.0,15.0,6.0,3.0,5.0,34.0
+REQ-12,Loyalty & Referral Program,T12-03,FOC cost reporting,Reporting,REQ-12 §3,Customization,,Medium,6.0,1.0,8.0,4.0,1.0,3.0,23.0
+REQ-12,Loyalty & Referral Program,T12-04,Promotional credit ledger class,Functional,REQ-12 §4,Customization,Tied REQ-02,High,1.0,1.0,10.0,4.0,1.0,4.0,21.0
+REQ-13,Customer Onboarding Corporate & Fazaa,T13-01,Corporate domain whitelist email OTP group,Functional,REQ-13 §3,Customization,,Medium,5.0,3.0,8.0,4.0,2.0,4.0,26.0
+REQ-13,Customer Onboarding Corporate & Fazaa,T13-02,Fazaa OCR API card verify,Integration,REQ-13 §3,Customization,,High,4.0,1.0,8.0,10.0,15.0,4.0,42.0
+REQ-13,Customer Onboarding Corporate & Fazaa,T13-03,Daily cron expiry revert to retail notify,Functional,REQ-13 §3,Customization,,Medium,2.0,2.0,6.0,2.0,1.0,3.0,16.0
+REQ-14,Flexible Delivery Scheduling & Time-Slots,T14-01,Admin define slots and fees,Functional,REQ-14 §3,Customization,,High,6.0,4.0,12.0,3.0,1.0,5.0,31.0
+REQ-14,Flexible Delivery Scheduling & Time-Slots,T14-02,Capacity per slot route disable when full,Functional,REQ-14 §3,Customization,,High,4.0,3.0,14.0,4.0,1.0,6.0,32.0
+REQ-14,Flexible Delivery Scheduling & Time-Slots,T14-03,Subscription preferred day time vs route,Functional,REQ-14 §3,Customization,,Medium,4.0,2.0,10.0,5.0,1.0,4.0,26.0
+REQ-15,Simple Re-order & One-Tap Repeat,T15-01,Buy again last 3 SKUs widgets,Functional,REQ-15 §2,Out Of Box,Storefront feature,Low,4.0,1.0,3.0,1.0,0.0,2.0,11.0
+REQ-15,Simple Re-order & One-Tap Repeat,T15-02,Save restore named basket,Functional,REQ-15 §2,Out Of Box,Cart persistence or custom,Medium,5.0,1.0,5.0,2.0,0.0,3.0,16.0
+REQ-16,Inventory & Stock Visibility,T16-01,Flag core vs merchandise inventory behavior,Functional,REQ-16 §2,Out Of Box,Product metadata,Low,1.0,4.0,2.0,0.5,0.0,1.0,8.5
+REQ-16,Inventory & Stock Visibility,T16-02,Admin force OOS global or region,Functional,REQ-16 §2,Out Of Box,Medusa inventory rules,Low,3.0,5.0,2.0,0.5,0.0,1.5,12.0
+REQ-16,Inventory & Stock Visibility,T16-03,Notify me back in stock batch,Functional,REQ-16 §2,Out Of Box,Subscription list + job,Medium,5.0,2.0,8.0,2.0,1.0,4.0,22.0
+REQ-17,Analytics & Admin Dashboard Power BI,T17-01,ETL commerce SurveyMonkey GA SAP,Integration,REQ-17 §3,Customization,,Very High,2.0,4.0,25.0,40.0,20.0,10.0,101.0
+REQ-17,Analytics & Admin Dashboard Power BI,T17-02,Star schema reporting database,Data,REQ-17 §3,Customization,,Very High,1.0,5.0,30.0,15.0,5.0,8.0,64.0
+REQ-17,Analytics & Admin Dashboard Power BI,T17-03,Build 5-7 Power BI dashboards,Reporting,REQ-17 §3,Customization,,High,25.0,3.0,10.0,20.0,8.0,8.0,74.0
+REQ-17,Analytics & Admin Dashboard Power BI,T17-04,RLS and data alerts,Security/NFR,REQ-17 §3,Customization,,High,4.0,4.0,12.0,15.0,6.0,6.0,47.0
+REQ-18,Order Shipment Management,T18-01,Split rules vehicle capability warehouse,Functional,REQ-18 §3,Out Of Box,Custom fulfillment strategy,High,1.0,3.0,18.0,4.0,1.0,6.0,33.0
+REQ-18,Order Shipment Management,T18-02,Customer UI one order multiple deliveries,Functional,REQ-18 §3,Customization,Storefront,Medium,10.0,1.0,6.0,4.0,0.0,4.0,25.0
+REQ-18,Order Shipment Management,T18-03,Invoice consolidated or per shipment,Functional,REQ-18 §3,Customization,Tied REQ-10,Medium,2.0,2.0,8.0,6.0,2.0,4.0,24.0
+REQ-19,Field Sales Attribution & Welcome Offers,T19-01,Batch generate rep-linked promo codes,Functional,REQ-19 §3.1,Customization,,Medium,6.0,2.0,10.0,3.0,1.0,4.0,26.0
+REQ-19,Field Sales Attribution & Welcome Offers,T19-02,Fraud checks phone device card hash,Functional,REQ-19 §3.2,Customization,,High,3.0,2.0,18.0,8.0,8.0,8.0,47.0
+REQ-19,Field Sales Attribution & Welcome Offers,T19-03,Attribute sales rep on paid order only,Functional,REQ-19 §3.3,Customization,,Medium,1.0,2.0,8.0,6.0,2.0,4.0,23.0
+REQ-19,Field Sales Attribution & Welcome Offers,T19-04,Admin reporting CSV export,Functional,REQ-19 §3.4,Out Of Box,,Low,5.0,2.0,4.0,2.0,0.0,2.0,15.0
+REQ-20,WhatsApp Commerce & Service Bot,T20-01,BSP Twilio Meta interactive flows,Integration,REQ-20 §4,Customization,,Very High,4.0,3.0,15.0,20.0,25.0,6.0,73.0
+REQ-20,WhatsApp Commerce & Service Bot,T20-02,Core flows reorder track wallet pause top-up,Functional,REQ-20 §4.2,Customization,,Very High,8.0,2.0,25.0,25.0,15.0,10.0,85.0
+REQ-20,WhatsApp Commerce & Service Bot,T20-03,Proactive templates and human handoff CRM,Integration,REQ-20 §4.3-4.4,Customization,,High,6.0,3.0,12.0,18.0,20.0,5.0,64.0
+REQ-21,Bonus AI Use Cases,T21-01,Implement BRD-listed AI KPI programs (acquisition churn AOV productivity),Functional,REQ-21,Customization,Separate AI roadmap,Very High,10.0,5.0,120.0,40.0,30.0,25.0,230.0

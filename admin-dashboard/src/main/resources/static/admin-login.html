@@ -32,7 +32,7 @@
       <span style="display:none;">Store Admin</span>
     </div>
     <h1>Welcome Unified OmniChannel</h1>
-    <p class="hint">Sign in with your admin credentials.</p>
+    <p class="hint">Sign in with your admin credentials. Java admin login uses the <strong>admin_credential</strong> table — if you only ever used Medusa, register the password once (see hint below).</p>
     <form id="loginForm" method="post" action="">
       <label for="email">Email</label>
       <input id="email" name="email" type="email" required autocomplete="email" placeholder="admin@example.com" />
@@ -41,7 +41,13 @@
       <button type="submit" id="submitBtn">Sign in</button>
     </form>
     <p id="errorMsg" class="error" style="display:none;"></p>
-    <div class="back"><a href="/app/products">Open Admin</a></div>
+    <p id="helpNoCredential" class="hint" style="display:none;margin-top:0.75rem;padding:0.75rem;background:#fef3c7;border-radius:8px;color:#92400e;font-size:0.8125rem;">
+      First time with Java admin? From <code>unifiedcommerce-store</code>:<br />
+      <code style="word-break:break-all;">ADMIN_RBAC_SERVICE_URL=http://localhost:8088 ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=YourPass npm run create-admin-user</code><br />
+      Or: <code>curl -X POST http://localhost:8088/auth/admin/register-credential -H 'Content-Type: application/json' -d '{"email":"you@example.com","password":"YourPass"}'</code> (user must already exist in the <code>user</code> table).
+    </p>
+    <p class="back" style="margin-top:1rem;"><a href="/auth/forgot-password.html">Forgot password?</a> <span style="color:#94a3b8;">(only if you already have a Java admin password)</span></p>
+    <div class="back"><a href="/app/products">Open dashboard</a> <span style="color:#94a3b8;">(requires sign-in — otherwise you’ll be redirected here)</span></div>
   </div>
   <script>
     (function() {
@@ -64,15 +70,23 @@
           credentials: 'include'
         })
         .then(function(res) {
+          var help = document.getElementById('helpNoCredential');
+          help.style.display = 'none';
           if (res.ok) { window.location.href = '/app/products'; return; }
-          return res.json().then(function(data) { throw new Error(data.message || 'Invalid email or password'); }).catch(function(err) {
-            if (err.message) throw err;
-            throw new Error('Invalid email or password');
+          return res.text().then(function(text) {
+            var data = {};
+            try { data = text ? JSON.parse(text) : {}; } catch (e) {}
+            var err = new Error(data.message || 'Invalid email or password');
+            err.code = data.code;
+            throw err;
           });
         })
         .catch(function(err) {
           errorMsg.textContent = err.message || 'Sign in failed. Try again.';
           errorMsg.style.display = 'block';
+          if (err.code === 'no_admin_credential') {
+            document.getElementById('helpNoCredential').style.display = 'block';
+          }
           submitBtn.disabled = false;
           submitBtn.textContent = 'Sign in';
         });

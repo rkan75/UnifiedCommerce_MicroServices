@@ -1,6 +1,5 @@
-# Products Service - replacement for Medusa GET /store/products
-# Connects to the same PostgreSQL database as Medusa (read-only recommended).
-# Derive from Medusa DATABASE_URL: jdbc:postgresql://host:port/dbname
+# Products Service — store-style product API over PostgreSQL (read-only recommended).
+# Point SPRING_DATASOURCE_* at the same DB as your commerce backend.
 
 server:
   port: ${SERVER_PORT:8082}
@@ -14,25 +13,41 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
     driver-class-name: org.postgresql.Driver
     hikari:
-      read-only: true
-      connection-init-sql: "SET default_transaction_read_only = on"
+      # Must be false for POST /admin/products and /admin/products/batch (product writes).
+      # Set CATALOG_DATASOURCE_READ_ONLY=true only when this service is used as a read-only catalog mirror.
+      read-only: ${CATALOG_DATASOURCE_READ_ONLY:false}
       initialization-fail-timeout: -1
       connection-timeout: 60000
       maximum-pool-size: 20
       minimum-idle: 2
 
-# Medusa table names (match your Medusa v2 schema)
-# product-category-link-table: link table (product_id, product_category_id), all lowercase in SQL
+# Table / column overrides if your schema differs (defaults match common commerce product modules).
 app:
   products:
-    product-table: ${MEDUSA_PRODUCT_TABLE:product}
-    variant-table: ${MEDUSA_VARIANT_TABLE:product_variant}
-    region-table: ${MEDUSA_REGION_TABLE:region}
-    product-category-table: ${MEDUSA_PRODUCT_CATEGORY_TABLE:product_category}
-    product-category-link-table: ${MEDUSA_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
-    product-category-link-table-category-column: ${MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
-    product-type-table: ${MEDUSA_PRODUCT_TYPE_TABLE:product_type}
-    # When set, GET /store/products and variant lookups only include products with this Medusa type_id (overrides client type_id for lists).
-    default-product-type-id: ${STOREFRONT_PRODUCT_TYPE_ID:}
+    product-table: ${CATALOG_PRODUCT_TABLE:product}
+    variant-table: ${CATALOG_VARIANT_TABLE:product_variant}
+    # Native product option tables (options ↔ variants). Override if your DB uses different table names.
+    product-option-table: ${CATALOG_PRODUCT_OPTION_TABLE:product_option}
+    product-option-value-table: ${CATALOG_PRODUCT_OPTION_VALUE_TABLE:product_option_value}
+    product-variant-option-table: ${CATALOG_PRODUCT_VARIANT_OPTION_TABLE:product_variant_option}
+    region-table: ${CATALOG_REGION_TABLE:region}
+    product-category-table: ${CATALOG_PRODUCT_CATEGORY_TABLE:product_category}
+    product-category-link-table: ${CATALOG_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
+    product-category-link-table-category-column: ${CATALOG_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
+    product-type-table: ${CATALOG_PRODUCT_TYPE_TABLE:product_type}
+    # When set, requests that omit type_id are scoped to this product type (storefront); explicit type_id still wins.
+    default-product-type-id: ${CATALOG_DEFAULT_PRODUCT_TYPE_ID:}
+    product-sales-channel-link-table: ${CATALOG_PRODUCT_SALES_CHANNEL_LINK_TABLE:}
+    sales-channel-table: ${CATALOG_SALES_CHANNEL_TABLE:sales_channel}
+    store-table: ${CATALOG_STORE_TABLE:store}
+    stock-location-table: ${CATALOG_STOCK_LOCATION_TABLE:stock_location}
+    currency-table: ${CATALOG_CURRENCY_TABLE:currency}
+    # Pivot product_tags (product_id, product_tag_id). Set CATALOG_PRODUCT_TAG_LINK_TABLE empty to disable relational tags.
+    product-tag-link-table: ${CATALOG_PRODUCT_TAG_LINK_TABLE:product_tags}
+    product-tag-table: ${CATALOG_PRODUCT_TAG_TABLE:product_tag}
+    product-tag-id-column: ${CATALOG_PRODUCT_TAG_ID_COLUMN:id}
+    product-tag-value-column: ${CATALOG_PRODUCT_TAG_VALUE_COLUMN:value}
+    product-tag-link-product-column: ${CATALOG_PRODUCT_TAG_LINK_PRODUCT_COLUMN:product_id}
+    product-tag-link-tag-column: ${CATALOG_PRODUCT_TAG_LINK_TAG_COLUMN:product_tag_id}
     max-limit: 100
     default-limit: 12

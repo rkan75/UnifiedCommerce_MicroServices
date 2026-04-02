@@ -50,12 +50,12 @@ public class InvitesController {
                     .body(Map.of("message", "An invite for this email already exists or the user is already registered."));
         }
         InviteDto inv = created.get();
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("invite", inv);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("invite", inv);
         String regUrl = authFlowProps.registrationPageUrl(inv.getToken() != null ? inv.getToken() : "");
         if (regUrl != null && !regUrl.isEmpty()) {
-            body.put("registration_url", regUrl);
+            responseBody.put("registration_url", regUrl);
         }
-        return ResponseEntity.ok(body);
+        return ResponseEntity.ok(responseBody);
     }
 }

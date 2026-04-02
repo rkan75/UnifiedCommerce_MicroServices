@@ -37,6 +37,13 @@ public class ProductsController {
         @RequestParam(required = false, name = "category_handle") String categoryHandle,
         @RequestParam(required = false, name = "collection_id") List<String> collectionIds,
         @RequestParam(required = false, name = "type_id") String typeId,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String tag,
+        @RequestParam(required = false, name = "sales_channel_id") String salesChannelId,
+        @RequestParam(required = false, name = "created_after") String createdAfter,
+        @RequestParam(required = false, name = "created_before") String createdBefore,
+        @RequestParam(required = false, name = "updated_after") String updatedAfter,
+        @RequestParam(required = false, name = "updated_before") String updatedBefore,
         @RequestParam(required = false) String order,
         @RequestParam(required = false) String fields
     ) {
@@ -54,9 +61,31 @@ public class ProductsController {
             typeId,
             limit,
             offset,
+            status,
+            tag,
+            salesChannelId,
+            createdAfter,
+            createdBefore,
+            updatedAfter,
+            updatedBefore,
             order
         );
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/product-types")
+    public ResponseEntity<Map<String, Object>> listProductTypes() {
+        return ResponseEntity.ok(Map.of("product_types", productsService.listProductTypes()));
+    }
+
+    @GetMapping("/product-tags")
+    public ResponseEntity<Map<String, Object>> listProductTags() {
+        return ResponseEntity.ok(Map.of("tags", productsService.listDistinctTags()));
+    }
+
+    @GetMapping("/sales-channels")
+    public ResponseEntity<Map<String, Object>> listSalesChannels() {
+        return ResponseEntity.ok(Map.of("sales_channels", productsService.listSalesChannels()));
     }
 
     /**

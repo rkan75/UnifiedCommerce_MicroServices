@@ -5,6 +5,7 @@ import {
   getMedusaPublishableKeyHeaders,
 } from "@lib/config/products-service"
 import { HttpTypes } from "@medusajs/types"
+import { fetchWithConnectionContext } from "@lib/util/fetch-with-connection-context"
 import { getCachedStorefrontCategoryIdSet } from "./catalog-scope"
 import { STORE_CATEGORIES_CACHE_TAG } from "./cache-tags"
 import { resolveStorefrontProductTypeId } from "./storefront-product-type-id"
@@ -69,7 +70,7 @@ async function fetchProductCategoriesFlat(limit: number): Promise<
   const sp = new URLSearchParams()
   sp.set("limit", String(Math.min(500, Math.max(1, limit))))
   const url = `${base}/store/product-categories?${sp.toString()}`
-  const res = await fetch(url, {
+  const res = await fetchWithConnectionContext(url, {
     method: "GET",
     headers: getMedusaPublishableKeyHeaders(),
     next: {

@@ -20,6 +20,8 @@ public record ProductDto(
     String status,
     ProductTypeDto type,
     List<ProductVariantDto> variants,
+    /** Gallery URLs from Medusa {@code product_image} / {@code image} and variant image links. */
+    List<ProductImageDto> images,
     List<ProductOptionDto> options,
     Object metadata,
     /** Used by storefront to scope collections (Shop by Brand) to storefront product type. */

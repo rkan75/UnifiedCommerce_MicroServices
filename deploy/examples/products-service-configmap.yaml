@@ -1,0 +1,29 @@
+# Example Kubernetes ConfigMap for products-service environment variables.
+# Apply after editing: kubectl apply -f products-service-configmap.yaml
+#
+# Put SPRING_DATASOURCE_PASSWORD (and any secrets) in a Secret + envFrom, not here.
+# Legacy names removed: use only CATALOG_* and CATALOG_DEFAULT_PRODUCT_TYPE_ID (not MEDUSA_* / STOREFRONT_PRODUCT_TYPE_ID).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: products-service-config
+  labels:
+    app: products-service
+data:
+  SERVER_PORT: "8082"
+  CATALOG_PRODUCT_TABLE: "product"
+  CATALOG_VARIANT_TABLE: "product_variant"
+  CATALOG_REGION_TABLE: "region"
+  CATALOG_PRODUCT_CATEGORY_TABLE: "product_category"
+  CATALOG_PRODUCT_CATEGORY_LINK_TABLE: "product_category_product"
+  CATALOG_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN: "product_category_id"
+  CATALOG_PRODUCT_TYPE_TABLE: "product_type"
+  CATALOG_PRODUCT_SALES_CHANNEL_LINK_TABLE: "product_sales_channel"
+  CATALOG_SALES_CHANNEL_TABLE: "sales_channel"
+  CATALOG_PRODUCT_TAG_LINK_TABLE: "product_tags"
+  CATALOG_PRODUCT_TAG_TABLE: "product_tag"
+  CATALOG_PRODUCT_TAG_ID_COLUMN: "id"
+  CATALOG_PRODUCT_TAG_VALUE_COLUMN: "value"
+  CATALOG_PRODUCT_TAG_LINK_PRODUCT_COLUMN: "product_id"
+  CATALOG_PRODUCT_TAG_LINK_TAG_COLUMN: "product_tag_id"
+  # CATALOG_DEFAULT_PRODUCT_TYPE_ID: "ptyp_..."  # optional storefront default type

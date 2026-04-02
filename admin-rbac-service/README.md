@@ -4,6 +4,14 @@ Java Spring Boot service that **replicates** Medusa’s admin user policy and RB
 
 See **[docs/MEDUSA_RBAC_AND_JAVA_REPLICATION.md](../docs/MEDUSA_RBAC_AND_JAVA_REPLICATION.md)** for how Medusa RBAC works and why this service is separate from customer-service.
 
+
+IN_PASSWORD='YourPassword' npm run create-admin-user
+B) Or call RBAC directly (email must already exist in the "user" table):
+
+curl -s -X POST http://localhost:8088/auth/admin/register-credential \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"you@example.com","password":"YourPassword"}'
+
 ## API (Medusa-compatible)
 
 | Method | Path | Description |
@@ -21,6 +29,12 @@ See **[docs/MEDUSA_RBAC_AND_JAVA_REPLICATION.md](../docs/MEDUSA_RBAC_AND_JAVA_RE
 | POST | `/auth/user/emailpass` | Admin login. Body: `{ "email", "password" }`. Returns `{ "token" }`. |
 | GET/POST | `/auth/validate` | Validate JWT (Authorization: Bearer). Returns `actor_id`, `auth_identity_id`, `actor_type`. |
 | POST | `/auth/admin/register-credential` | Register password for an existing admin user (e.g. after create-admin-user or invite accept). Body: `{ "email", "password" }`. |
+| GET | `/admin/me` | Current user for the Vite backoffice (Bearer JWT). Response: `{ "user": { "id", "email", "first_name?", "last_name?", "store_id?", "is_admin", "can_create_store_user" } }`. Role names: **Super Admin** → `is_admin`; **Store Admin User** → `can_create_store_user` (admins imply both). `store_id` is read from `user.metadata` JSON (`store_id` / `storeId` / `store.id`). |
+| GET | `/auth/invite/info?token=` | Public: validate invite token. |
+| POST | `/auth/invite/register` | Public: complete invite (`token`, `password`, optional `first_name`, `last_name`). |
+| POST | `/auth/forgot-password` | Request reset (body `{ "email" }`). Dev: optional `reset_url` / `reset_token` when configured. |
+| POST | `/auth/reset-password` | Body `{ "token", "password" }` (token from reset email). |
+| POST | `/auth/change-password` | Logged-in: Bearer JWT; body `{ "current_password", "new_password" }`. |
 | GET | `/actuator/health` | Health check. |
 
 Response shapes match the Medusa admin API. **Admin auth is fully in this service;** the store backend proxies POST `/auth/user/emailpass` here and sets the `medusa_admin_token` cookie from the returned token. Use the **same JWT secret** in this service (`ADMIN_JWT_SECRET` or `JWT_SECRET`) and in the store backend (`JWT_SECRET`) so the backend can validate the cookie.
@@ -45,6 +59,9 @@ Response shapes match the Medusa admin API. **Admin auth is fully in this servic
 | `RBAC_ROLE_POLICY_LINK_TABLE` | Role–policy link table (default `rbac_role_rbac_policy`). |
 | `ADMIN_JWT_SECRET` or `JWT_SECRET` | **Required for admin auth.** Must match the store backend `JWT_SECRET` so the cookie is validated. |
 | `ADMIN_CREDENTIAL_TABLE` | Admin credential table (default `admin_credential`). |
+| `AUTH_PUBLIC_BASE_URL` | No trailing slash. Invite/reset emails and API `registration_url` point here. **Default in `application.yml`:** `http://localhost:9010` (admin-dashboard dev). Override in production. |
+| `BACKOFFICE_SUPER_ADMIN_ROLE_NAME` | Role name that sets `is_admin` on `/admin/me` (default `Super Admin`). |
+| `BACKOFFICE_STORE_ADMIN_USER_ROLE_NAME` | Role name that sets `can_create_store_user` (default `Store Admin User`). |
 
 ## Run
 

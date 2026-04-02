@@ -6,6 +6,8 @@ Item search microservice that reads from the **same PostgreSQL database as Medus
 
 - **GET /search** – Text search on product title and description (`q`), with optional `priceMin`, `priceMax`, `region_id`, `category_id`, `collection_id`, `limit`, `offset`. For product-by-ID use **GET /search?id=prod_xxx** (returns one product with variants and prices).
 - **GET /search/health** – Health check.
+- **GET /admin/search** – Federated backend search for store admin use-cases across multiple services/types (products, categories, customers, orders, promotions, settings domains, etc.).
+- **GET /admin/search/meta** – Lists supported backend search types configured in `application.yml`.
 - **Read-only** – Uses a read-only DB connection when possible; no writes to Medusa tables.
 - **Response shape** – Returns `{ products: [...], count: N }` so the Next.js storefront can use it with minimal mapping.
 
@@ -37,17 +39,23 @@ Set environment variables (or `application.yml`):
 
 | Variable | Description |
 |----------|-------------|
-| `SPRING_DATASOURCE_URL` | JDBC URL, e.g. `jdbc:postgresql://localhost:5432/grocery_store`. Derive from Medusa `DATABASE_URL`: replace `postgresql://` with `jdbc:postgresql://`. |
+| `SPRING_DATASOURCE_URL` | JDBC URL, e.g. `jdbc:postgresql://localhost:5432/grocery_store`. Derive from your backend `DATABASE_URL`: replace `postgresql://` with `jdbc:postgresql://`. |
 | `SPRING_DATASOURCE_USERNAME` | DB user (prefer read-only for this service). |
 | `SPRING_DATASOURCE_PASSWORD` | DB password. |
 | `SERVER_PORT` | Port (default `8081`). |
-| `MEDUSA_DB_SCHEMA` | Schema name if Medusa uses one (default `public`). |
-| `MEDUSA_PRODUCT_TABLE` | Product table name (default `product`). Adjust if your Medusa version uses a different name. |
+| `CATALOG_DB_SCHEMA` | PostgreSQL schema if not `public` (document only; wire in SQL if you use a non-public schema). |
+| `CATALOG_PRODUCT_TABLE` | Product table name (default `product`). |
+| `CATALOG_VARIANT_TABLE` | Variant table name (default `product_variant`). |
+| `CATALOG_PRODUCT_CATEGORY_LINK_TABLE` | Category link table (default `product_category_product`). |
+| `CATALOG_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN` | Category id column in link table (default `product_category_id`). |
+| `ADMIN_API_BASE_URL` | Base URL for federated **GET /admin/search** targets that use the shared default (see `application.yml`). Replaces legacy **`MEDUSA_ADMIN_URL`**. Use **Java admin-dashboard** (e.g. `http://localhost:9010`) when it proxies `/admin/*`. Default `http://localhost:9000`. |
 
-### Example: from Medusa `DATABASE_URL`
+**Deploy:** [`.env.example`](.env.example) lists variables; [`restart-dev.sh`](restart-dev.sh) loads `.env`. Example ConfigMap: [`deploy/examples/search-service-configmap.yaml`](../deploy/examples/search-service-configmap.yaml).
+
+### Example: from backend `DATABASE_URL`
 
 ```bash
-# Medusa
+# Commerce backend
 DATABASE_URL=postgresql://grocery_app:secret@localhost:5432/grocery_store
 
 # Search service (same DB)
@@ -56,18 +64,18 @@ export SPRING_DATASOURCE_USERNAME=grocery_app
 export SPRING_DATASOURCE_PASSWORD=secret
 ```
 
-## Schema alignment (Medusa v2)
+## Schema alignment (product module)
 
-Medusa v2 creates tables via migrations. The exact table and column names can vary. This service assumes a **product** table with at least:
+Typical commerce DBs expose a **product** table with at least:
 
 - `id`, `title`, `handle`, `description`, `thumbnail`, `status`, `metadata`, `created_at`, `deleted_at`
 
-If your Medusa schema differs (e.g. different table name, schema, or columns):
+If your schema differs (e.g. different table name or columns):
 
-1. **Option A** – Set `MEDUSA_PRODUCT_TABLE` (and `MEDUSA_DB_SCHEMA` if needed) to match your product table.
-2. **Option B** – Create a **database view** that matches the expected columns and set `MEDUSA_PRODUCT_TABLE` to that view name.
+1. **Option A** – Set `CATALOG_PRODUCT_TABLE` (and schema, if needed) to match your product table.
+2. **Option B** – Create a **database view** that matches the expected columns and set `CATALOG_PRODUCT_TABLE` to that view name.
 
-Example view (adjust to your actual Medusa schema):
+Example view (adjust to your actual columns):
 
 ```sql
 CREATE VIEW search_product AS
@@ -75,7 +83,7 @@ SELECT id, title, handle, description, thumbnail, status, metadata, created_at, 
 FROM product;
 ```
 
-Then set `MEDUSA_PRODUCT_TABLE=search_product`.
+Then set `CATALOG_PRODUCT_TABLE=search_product`.
 
 ## Build and run
 
@@ -130,6 +138,51 @@ java -jar target/search-service-1.0.0-SNAPSHOT.jar
 | `offset` | int | Offset for pagination. |
 
 **Response:** `{ "products": [ { "id", "title", "handle", "description", "thumbnail", "status", "variants", "metadata" }, ... ], "count": N }`
+
+---
+
+### GET /admin/search
+
+Global backend/admin search endpoint that fans out to configured microservices. Intended for a separate store-backend admin search layer.
+
+| Query param | Type | Description |
+|-------------|------|-------------|
+| `q` | string | Search text passed to upstream services. |
+| `types` | string | Comma-separated types to search (e.g. `products,categories,customers,orders`). If omitted, searches all configured types. |
+| `limit` | int | Per-type page size (default `app.admin-search.default-limit`). |
+| `offset` | int | Per-type offset. |
+
+Auth: forwards `Authorization: Bearer ...` header to each configured upstream target.
+
+Response shape:
+
+```json
+{
+  "query": "milk",
+  "limit": 10,
+  "offset": 0,
+  "requestedTypes": ["products", "categories"],
+  "results": [
+    { "type": "products", "count": 4, "items": [ ... ] },
+    { "type": "categories", "count": 1, "items": [ ... ] }
+  ]
+}
+```
+
+If a specific upstream is unavailable/misconfigured, that type returns an `error` string while other types still return results.
+
+### Default configured backend types
+
+Configured under `app.admin-search.targets` in `application.yml`:
+
+- `products`, `campaigns`, `categories`
+- `customer-groups`, `customers`
+- `inventory`, `orders`, `price-lists`, `promotions`, `reservations`
+- `product-types`, `profile`, `publishable-api-keys`
+- `regions`, `return-reasons`, `sales-channels`, `secret-api-keys`
+- `store`, `tax-regions`, `users`, `workflows`
+
+You can point each type to its owning Java microservice (`base-url`, `path`, `response-key`, `query-param`) using env vars.
 
 ---
 
@@ -202,7 +255,7 @@ If you get “Connection refused”, the service is not running or the port is w
 }
 ```
 
-If the DB has no `product` table or it’s empty, you may get `count: 0` and `products: []`, or an error (check service logs and [Schema alignment](#schema-alignment-medusa-v2)).
+If the DB has no `product` table or it’s empty, you may get `count: 0` and `products: []`, or an error (check service logs and [Schema alignment](#schema-alignment-product-module)).
 
 ### Step 5: Search with query (q)
 
@@ -247,7 +300,7 @@ Example:
 | Search by text    | GET    | `http://localhost:8081/search?q=tea&limit=10` |
 | Search + paginate | GET    | `http://localhost:8081/search?q=tea&limit=5&offset=5` |
 
-If you get **500** or empty results, check that the Medusa database has a **product** table and that `MEDUSA_PRODUCT_TABLE` (default `product`) matches your schema; see [Schema alignment](#schema-alignment-medusa-v2) above.
+If you get **500** or empty results, check that the database has a **product** table and that `CATALOG_PRODUCT_TABLE` (default `product`) matches your schema; see [Schema alignment](#schema-alignment-product-module) above.
 
 ---
 

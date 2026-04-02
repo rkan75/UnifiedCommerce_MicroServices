@@ -1,0 +1,13 @@
+{
+  "id": "medusa-v2",
+  "label": "Medusa v2 single backend (vanilla routes on one origin)",
+  "description": "Point hosts.default at a standard Medusa 2 server (e.g. localhost:9000). For UnifiedCommerce's unifiedcommerce-store, GET /store/products|collections|categories|product-variants returns 410 by design — use preset medusa-v2 only against a backend without that middleware, or expect those tests to fail.",
+  "hosts": {
+    "default": "http://127.0.0.1:9000"
+  },
+  "adminAuth": {
+    "header": "Authorization",
+    "valueFromEnv": "ADMIN_BEARER_TOKEN",
+    "cookieFromEnv": "ADMIN_SESSION_COOKIE"
+  }
+}

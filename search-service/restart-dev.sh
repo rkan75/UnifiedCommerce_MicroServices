@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 # Check if port 8081 is in use; if so, kill the process, then run the search service.
+# Loads .env if present (ADMIN_API_BASE_URL, CATALOG_*, SPRING_DATASOURCE_* — see .env.example).
 
 set -e
 PORT=8081
+
+if [ -f .env ]; then
+  set -a
+  # shellcheck source=/dev/null
+  source .env
+  set +a
+fi
 
 if command -v lsof >/dev/null 2>&1; then
   PIDS=$(lsof -ti :"$PORT" 2>/dev/null || true)
@@ -15,4 +23,4 @@ else
   echo "Warning: lsof not found; skipping port check."
 fi
 
-exec ./mvnw spring-boot:run
+exec bash ./mvnw spring-boot:run

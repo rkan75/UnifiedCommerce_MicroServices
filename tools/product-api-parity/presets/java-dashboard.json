@@ -1,0 +1,19 @@
+{
+  "id": "java-dashboard",
+  "label": "Java admin-dashboard (9010) — Medusa-shaped /admin proxy + same microservice hosts for store paths",
+  "hosts": {
+    "dashboard": "http://127.0.0.1:9010",
+    "products": "http://127.0.0.1:8082",
+    "categories": "http://127.0.0.1:8085",
+    "collections": "http://127.0.0.1:8086",
+    "cart": "http://127.0.0.1:8083",
+    "customer": "http://127.0.0.1:8087",
+    "search": "http://127.0.0.1:8081"
+  },
+  "adminAuth": {
+    "header": "Authorization",
+    "valueFromEnv": "ADMIN_BEARER_TOKEN",
+    "cookieFromEnv": "ADMIN_SESSION_COOKIE",
+    "note": "Send ADMIN_BEARER_TOKEN=Bearer <jwt> from admin-rbac login, or set ADMIN_SESSION_COOKIE=medusa_admin_token=... for cookie auth."
+  }
+}

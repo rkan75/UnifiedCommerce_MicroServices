@@ -1,0 +1,18 @@
+# Example Kubernetes ConfigMap for search-service.
+# Apply: kubectl apply -f search-service-configmap.yaml
+#
+# ADMIN_API_BASE_URL replaces legacy MEDUSA_ADMIN_URL for federated admin search defaults.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: search-service-config
+  labels:
+    app: search-service
+data:
+  SERVER_PORT: "8081"
+  CATALOG_PRODUCT_TABLE: "product"
+  CATALOG_VARIANT_TABLE: "product_variant"
+  CATALOG_PRODUCT_CATEGORY_LINK_TABLE: "product_category_product"
+  CATALOG_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN: "product_category_id"
+  ADMIN_API_BASE_URL: "http://admin-dashboard:9010"
+  # ADMIN_RBAC_SERVICE_URL: "http://admin-rbac-service:8088"

@@ -10,26 +10,85 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="/app/products" class="logo-link">Unified OmniChannel</a>
+        <div class="account-menu-wrap">
+          <button id="accountMenuTrigger" type="button" class="account-menu-trigger" aria-haspopup="true" aria-expanded="false">
+            <span class="logo-link">Unified Commerce</span>
+            <span class="menu-dots" aria-hidden="true">...</span>
+          </button>
+          <div id="accountMenu" class="account-menu hidden" role="menu" aria-label="Account menu">
+            <a href="/app/products" class="account-item" role="menuitem">
+              <span class="icon" aria-hidden="true">🏬</span>
+              <span>
+                <span class="account-item-title">Unified Commerce Store</span>
+              </span>
+            </a>
+            <div class="account-separator" aria-hidden="true"></div>
+            <a href="/app/settings" class="account-item" role="menuitem">
+              <span class="icon" aria-hidden="true">⚙️</span>
+              <span class="account-item-title">Store settings</span>
+            </a>
+            <div class="account-separator" aria-hidden="true"></div>
+            <a href="/admin-login" class="account-item" role="menuitem">
+              <span class="icon" aria-hidden="true">↪</span>
+              <span class="account-item-title">Log out</span>
+            </a>
+          </div>
+        </div>
       </div>
       <nav class="sidebar-nav">
-        <a href="/app/products" class="nav-item" data-page="products">Products</a>
-        <a href="/app/orders" class="nav-item" data-page="orders">Orders</a>
-        <a href="/app/regions" class="nav-item" data-page="regions">Regions</a>
-        <a href="/app/users" class="nav-item" data-page="users">Users</a>
-        <a href="/app/invites" class="nav-item" data-page="invites">Invites</a>
-        <a href="/app/settings" class="nav-item" data-page="settings">Settings</a>
+        <a href="/app/search" class="nav-item nav-item-search" data-page="search"><span>🔎 Search</span><span class="shortcut">⌘ K</span></a>
+        <div class="sidebar-section">
+          <a href="/app/orders" class="nav-item" data-page="orders">🛒 Orders</a>
+          <a href="/app/orders/drafts" class="nav-sub-item" data-page="orders-drafts">Drafts</a>
+          <a href="/app/products" class="nav-item" data-page="products">🏷️ Products</a>
+          <a href="/app/product-collections" class="nav-sub-item" data-page="product-collections">Collections</a>
+          <a href="/app/product-categories" class="nav-sub-item" data-page="product-categories">Categories</a>
+          <a href="/app/inventory" class="nav-item" data-page="inventory">🏬 Inventory</a>
+          <a href="/app/customers" class="nav-item" data-page="customers">👥 Customers</a>
+          <a href="/app/promotions" class="nav-item" data-page="promotions">🎟️ Promotions</a>
+          <a href="/app/price-lists" class="nav-item" data-page="price-lists">💲 Price Lists</a>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Extensions</div>
+        <div class="sidebar-section">
+          <a href="/app/recipes" class="nav-item" data-page="recipes">📄 Recipes</a>
+          <a href="/app/price-update" class="nav-item" data-page="price-update">💱 Price Update</a>
+        </div>
       </nav>
       <div class="sidebar-footer">
-        <a href="/admin-login" class="nav-item">Sign out</a>
+        <a href="/app/settings" class="nav-item" data-page="settings">⚙️ Settings</a>
+        <div class="sidebar-divider"></div>
+        <button id="profileMenuTrigger" type="button" class="profile-menu-trigger">
+          <span class="avatar">K</span>
+          <span class="profile-name">Kannan Ramakrishnan</span>
+          <span class="menu-dots">...</span>
+        </button>
       </div>
     </aside>
     <main class="main">
       <header class="main-header">
         <h1 id="pageTitle">Products</h1>
+        <div id="pageActions" class="page-actions"></div>
       </header>
       <div id="content" class="content"></div>
     </main>
+  </div>
+  <div id="commandModal" class="command-modal hidden" aria-hidden="true">
+    <div class="command-panel" role="dialog" aria-modal="true" aria-label="Search commands">
+      <div class="command-head">
+        <span class="area-pill">All areas <span class="caret">▼</span></span>
+      </div>
+      <div class="command-input-row">
+        <input id="commandInput" class="command-input" type="text" placeholder="Jump to or find anything..." autocomplete="off" />
+        <button type="button" id="commandClear" class="command-clear">Clear</button>
+      </div>
+      <div id="commandSections" class="command-sections"></div>
+      <div class="command-footer">
+        <span>Navigation <span class="keycap">↓</span> <span class="keycap">↑</span></span>
+        <span class="sep">|</span>
+        <span>Open result <span class="keycap">↵</span></span>
+      </div>
+    </div>
   </div>
   <script src="/js/app.js"></script>
 </body>

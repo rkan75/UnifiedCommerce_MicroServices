@@ -58,6 +58,20 @@ rm -rf .next
 echo "🚀 Starting dev server (from $SCRIPT_DIR)..."
 echo "   Backend: set MEDUSA_BACKEND_URL in .env.local (e.g. http://localhost:9000)"
 echo "   Algolia: .env.local or pass NEXT_PUBLIC_ALGOLIA_APP_ID, NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY (and optional NEXT_PUBLIC_ALGOLIA_INDEX_NAME)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+CART_RESTART="$REPO_ROOT/cart-service/restart-dev.sh"
+if command -v nc >/dev/null 2>&1; then
+  if nc -z 127.0.0.1 8083 2>/dev/null; then
+    echo "   Cart: cart-service appears up on 127.0.0.1:8083 (CART_SERVICE_URL)"
+  else
+    echo "   Cart: nothing on 127.0.0.1:8083 — add-to-cart/checkout need cart-service. Run: cd \"$REPO_ROOT/cart-service\" && ./restart-dev.sh"
+    if [[ -x "$CART_RESTART" ]]; then
+      echo "         (script: $CART_RESTART)"
+    fi
+  fi
+else
+  echo "   Cart: ensure cart-service is running on CART_SERVICE_URL (default port 8083). See cart-service/restart-dev.sh"
+fi
 echo ""
 # So Next.js inlines Algolia vars at compile time: export from .env.local if not already set
 if [[ -f .env.local && -z "${NEXT_PUBLIC_ALGOLIA_APP_ID:-}" ]]; then

@@ -5,6 +5,7 @@ import {
   getMedusaPublishableKeyHeaders,
 } from "@lib/config/products-service"
 import { HttpTypes } from "@medusajs/types"
+import { fetchWithConnectionContext } from "@lib/util/fetch-with-connection-context"
 import { STORE_COLLECTIONS_CACHE_TAG } from "./cache-tags"
 import { getCachedStorefrontCollectionIdSet } from "./catalog-scope"
 import { resolveStorefrontProductTypeId } from "./storefront-product-type-id"
@@ -29,7 +30,7 @@ function collectionsFetchInit(): RequestInit {
 export const retrieveCollection = async (id: string) => {
   const base = getCollectionsServiceBaseUrl()
   const url = `${base}/store/collections/${encodeURIComponent(id)}`
-  const res = await fetch(url, collectionsFetchInit())
+  const res = await fetchWithConnectionContext(url, collectionsFetchInit())
   if (!res.ok) return null
   const data = (await res.json()) as { collection?: HttpTypes.StoreCollection }
   return data.collection ?? null
@@ -53,7 +54,7 @@ export const listCollections = async (
 
   const base = getCollectionsServiceBaseUrl()
   const url = `${base}/store/collections?${sp.toString()}`
-  const res = await fetch(url, collectionsFetchInit())
+  const res = await fetchWithConnectionContext(url, collectionsFetchInit())
   if (!res.ok) {
     const t = await res.text().catch(() => "")
     throw new Error(
@@ -99,7 +100,7 @@ export const getCollectionByHandle = async (
   const sp = new URLSearchParams()
   sp.set("handle", handle)
   const url = `${base}/store/collections?${sp.toString()}`
-  const res = await fetch(url, collectionsFetchInit())
+  const res = await fetchWithConnectionContext(url, collectionsFetchInit())
   if (!res.ok) {
     const t = await res.text().catch(() => "")
     throw new Error(

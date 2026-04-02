@@ -1,11 +1,14 @@
 "use server"
 
 import { getProductsServiceBaseUrl } from "@lib/config/products-service"
+import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
 import { cache } from "react"
 import { getAuthHeaders } from "./cookies"
 
 const getMedusaBackendUrl = () => {
-  return process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"
+  return normalizeLocalhostForServerFetch(
+    process.env.MEDUSA_BACKEND_URL?.trim() || "http://localhost:9000"
+  )
 }
 
 const PUBLISHABLE_KEY_HEADER = "x-publishable-api-key"

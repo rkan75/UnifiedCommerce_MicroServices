@@ -1,0 +1,13 @@
+{
+  "id": "java-microservices",
+  "label": "Java stack — call each service directly (default ports from application.yml)",
+  "hosts": {
+    "products": "http://127.0.0.1:8082",
+    "categories": "http://127.0.0.1:8085",
+    "collections": "http://127.0.0.1:8086",
+    "cart": "http://127.0.0.1:8083",
+    "customer": "http://127.0.0.1:8087",
+    "search": "http://127.0.0.1:8081"
+  },
+  "adminAuth": null
+}

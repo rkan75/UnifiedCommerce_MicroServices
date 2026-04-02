@@ -11,9 +11,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // allowedOrigins("*") + allowCredentials(true) is invalid in Spring 5.3+ and causes HTTP 500
         registry.addMapping("/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
             .allowCredentials(true);
     }
 
@@ -23,10 +25,20 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/admin-login").setViewName("forward:/admin-login.html");
         registry.addViewController("/app").setViewName("forward:/index.html");
         registry.addViewController("/app/products").setViewName("forward:/index.html");
+        registry.addViewController("/app/product-categories").setViewName("forward:/index.html");
+        registry.addViewController("/app/product-collections").setViewName("forward:/index.html");
         registry.addViewController("/app/orders").setViewName("forward:/index.html");
+        registry.addViewController("/app/orders/drafts").setViewName("forward:/index.html");
+        registry.addViewController("/app/inventory").setViewName("forward:/index.html");
+        registry.addViewController("/app/customers").setViewName("forward:/index.html");
+        registry.addViewController("/app/promotions").setViewName("forward:/index.html");
+        registry.addViewController("/app/price-lists").setViewName("forward:/index.html");
         registry.addViewController("/app/regions").setViewName("forward:/index.html");
         registry.addViewController("/app/users").setViewName("forward:/index.html");
         registry.addViewController("/app/invites").setViewName("forward:/index.html");
+        registry.addViewController("/app/recipes").setViewName("forward:/index.html");
+        registry.addViewController("/app/price-update").setViewName("forward:/index.html");
+        registry.addViewController("/app/search").setViewName("forward:/index.html");
         registry.addViewController("/app/settings").setViewName("forward:/index.html");
     }
 }

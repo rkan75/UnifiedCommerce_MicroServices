@@ -1,5 +1,5 @@
-# Search Service - same DB as Medusa (read-only recommended)
-# Set SPRING_DATASOURCE_URL from Medusa DATABASE_URL, e.g.:
+# Search Service — same PostgreSQL as the commerce catalog (read-only recommended).
+# Example: derive SPRING_DATASOURCE_URL from your backend DATABASE_URL:
 #   DATABASE_URL=postgresql://user:pass@host:5432/dbname
 #   SPRING_DATASOURCE_URL=jdbc:postgresql://host:5432/dbname
 #   SPRING_DATASOURCE_USERNAME=user
@@ -13,7 +13,7 @@ spring:
     name: search-service
   datasource:
     # URL must be host:port/database only; set username/password below or via env
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gnc_store}
     username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
     password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
     driver-class-name: org.postgresql.Driver
@@ -29,13 +29,101 @@ spring:
       # Idle connections kept ready (reduces latency for bursts)
       minimum-idle: 2
 
-# Optional: table name overrides if Medusa uses different names (e.g. prefixed)
-# product-category-link-table: link table (product_id, product_category_id), all lowercase in SQL
+# Optional: table overrides if your schema uses different names (identifiers lowercased in SQL).
 app:
   search:
-    product-table: ${MEDUSA_PRODUCT_TABLE:product}
-    variant-table: ${MEDUSA_VARIANT_TABLE:product_variant}
-    product-category-link-table: ${MEDUSA_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
-    product-category-link-table-category-column: ${MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
+    product-table: ${CATALOG_PRODUCT_TABLE:product}
+    variant-table: ${CATALOG_VARIANT_TABLE:product_variant}
+    product-category-link-table: ${CATALOG_PRODUCT_CATEGORY_LINK_TABLE:product_category_product}
+    product-category-link-table-category-column: ${CATALOG_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN:product_category_id}
     max-limit: 100
     default-limit: 12
+  admin-search:
+    default-limit: ${ADMIN_SEARCH_DEFAULT_LIMIT:10}
+    max-limit: ${ADMIN_SEARCH_MAX_LIMIT:50}
+    timeout-ms: ${ADMIN_SEARCH_TIMEOUT_MS:4000}
+    targets:
+      products:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/products
+        response-key: products
+      campaigns:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/campaigns
+        response-key: campaigns
+      categories:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/product-categories
+        response-key: product_categories
+      customer-groups:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/customer-groups
+        response-key: customer_groups
+      customers:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/customers
+        response-key: customers
+      inventory:
+        base-url: ${INVENTORY_SERVICE_URL:http://localhost:9000}
+        path: /admin/inventory-items
+        response-key: inventory_items
+      orders:
+        base-url: ${ORDER_SERVICE_URL:http://localhost:9000}
+        path: /admin/orders
+        response-key: orders
+      price-lists:
+        base-url: ${PRICING_SERVICE_URL:http://localhost:9000}
+        path: /admin/price-lists
+        response-key: price_lists
+      promotions:
+        base-url: ${PROMOTION_SERVICE_URL:http://localhost:9000}
+        path: /admin/promotions
+        response-key: promotions
+      reservations:
+        base-url: ${ORDER_SERVICE_URL:http://localhost:9000}
+        path: /admin/reservations
+        response-key: reservations
+      product-types:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/product-types
+        response-key: product_types
+      profile:
+        base-url: ${ADMIN_RBAC_SERVICE_URL:http://localhost:8088}
+        path: /admin/me
+        response-key: user
+      publishable-api-keys:
+        base-url: ${API_KEYS_SERVICE_URL:http://localhost:9000}
+        path: /admin/publishable-api-keys
+        response-key: publishable_api_keys
+      regions:
+        base-url: ${ADMIN_API_BASE_URL:http://localhost:9000}
+        path: /admin/regions
+        response-key: regions
+      return-reasons:
+        base-url: ${ORDER_SERVICE_URL:http://localhost:9000}
+        path: /admin/return-reasons
+        response-key: return_reasons
+      sales-channels:
+        base-url: ${SALES_CHANNEL_SERVICE_URL:http://localhost:9000}
+        path: /admin/sales-channels
+        response-key: sales_channels
+      secret-api-keys:
+        base-url: ${API_KEYS_SERVICE_URL:http://localhost:9000}
+        path: /admin/api-keys
+        response-key: api_keys
+      store:
+        base-url: ${STORE_SERVICE_URL:http://localhost:9000}
+        path: /admin/store
+        response-key: store
+      tax-regions:
+        base-url: ${TAX_SERVICE_URL:http://localhost:9000}
+        path: /admin/tax-regions
+        response-key: tax_regions
+      users:
+        base-url: ${ADMIN_RBAC_SERVICE_URL:http://localhost:8088}
+        path: /admin/users
+        response-key: users
+      workflows:
+        base-url: ${WORKFLOW_SERVICE_URL:http://localhost:9000}
+        path: /admin/workflows-executions
+        response-key: workflow_executions

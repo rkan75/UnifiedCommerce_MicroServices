@@ -1,9 +1,11 @@
 package com.tcs.commerce.dashboard.web;
 
 import com.tcs.commerce.dashboard.config.DashboardProperties;
-import com.tcs.commerce.dashboard.security.JwtValidator;
+import com.tcs.commerce.dashboard.service.ProxyService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,31 +18,38 @@ import java.util.Map;
 public class AdminController {
 
     private final DashboardProperties props;
-    private final JwtValidator jwtValidator;
+    private final ProxyService proxyService;
 
-    public AdminController(DashboardProperties props, JwtValidator jwtValidator) {
+    public AdminController(DashboardProperties props, ProxyService proxyService) {
         this.props = props;
-        this.jwtValidator = jwtValidator;
+        this.proxyService = proxyService;
     }
 
+    /**
+     * Backoffice contract: rich user with {@code is_admin}, {@code can_create_store_user}, {@code store_id}.
+     */
+    @GetMapping("/me")
+    public ResponseEntity<?> me(HttpServletRequest request) {
+        return proxyMe(request);
+    }
+
+    /** Legacy / alternate path; same payload as {@code GET /admin/me}. */
     @GetMapping("/users/me")
     public ResponseEntity<?> usersMe(HttpServletRequest request) {
-        JwtValidator.SessionPayload auth = (JwtValidator.SessionPayload) request.getAttribute("auth");
-        if (auth == null) {
-            String token = getToken(request);
-            auth = token != null ? jwtValidator.validate(token).orElse(null) : null;
+        return proxyMe(request);
+    }
+
+    private ResponseEntity<?> proxyMe(HttpServletRequest request) {
+        String token = getToken(request);
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized"));
         }
-        if (auth == null) {
-            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+        String base = props.getAdminRbacUrl() != null ? props.getAdminRbacUrl().replaceAll("/$", "") : "";
+        if (base.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("message", "ADMIN_RBAC_SERVICE_URL not set."));
         }
-        return ResponseEntity.ok(Map.of("user", Map.of(
-            "id", auth.actorId(),
-            "email", "",
-            "first_name", "",
-            "last_name", "",
-            "metadata", Map.of(),
-            "app_metadata", Map.of()
-        )));
+        ProxyService.ProxyResult result = proxyService.proxy(base, "/admin/me", HttpMethod.GET, null, token);
+        return ResponseEntity.status(result.status()).body(result.body());
     }
 
     private String getToken(HttpServletRequest request) {

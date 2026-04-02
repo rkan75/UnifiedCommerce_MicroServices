@@ -6,6 +6,7 @@ import {
   getProductsServiceBaseUrl,
 } from "@lib/config/products-service"
 import { getStorefrontProductTypeConfigKey } from "@lib/config/storefront-product-scope"
+import { fetchWithConnectionContext } from "@lib/util/fetch-with-connection-context"
 import { sortProducts } from "@lib/util/sort-products"
 import { HttpTypes } from "@medusajs/types"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
@@ -121,7 +122,7 @@ export const listProducts = async ({
   }
 
   const url = `${base}/store/products?${sp.toString()}`
-  const res = await fetch(url, {
+  const res = await fetchWithConnectionContext(url, {
     method: "GET",
     headers,
     next,
@@ -129,8 +130,13 @@ export const listProducts = async ({
   })
   if (!res.ok) {
     const body = await res.text().catch(() => "")
+    const hint =
+      body.includes("No static resource store/products") ||
+      body.includes("NoResourceFoundException")
+        ? " If PRODUCTS_SERVICE_URL points at admin-dashboard, restart the dashboard so GET /store/products is proxied to products-service; or set PRODUCTS_SERVICE_URL to products-service directly (e.g. http://127.0.0.1:8082)."
+        : ""
     throw new Error(
-      `products-service GET /store/products failed: ${res.status} ${body.slice(0, 200)}`
+      `products-service GET /store/products failed: ${res.status} ${body.slice(0, 200)}${hint}`
     )
   }
   const { products, count } = (await res.json()) as {

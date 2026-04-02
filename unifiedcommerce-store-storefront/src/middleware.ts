@@ -1,7 +1,10 @@
+import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
 import { HttpTypes } from "@medusajs/types"
 import { NextRequest, NextResponse } from "next/server"
 
-const BACKEND_URL = process.env.MEDUSA_BACKEND_URL
+const BACKEND_URL = process.env.MEDUSA_BACKEND_URL?.trim()
+  ? normalizeLocalhostForServerFetch(process.env.MEDUSA_BACKEND_URL.trim())
+  : undefined
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 

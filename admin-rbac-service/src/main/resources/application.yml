@@ -21,11 +21,15 @@ app:
     jwt-expires-seconds: ${ADMIN_JWT_EXPIRES_SECONDS:604800}
     password-reset-expires-seconds: ${ADMIN_PASSWORD_RESET_EXPIRES_SECONDS:3600}
     credential-table: ${ADMIN_CREDENTIAL_TABLE:admin_credential}
-  # Public registration / reset links (set AUTH_PUBLIC_BASE_URL so invite API returns registration_url)
+  # Public registration / reset links — default matches admin-dashboard dev port (override in prod)
   auth:
-    public-base-url: ${AUTH_PUBLIC_BASE_URL:}
+    public-base-url: ${AUTH_PUBLIC_BASE_URL:http://localhost:9010}
     expose-password-reset-token-in-response: ${AUTH_EXPOSE_RESET_TOKEN_IN_RESPONSE:false}
     default-role-id-on-invite-register: ${AUTH_DEFAULT_ROLE_ID_ON_INVITE:}
+  # Backoffice GET /admin/me: role name matching (Medusa seed-rbac-roles + store staff)
+  backoffice:
+    super-admin-role-name: ${BACKOFFICE_SUPER_ADMIN_ROLE_NAME:Super Admin}
+    store-admin-user-role-name: ${BACKOFFICE_STORE_ADMIN_USER_ROLE_NAME:Store Admin User}
   rbac:
     table-schema: ${RBAC_TABLE_SCHEMA:public}
     user-table: ${RBAC_USER_TABLE:user}

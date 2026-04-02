@@ -22,14 +22,18 @@ public class ProxyService {
         if (base.isEmpty()) return new ProxyResult(503, Map.of("message", "Service URL not configured"));
         String url = base + (pathAndQuery != null ? pathAndQuery : "");
         try {
-            var spec = webClient.method(method).uri(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
+            org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec<?> spec;
+            boolean withBody = body != null && method != HttpMethod.GET && method != HttpMethod.HEAD;
+            if (withBody) {
+                spec = webClient.method(method).uri(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .bodyValue(body);
+            } else {
+                spec = webClient.method(method).uri(url).accept(MediaType.APPLICATION_JSON);
+            }
             if (bearerToken != null && !bearerToken.isBlank()) {
                 spec = spec.header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken);
-            }
-            if (body != null && method != HttpMethod.GET) {
-                spec = spec.bodyValue(body);
             }
             var response = spec.retrieve().toEntity(Map.class).block();
             if (response != null && response.getBody() != null) {

@@ -4,7 +4,60 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="" />
+    <list default="true" id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/DashboardProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/DashboardProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/service/ProxyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/service/ProxyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminProxyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminProxyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/admin-login.html" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/admin-login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/css/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/css/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/service/RbacService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/service/RbacService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/web/AdminAuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/web/AdminAuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/web/InvitesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/web/InvitesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-rbac-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/categories-service/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/categories-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/collections-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/collections-service/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/collections-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/collections-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/customer-service/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/customer-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ADMIN_PLATFORM_E2E_AND_JAVA_REWRITE.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/ADMIN_PLATFORM_E2E_AND_JAVA_REWRITE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/config/ProductsProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/config/ProductsProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/ProductsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/ProductsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/web/ProductsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/web/ProductsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/restart-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store/.env.template" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store/.env.template" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,10 +66,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="3B3Nt7wqQUcZd9xjNf51WJJVaC6" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -27,8 +80,13 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "smartandfinal-init",
+    "git-widget-placeholder": "microservices-main",
     "last_opened_file_path": "/Users/kannanramakrishnan"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
   <component name="TaskManager">

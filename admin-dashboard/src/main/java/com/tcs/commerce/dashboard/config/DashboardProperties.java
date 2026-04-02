@@ -11,7 +11,8 @@ public class DashboardProperties {
     private String productsUrl = "http://localhost:8082";
     private String regionsUrl = "http://localhost:8084";
     private String categoriesUrl = "http://localhost:8083";
-    private String collectionsUrl = "http://localhost:8085";
+    private String collectionsUrl = "http://localhost:8086";
+    private String searchUrl = "http://localhost:8081";
     private String jwtSecret = "";
     private String cookieName = "medusa_admin_token";
 
@@ -29,6 +30,9 @@ public class DashboardProperties {
 
     public String getCollectionsUrl() { return collectionsUrl; }
     public void setCollectionsUrl(String collectionsUrl) { this.collectionsUrl = collectionsUrl; }
+
+    public String getSearchUrl() { return searchUrl; }
+    public void setSearchUrl(String searchUrl) { this.searchUrl = searchUrl; }
 
     public String getJwtSecret() { return jwtSecret; }
     public void setJwtSecret(String jwtSecret) { this.jwtSecret = jwtSecret != null ? jwtSecret : ""; }

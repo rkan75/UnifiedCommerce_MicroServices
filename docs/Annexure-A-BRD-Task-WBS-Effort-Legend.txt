@@ -1,0 +1,22 @@
+Annexure-A-BRD-Task-WBS.csv — effort columns (companion to CSV)
+
+Unit: PD = Person-Days (1 PD ≈ 8 hours; use decimals e.g. 0.5 = half day).
+
+Columns:
+- Complexity: Low | Medium | High | Very High (delivery risk / breadth, not just coding).
+- PD_UI: Front-end / mobile / admin screens, UX flows.
+- PD_Configuration: Medusa admin, env, feature flags, rules in product without new services.
+- PD_Service_Development: New or extended backend services, domain logic, workflows, DB.
+- PD_Integration_Development: APIs, adapters, webhooks, message mapping to/from internal systems.
+- PD_Third_Party_Coordination: Vendor workshops, UAT with SAP/SalesWorx/payment/CRM, security review, legal.
+- PD_Unit_Testing: Automated unit/component tests; excludes full UAT (often covered under 3rd party or separate QA line).
+
+PD_Total = sum of the six PD_* columns (ballpark; refine in estimation workshop).
+
+CSV columns (after Gap_or_Notes):
+  Complexity, PD_UI, PD_Configuration, PD_Service_Development,
+  PD_Integration_Development, PD_Third_Party_Coordination, PD_Unit_Testing, PD_Total
+
+To convert to hours: multiply each PD column by 8 (e.g. 4.5 PD = 36 hours).
+
+Estimates are indicative for planning — not a fixed quote.

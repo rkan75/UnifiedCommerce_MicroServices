@@ -11,6 +11,18 @@ type ImageGalleryProps = {
   objectFit?: "cover" | "contain"
 }
 
+/** IDs are often missing or repeated when URLs are merged from metadata; index keeps keys unique. */
+function galleryItemKey(
+  image: HttpTypes.StoreProductImage | { id: string; url: string },
+  index: number
+): string {
+  const id = "id" in image && image.id != null ? String(image.id).trim() : ""
+  const url = image.url != null ? String(image.url).trim() : ""
+  if (id) return `${id}-${index}`
+  if (url) return `${url}-${index}`
+  return `gallery-image-${index}`
+}
+
 const ImageGallery = ({
   images,
   objectFit = "cover",
@@ -40,9 +52,9 @@ const ImageGallery = ({
     <div className="flex flex-col items-center relative w-full max-w-[600px] mx-auto tablet:mx-0">
       {/* Main image - larger size, centered between description and price */}
       <Container
-        key={mainImage.id}
+        key={galleryItemKey(mainImage, selectedIndex)}
         className="relative aspect-[29/34] w-full max-h-[min(48vh,420px)] tablet:max-h-[min(55vh,480px)] small:max-h-[min(58vh,540px)] overflow-hidden rounded-rounded bg-white shrink-0 ring-1 ring-inset ring-ui-border-base"
-        id={mainImage.id}
+        id={mainImage.id != null && String(mainImage.id) ? String(mainImage.id) : undefined}
       >
         {!!mainImage.url && (
           <Image
@@ -68,7 +80,7 @@ const ImageGallery = ({
           >
             {images.map((image, index) => (
               <button
-                key={image.id}
+                key={galleryItemKey(image, index)}
                 type="button"
                 onClick={() => setSelectedIndex(index)}
                 className={clx(

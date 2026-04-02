@@ -63,7 +63,7 @@ flowchart LR
 
 - **`admin-rbac-service`**: `POST /auth/user/emailpass` issues JWT; must use the **same secret** as consumers (`JWT_SECRET` / `ADMIN_JWT_SECRET`).
 - **`admin-dashboard` `AuthController`**: Proxies login to admin-rbac, sets **`medusa_admin_token`** HttpOnly cookie, returns `{ token }`. `GET/POST /auth/session` validates JWT locally (`JwtValidator`).
-- **Shape mismatch note:** Java dashboard exposes **`GET /admin/users/me`** for session user stub; the Vite backoffice calls **`GET /admin/me`** with a rich `BackofficeUser` (`is_admin`, `can_create_store_user`, `store_id`). For parity when moving UI to Java, either add **`/admin/me`** on the dashboard or change the SPA contract.
+- **Implemented:** **admin-rbac-service** exposes **`GET /admin/me`** (Bearer JWT) with `is_admin`, `can_create_store_user`, `store_id` (from `user.metadata`). **admin-dashboard** proxies **`GET /admin/me`** and **`GET /admin/users/me`** to the same backend response. Public flows **`/auth/invite/*`**, **`/auth/forgot-password`**, **`/auth/reset-password`**, **`/auth/change-password`** are implemented in admin-rbac and **proxied from the dashboard** so one browser origin (e.g. port 9010) is enough. Static pages: **`/auth/register.html`**, **`/auth/forgot-password.html`**, **`/auth/reset-password.html`**. Set **`AUTH_PUBLIC_BASE_URL`** (admin-rbac) to the dashboard base URL so invite/reset links use those pages.
 
 ---
 

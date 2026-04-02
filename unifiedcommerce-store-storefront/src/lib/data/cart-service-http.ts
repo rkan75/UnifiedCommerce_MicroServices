@@ -4,6 +4,7 @@ import {
   getCartServiceBaseUrl,
   getMedusaPublishableKeyHeaders,
 } from "@lib/config/products-service"
+import { fetchWithConnectionContext } from "@lib/util/fetch-with-connection-context"
 import { getAuthHeaders } from "./cookies"
 
 export async function cartServiceUrl(
@@ -57,7 +58,7 @@ export async function cartServiceFetch(
   ) {
     merged["Content-Type"] = "application/json"
   }
-  return fetch(url, {
+  return fetchWithConnectionContext(url, {
     ...rest,
     ...(next && Object.keys(next).length > 0 ? { next } : {}),
     headers: merged,

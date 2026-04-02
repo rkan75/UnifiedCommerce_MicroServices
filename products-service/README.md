@@ -20,17 +20,30 @@ Query parameters (aligned with Medusa Store API):
 | `q`            | string   | Search in title/description (AND of words). |
 | `category_id`  | string   | Filter by category (uses `product_category_product` link table: product_id, product_category_id). |
 | `collection_id`| string   | Filter by collection (requires `product.collection_id` column). |
-| `type_id`      | string   | Filter by Medusa product type (`product.type_id`). Ignored for listing when **`STOREFRONT_PRODUCT_TYPE_ID`** is set (server forces that type). |
-| `order`        | string   | Sort: `created_at`, `-created_at`, `title`, `-title`, `handle`, `-handle`. |
+| `type_id`      | string   | Filter by product type (`product.type_id`). When present, it **overrides** the optional **`CATALOG_DEFAULT_PRODUCT_TYPE_ID`** default (so admin UIs can filter by any type). When omitted, the env default still scopes the catalog for storefront-style requests. |
+| `tag`          | string   | Products whose `metadata.tags` JSON array contains this tag (case-insensitive), and/or relational tags when **`CATALOG_PRODUCT_TAG_LINK_TABLE`** is set. |
+| `status`       | string   | `published`, `draft`, etc. (`LOWER(p.status)` match). |
+| `sales_channel_id` | string | When **`CATALOG_PRODUCT_SALES_CHANNEL_LINK_TABLE`** is set, products linked to that channel. |
+| `created_after` / `created_before` | string (date) | Filter `created_at` (inclusive start, exclusive end+1 day). |
+| `updated_after` / `updated_before` | string (date) | Filter `updated_at` (same semantics). |
+| `order`        | string   | Sort: `created_at`, `-created_at`, `updated_at`, `-updated_at`, `title`, `-title`, `handle`, `-handle`. |
 | `fields`       | string   | Ignored; response is full StoreProduct-like shape. Each product includes `type: { id, value }` when `product_type` join is enabled (default). |
 
 **Response:** `{ "products": [ { "id", "title", "handle", "description", "thumbnail", "status", "variants", "metadata" }, ... ], "count": N }`
 
 Each product includes `variants[]` with `id`, `title`, `sku`, and `calculated_price: { calculated_amount, currency_code }` (when available from `price_set_money_amount`).
 
+### GET /store/product-tags
+
+Admin / dashboard helper: **`{ "tags": [ "grocery", "organic", ... ] }`**. Tags are loaded from **`product.metadata` → JSON `tags` array** and, when **`CATALOG_PRODUCT_TAG_LINK_TABLE`** is set, from the relational **`product_tag`** link (see configuration table below). Merged and de-duplicated case-insensitively.
+
+### GET /store/product-types & GET /store/sales-channels
+
+**`{ "product_types": [ { "id", "value" }, ... ] }`** and **`{ "sales_channels": [ { "id", "name" }, ... ] }`** for filter dropdowns.
+
 ### GET /store/catalog-scope/category-ids & GET /store/catalog-scope/collection-ids
 
-Storefront-only helpers: **one SQL query** each to list distinct category or collection ids that appear on at least one non-deleted product with the given `type_id`. Query: `type_id` (required). Response: `{ "ids": [ "..." ] }`. This avoids the storefront paginating through tens of thousands of products to build nav/collection scope (which could take minutes). Link table and column names follow `MEDUSA_PRODUCT_CATEGORY_LINK_*` app properties.
+Storefront-only helpers: **one SQL query** each to list distinct category or collection ids that appear on at least one non-deleted product with the given `type_id`. Query: `type_id` (required). Response: `{ "ids": [ "..." ] }`. This avoids the storefront paginating through tens of thousands of products to build nav/collection scope (which could take minutes). Link table and column names follow `CATALOG_PRODUCT_CATEGORY_LINK_*` app properties.
 
 ### GET /store/product-variants/:variantId (replaces Medusa GET /store/product-variants/:id)
 
@@ -74,12 +87,27 @@ Environment variables (or `application.yml`):
 | `SPRING_DATASOURCE_USERNAME` | DB user. |
 | `SPRING_DATASOURCE_PASSWORD` | DB password. |
 | `SERVER_PORT` | Port (default **8082**). |
-| `MEDUSA_PRODUCT_TABLE` | Product table name (default `product`). |
-| `MEDUSA_VARIANT_TABLE` | Variant table name (default `product_variant`). |
-| `MEDUSA_REGION_TABLE`  | Region table name (default `region`); used to resolve `currency_code` when `region_id` is sent (same as Medusa Store API). |
-| `MEDUSA_PRODUCT_CATEGORY_LINK_TABLE` | Link table name (default `product_category_product`). Must have columns `product_id`, `product_category_id`. SQL uses lowercase. |
-| `MEDUSA_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN` | Category column in link table (default `product_category_id`). |
-| `STOREFRONT_PRODUCT_TYPE_ID` | **Optional.** When set (e.g. `ptyp_01KM44HB9H03N9JPVC3Q79Y4XE`), **GET /store/products** always adds `AND p.type_id = ?` with this id, and variant endpoints only return variants whose product matches this type. Unset = no extra type filter (client `type_id` query param applies as before). |
+| `CATALOG_PRODUCT_TABLE` | Product table name (default `product`). |
+| `CATALOG_VARIANT_TABLE` | Variant table name (default `product_variant`). |
+| `CATALOG_REGION_TABLE`  | Region table name (default `region`); used to resolve `currency_code` when `region_id` is sent. |
+| `CATALOG_PRODUCT_CATEGORY_TABLE` | Product category table (default `product_category`). |
+| `CATALOG_PRODUCT_TYPE_TABLE` | Product type table (default `product_type`). |
+| `CATALOG_PRODUCT_CATEGORY_LINK_TABLE` | Link table name (default `product_category_product`). Must have columns `product_id`, `product_category_id`. SQL uses lowercase. |
+| `CATALOG_PRODUCT_CATEGORY_LINK_CATEGORY_COLUMN` | Category column in link table (default `product_category_id`). |
+| `CATALOG_DEFAULT_PRODUCT_TYPE_ID` | **Optional.** Default catalog scope: when a request **omits** `type_id`, lists use this `product.type_id`. Explicit `type_id` on the request **overrides** this (needed for admin filters). Variant “in catalog” checks still use this id when set. |
+| `CATALOG_PRODUCT_SALES_CHANNEL_LINK_TABLE` | e.g. `product_sales_channel` — enables `sales_channel_id` on **GET /store/products** and populates **GET /store/sales-channels** list. |
+| `CATALOG_SALES_CHANNEL_TABLE` | Sales channel master table (default `sales_channel`). |
+| `CATALOG_PRODUCT_TAG_LINK_TABLE` | Default **`product_tags`** (pivot). Set to empty to skip relational tag filter/list from the pivot. **GET /store/product-tags** also reads all values from **`product_tag`** (master table). |
+| `CATALOG_PRODUCT_TAG_TABLE` | Tag master table (default `product_tag`). |
+| `CATALOG_PRODUCT_TAG_ID_COLUMN` / `CATALOG_PRODUCT_TAG_VALUE_COLUMN` | Default `id` / `value`. |
+| `CATALOG_PRODUCT_TAG_LINK_PRODUCT_COLUMN` / `CATALOG_PRODUCT_TAG_LINK_TAG_COLUMN` | Default `product_id` / `product_tag_id`. |
+
+**Migration:** Rename old `MEDUSA_*` env vars to the `CATALOG_*` names above. If you scoped **products-service** with `STOREFRONT_PRODUCT_TYPE_ID`, use **`CATALOG_DEFAULT_PRODUCT_TYPE_ID`** instead (same value). The Next.js storefront can still use its own `STOREFRONT_PRODUCT_TYPE_ID` for client-side behavior; only this service’s env names changed.
+
+### Kubernetes / Docker / CI
+
+- Local: copy [`.env.example`](.env.example) to `.env`; [`restart-dev.sh`](restart-dev.sh) exports those variables before `spring-boot:run`.
+- Cluster: example ConfigMap — [`deploy/examples/products-service-configmap.yaml`](../deploy/examples/products-service-configmap.yaml). Keep `SPRING_DATASOURCE_PASSWORD` (and similar) in a **Secret**; reference both from the Pod `envFrom`.
 
 ## Category filter and fallback
 
@@ -247,7 +275,7 @@ If the DB is empty or tables differ, you may get `products: []` and `count: 0`, 
 |-------|----------------|
 | Connection refused | Service not running; run `./restart-dev.sh` from `products-service`. Port 8082 free (script kills existing process). |
 | 503 Database unavailable | PostgreSQL not running or wrong `SPRING_DATASOURCE_*`. Check `application.yml` or env vars. |
-| Empty products / count 0 | DB has no rows in `product` table, or table names differ; set `MEDUSA_PRODUCT_TABLE` / `MEDUSA_VARIANT_TABLE` if needed. |
+| Empty products / count 0 | DB has no rows in `product` table, or table names differ; set `CATALOG_PRODUCT_TABLE` / `CATALOG_VARIANT_TABLE` if needed. |
 
 ---
 
@@ -262,17 +290,17 @@ To use this service **instead of Medusa** for product listing:
    Example in `products.ts`:
 
    ```ts
-   const productsBase = process.env.PRODUCTS_API_URL || process.env.MEDUSA_BACKEND_URL
+   const productsBase = process.env.PRODUCTS_API_URL || process.env.COMMERCE_BACKEND_URL
    const url = `${productsBase}/store/products?${new URLSearchParams({ limit, offset, region_id, ... })}`
    const res = await fetch(url, { headers: await getAuthHeaders(), next: await getCacheOptions('products') })
    const { products, count } = await res.json()
    ```
 
-3. **Option C – Full backend URL switch:** Point `MEDUSA_BACKEND_URL` to an API gateway that routes `/store/products` to this service and all other paths to Medusa. Then no storefront code changes are needed.
+3. **Option C – Full backend URL switch:** Point your storefront’s backend base URL (e.g. `COMMERCE_BACKEND_URL`) at an API gateway that routes `/store/products` to this service and other paths to your core API. Then no storefront code changes are needed.
 
 ## Relation to search-service
 
 - **search-service**: GET `/search` — text search, returns `{ products, count }` for search UIs.
 - **products-service**: GET `/store/products` — full Store API replacement for listing/browsing with pagination, handle, id, q, region_id.
 
-Both use the same Medusa DB and can run side by side (different ports).
+Both use the same catalog database and can run side by side (different ports).

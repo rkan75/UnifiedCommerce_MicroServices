@@ -1,3 +1,5 @@
+import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
+
 const PUBLISHABLE_API_KEY_HEADER = "x-publishable-api-key"
 
 /**
@@ -18,7 +20,7 @@ function requireJavaServiceBaseUrl(
       `Set ${envName} to your Java service base URL. Medusa is not used for catalog APIs.`
     )
   }
-  return raw.replace(/\/$/, "")
+  return normalizeLocalhostForServerFetch(raw.replace(/\/$/, ""))
 }
 
 export function getProductsServiceBaseUrl(): string {
@@ -42,6 +44,10 @@ export function getCollectionsServiceBaseUrl(): string {
   )
 }
 
+/**
+ * Java cart-service only — Medusa {@code /store/carts} is disabled in this project (410).
+ * Local default port 8083; start with {@code cart-service/restart-dev.sh}.
+ */
 export function getCartServiceBaseUrl(): string {
   return requireJavaServiceBaseUrl(
     process.env.CART_SERVICE_URL,

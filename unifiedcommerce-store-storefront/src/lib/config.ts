@@ -33,13 +33,16 @@ if (typeof globalThis !== "undefined") {
 }
 
 import { getLocaleHeader } from "@lib/util/get-locale-header"
+import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
 import Medusa, { FetchArgs, FetchInput } from "@medusajs/js-sdk"
 
 // Defaults to standard port for Medusa server
-let MEDUSA_BACKEND_URL = "http://localhost:9000"
+let MEDUSA_BACKEND_URL = normalizeLocalhostForServerFetch("http://localhost:9000")
 
 if (process.env.MEDUSA_BACKEND_URL) {
-  MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL
+  MEDUSA_BACKEND_URL = normalizeLocalhostForServerFetch(
+    process.env.MEDUSA_BACKEND_URL.trim()
+  )
 }
 
 const publishableKey = (process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? "").trim()

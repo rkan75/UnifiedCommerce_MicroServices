@@ -6,7 +6,10 @@ Java Spring Boot service that **recreates the Medusa backend dashboard** using y
 
 - **Login** – POST `/auth/user/emailpass` (proxies to admin-rbac), sets JWT cookie
 - **Session** – GET/POST `/auth/session` (validates JWT; same secret as admin-rbac)
+- **Backoffice session user** – GET `/admin/me` and GET `/admin/users/me` (proxies to admin-rbac; `is_admin`, `can_create_store_user`, `store_id`)
+- **Invite & password** – Proxies to admin-rbac: GET `/auth/invite/info`, POST `/auth/invite/register`, `/auth/forgot-password`, `/auth/reset-password`, POST `/auth/change-password` (Bearer). Static UX: `/auth/register.html`, `/auth/forgot-password.html`, `/auth/reset-password.html`
 - **Dashboard UI** – Products, Orders, Regions, Users, Invites, Settings (static SPA)
+- **Global Search UI** – single search box in header + grouped results page (`/app/search`) backed by `search-service` (`/admin/search`)
 - **Admin API** – Proxies to microservices:
   - `/admin/invites`, `/admin/users`, `/admin/roles`, `/admin/policies` → admin-rbac
   - `/admin/regions` → regions-service (`/store/regions`)
@@ -36,6 +39,21 @@ Java Spring Boot service that **recreates the Medusa backend dashboard** using y
 
 4. Open **http://localhost:9010/admin-login**, sign in, then you are redirected to **http://localhost:9010/app/products**.
 
+### Verify JWT + `/admin/me` (e.g. before Vite backoffice)
+
+Use the **same** `JWT_SECRET` / `ADMIN_JWT_SECRET` in admin-rbac and admin-dashboard, then:
+
+```bash
+curl -s -X POST http://localhost:9010/auth/user/emailpass \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"you@example.com","password":"yourpassword"}'
+# Copy "token" from the JSON response, then:
+
+curl -s http://localhost:9010/admin/me -H "Authorization: Bearer PASTE_TOKEN"
+```
+
+The backoffice (`unifiedcommerce-store-backoffice`) proxies `/admin` and `/auth` to **http://localhost:9010** by default in `vite.config.ts`; set `VITE_MEDUSA_BACKEND_URL` to `http://localhost:9000` if you use Medusa instead.
+
 ## Port and URLs
 
 | Property | Default | Description |
@@ -46,6 +64,7 @@ Java Spring Boot service that **recreates the Medusa backend dashboard** using y
 | `app.regions-url` | http://localhost:8084 | Regions service |
 | `app.categories-url` | http://localhost:8083 | Categories service |
 | `app.collections-url` | http://localhost:8086 | Collections service |
+| `app.search-url` | http://localhost:8081 | Search service (`/admin/search`, `/admin/search/meta`) |
 | `app.jwt-secret` | (env JWT_SECRET) | Must match admin-rbac for session validation |
 | `app.cookie-name` | medusa_admin_token | Cookie name for JWT |
 

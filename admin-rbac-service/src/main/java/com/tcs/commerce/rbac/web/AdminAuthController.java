@@ -38,7 +38,13 @@ public class AdminAuthController {
                 return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body(Map.of("message", "Login succeeded but token could not be issued. Set ADMIN_JWT_SECRET (or JWT_SECRET) in admin-rbac-service and ensure it matches the store backend."));
             case NO_CREDENTIAL:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "message", "No Java admin password for this email. Register with create-admin-user (ADMIN_RBAC_SERVICE_URL) or POST /auth/admin/register-credential — user must exist in the database.",
+                    "code", "no_admin_credential"));
             case BAD_PASSWORD:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "message", "Invalid email or password.",
+                    "code", "invalid_credentials"));
             default:
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid email or password."));
         }

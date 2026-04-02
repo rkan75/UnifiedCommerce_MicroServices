@@ -16,7 +16,7 @@ export default defineConfig({
     port: 7000,
     proxy: {
       "/admin": {
-        target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9000",
+        target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9010",
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on("error", (err, _req, res) => {
@@ -24,7 +24,8 @@ export default defineConfig({
               res.writeHead(503, { "Content-Type": "application/json" })
               res.end(
                 JSON.stringify({
-                  message: "Backend unreachable. Start the Medusa server (e.g. in unifiedcommerce-grocery-store: npm run dev).",
+                  message:
+                    "Backend unreachable. Start admin-dashboard on 9010 (Java) or Medusa on 9000; set VITE_MEDUSA_BACKEND_URL if needed.",
                   code: "ECONNREFUSED",
                 })
               )
@@ -33,7 +34,7 @@ export default defineConfig({
         },
       },
       "/auth": {
-        target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9000",
+        target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9010",
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on("error", (err, _req, res) => {
@@ -41,7 +42,8 @@ export default defineConfig({
               res.writeHead(503, { "Content-Type": "application/json" })
               res.end(
                 JSON.stringify({
-                  message: "Backend unreachable. Start the Medusa server (e.g. in unifiedcommerce-grocery-store: npm run dev).",
+                  message:
+                    "Backend unreachable. Start admin-dashboard on 9010 (Java) or Medusa on 9000; set VITE_MEDUSA_BACKEND_URL if needed.",
                   code: "ECONNREFUSED",
                 })
               )

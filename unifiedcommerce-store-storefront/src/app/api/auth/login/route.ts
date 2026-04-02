@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server"
 
-const MEDUSA_BACKEND_URL =
-  process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"
+import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
+
+const MEDUSA_BACKEND_URL = normalizeLocalhostForServerFetch(
+  process.env.MEDUSA_BACKEND_URL?.trim() || "http://localhost:9000"
+)
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || ""
 const COOKIE_NAME = "_medusa_jwt"
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7 // 7 days

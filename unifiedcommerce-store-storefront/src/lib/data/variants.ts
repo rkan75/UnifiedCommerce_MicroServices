@@ -4,6 +4,7 @@ import {
   getMedusaPublishableKeyHeaders,
   getProductsServiceBaseUrl,
 } from "@lib/config/products-service"
+import { fetchWithConnectionContext } from "@lib/util/fetch-with-connection-context"
 import { HttpTypes } from "@medusajs/types"
 
 export const retrieveVariant = async (
@@ -17,7 +18,7 @@ export const retrieveVariant = async (
   try {
     const base = getProductsServiceBaseUrl()
     const url = `${base}/store/product-variants/${encodeURIComponent(variant_id)}?fields=${encodeURIComponent("*images")}`
-    const res = await fetch(url, {
+    const res = await fetchWithConnectionContext(url, {
       method: "GET",
       headers: getMedusaPublishableKeyHeaders(),
       next,

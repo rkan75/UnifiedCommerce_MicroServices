@@ -14,6 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,7 @@ public class RbacService {
 
     private final JdbcTemplate jdbc;
     private final RbacProperties props;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public RbacService(JdbcTemplate jdbc, RbacProperties props) {
         this.jdbc = jdbc;
@@ -135,6 +139,33 @@ public class RbacService {
         String roleTable = props.qualifiedRoleTable();
         String sql = "SELECT r.id, r.name, r.description FROM " + roleTable + " r INNER JOIN " + linkTable + " ur ON ur.rbac_role_id = r.id WHERE ur.user_id = ?";
         return jdbc.query(sql, ROLE_MAPPER, userId);
+    }
+
+    /**
+     * Reads {@code store_id} / {@code storeId} from {@code user.metadata} JSON (Medusa / backoffice convention).
+     */
+    public Optional<String> findStoreIdInUserMetadata(String userId) {
+        if (userId == null || userId.isBlank()) return Optional.empty();
+        String userTable = props.qualifiedUserTable();
+        String raw;
+        try {
+            raw = jdbc.queryForObject("SELECT metadata::text FROM " + userTable + " WHERE id = ?", String.class, userId);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+        if (raw == null || raw.isBlank() || "{}".equals(raw.trim())) return Optional.empty();
+        try {
+            JsonNode root = objectMapper.readTree(raw);
+            if (root.hasNonNull("store_id")) return Optional.of(root.get("store_id").asText());
+            if (root.hasNonNull("storeId")) return Optional.of(root.get("storeId").asText());
+            if (root.has("store") && root.get("store").isObject()) {
+                JsonNode store = root.get("store");
+                if (store.hasNonNull("id")) return Optional.of(store.get("id").asText());
+            }
+        } catch (Exception ignored) {
+            return Optional.empty();
+        }
+        return Optional.empty();
     }
 
     @Transactional

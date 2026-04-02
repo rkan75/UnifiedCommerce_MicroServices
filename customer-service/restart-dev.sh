@@ -16,4 +16,11 @@ if command -v lsof >/dev/null 2>&1; then
     sleep 1
   fi
 fi
-[ -x "./mvnw" ] && exec ./mvnw spring-boot:run || exec mvn spring-boot:run
+if [ -f ./mvnw ]; then
+  exec bash ./mvnw spring-boot:run
+elif command -v mvn >/dev/null 2>&1; then
+  exec mvn spring-boot:run
+else
+  echo "Neither ./mvnw nor mvn found. From this directory run: chmod +x ./mvnw" >&2
+  exit 1
+fi
