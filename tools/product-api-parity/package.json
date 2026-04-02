@@ -1,0 +1,16 @@
+{
+  "name": "product-api-parity-tests",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test:medusa": "node run-parity-tests.mjs --preset medusa-v2",
+    "test:java": "node run-parity-tests.mjs --preset java-microservices",
+    "test:dashboard": "node run-parity-tests.mjs --preset java-dashboard",
+    "test:java:mutations": "node run-parity-tests.mjs --preset java-microservices --mutations",
+    "test:dashboard:mutations": "node run-parity-tests.mjs --preset java-dashboard --mutations",
+    "report:json": "node run-parity-tests.mjs --preset java-microservices --json"
+  }
+}
