@@ -36,6 +36,11 @@ public class ProductsProperties {
     private String salesChannelTable = "sales_channel";
     /** Medusa {@code store} row for admin store settings. */
     private String storeTable = "store";
+    /**
+     * Medusa v2 {@code store_currency} (per-store supported currencies; {@code is_default} marks default).
+     * After migration {@code Migration20240621145944}, {@code store.default_currency_code} is removed.
+     */
+    private String storeCurrencyTable = "store_currency";
     /** {@code stock_location} for default location picker. */
     private String stockLocationTable = "stock_location";
     /** {@code currency} master (optional); when missing, currencies are derived from regions. */
@@ -179,6 +184,15 @@ public class ProductsProperties {
 
     public void setStoreTable(String storeTable) {
         this.storeTable = storeTable != null && !storeTable.isBlank() ? storeTable : "store";
+    }
+
+    public String getStoreCurrencyTable() {
+        return storeCurrencyTable;
+    }
+
+    public void setStoreCurrencyTable(String storeCurrencyTable) {
+        this.storeCurrencyTable =
+            storeCurrencyTable != null && !storeCurrencyTable.isBlank() ? storeCurrencyTable : "store_currency";
     }
 
     public String getStockLocationTable() {

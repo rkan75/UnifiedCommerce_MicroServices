@@ -12,12 +12,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Admin store settings: reads/writes the Medusa {@code store} row and loads option lists from catalog tables.
@@ -44,12 +47,14 @@ public class AdminStoreService {
         if (!schema.hasTable(storeT)) {
             throw new ProductWriteException(HttpStatus.NOT_FOUND, "Store table not found in catalog database");
         }
+        bootstrapStoreIfEmpty(storeT);
         Map<String, Object> row = loadStoreRow(storeT);
         if (row == null || row.isEmpty()) {
             throw new ProductWriteException(HttpStatus.NOT_FOUND, "No store row found (store table is empty)");
         }
         Map<String, Object> store = enrichStore(row);
-        Map<String, Object> options = loadOptions();
+        String storeId = stringVal(row.get("id"));
+        Map<String, Object> options = loadOptions(storeId);
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("store", store);
         out.put("options", options);
@@ -105,7 +110,10 @@ public class AdminStoreService {
             args.add(currencyCode);
         }
 
-        sql.append(" WHERE id::text = ? AND deleted_at IS NULL");
+        sql.append(" WHERE id::text = ?");
+        if (schema.hasColumn(storeT, "deleted_at")) {
+            sql.append(" AND deleted_at IS NULL");
+        }
         args.add(storeId);
 
         int n = jdbc.update(sql.toString(), args.toArray());
@@ -118,6 +126,9 @@ public class AdminStoreService {
             && !schema.hasColumn(storeT, "default_currency_code")
             && regionForCurrency != null) {
             patchRegionCurrency(regionForCurrency, currencyCode);
+        }
+        if (currencyCode != null && !schema.hasColumn(storeT, "default_currency_code")) {
+            syncStoreDefaultCurrency(storeId, currencyCode);
         }
 
         return getStoreAdmin();
@@ -136,9 +147,49 @@ public class AdminStoreService {
         );
     }
 
+    private void bootstrapStoreIfEmpty(String storeT) {
+        try {
+            String alive = schema.hasColumn(storeT, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+            Long count = jdbc.queryForObject("SELECT COUNT(*) FROM " + storeT + " WHERE " + alive, Long.class);
+            if (count != null && count > 0) {
+                return;
+            }
+            if (!schema.hasColumn(storeT, "id")) {
+                return;
+            }
+            String id = "store_" + UUID.randomUUID().toString().replace("-", "");
+            List<String> cols = new ArrayList<>();
+            List<Object> vals = new ArrayList<>();
+            cols.add("id");
+            vals.add(id);
+            if (schema.hasColumn(storeT, "name")) {
+                cols.add("name");
+                vals.add("Medusa Store");
+            }
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            if (schema.hasColumn(storeT, "created_at")) {
+                cols.add("created_at");
+                vals.add(now);
+            }
+            if (schema.hasColumn(storeT, "updated_at")) {
+                cols.add("updated_at");
+                vals.add(now);
+            }
+            String placeholders = String.join(", ", Collections.nCopies(cols.size(), "?"));
+            jdbc.update("INSERT INTO " + storeT + " (" + String.join(", ", cols) + ") VALUES (" + placeholders + ")", vals.toArray());
+            log.info("[admin-store] inserted default store row id={} (table was empty)", id);
+        } catch (Exception e) {
+            log.warn("[admin-store] bootstrap store: {}", e.getMessage());
+        }
+    }
+
     private Map<String, Object> loadStoreRow(String storeT) {
         try {
-            List<Map<String, Object>> rows = jdbc.queryForList(buildStoreSelect(storeT) + " FROM " + storeT + " WHERE deleted_at IS NULL ORDER BY created_at ASC LIMIT 1");
+            String alive = schema.hasColumn(storeT, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+            String orderCol = schema.hasColumn(storeT, "created_at") ? "created_at" : "id";
+            List<Map<String, Object>> rows = jdbc.queryForList(
+                buildStoreSelect(storeT) + " FROM " + storeT + " WHERE " + alive + " ORDER BY " + orderCol + " ASC NULLS LAST LIMIT 1"
+            );
             return rows.isEmpty() ? null : rows.get(0);
         } catch (Exception e) {
             log.warn("[admin-store] load store: {}", e.getMessage());
@@ -184,7 +235,11 @@ public class AdminStoreService {
         String locTable = sanitizeTable(props.getStockLocationTable());
         store.put("default_location_name", schema.hasTable(locTable) ? lookupName(locTable, locId) : null);
 
+        String storeId = stringVal(row.get("id"));
         String cur = stringVal(row.get("default_currency_code"));
+        if (cur == null && storeId != null) {
+            cur = lookupDefaultStoreCurrency(storeId);
+        }
         if (cur == null && regId != null) {
             cur = lookupRegionCurrency(regId);
         }
@@ -234,14 +289,189 @@ public class AdminStoreService {
             return null;
         }
         try {
+            String alive = schema.hasColumn(rTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
             List<String> codes = jdbc.query(
-                "SELECT currency_code FROM " + rTable + " WHERE id::text = ? AND deleted_at IS NULL LIMIT 1",
+                "SELECT currency_code FROM " + rTable + " WHERE id::text = ? AND " + alive + " LIMIT 1",
                 (rs, i) -> rs.getString("currency_code"),
                 regionId.trim()
             );
             return codes.isEmpty() ? null : codes.get(0);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * Medusa v2: default currency lives in {@code store_currency.is_default} after {@code default_currency_code} is dropped from {@code store}.
+     * Uses the same store_id matching fallbacks as {@link #listStoreCurrenciesTableOnly} (strict → null store_id → any row when single store).
+     */
+    private String lookupDefaultStoreCurrency(String storeId) {
+        String t = sanitizeTable(props.getStoreCurrencyTable());
+        if (!schema.hasTable(t) || !schema.hasColumn(t, "store_id") || !schema.hasColumn(t, "currency_code")) {
+            return null;
+        }
+        boolean hasDefault = schema.hasColumn(t, "is_default");
+        String alive = schema.hasColumn(t, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+        try {
+            if (hasDefault) {
+                String c = queryDefaultCurrencyCodeWithScope(t, alive, storeId, StoreCurrencyScope.STRICT_STORE_ID);
+                if (c != null) {
+                    return c;
+                }
+                if (countActiveStores() == 1) {
+                    c = queryDefaultCurrencyCodeWithScope(t, alive, storeId, StoreCurrencyScope.INCLUDE_NULL_STORE_ID);
+                    if (c != null) {
+                        return c;
+                    }
+                    c = queryDefaultCurrencyCodeWithScope(t, alive, storeId, StoreCurrencyScope.ANY_ROW_SINGLE_STORE);
+                    if (c != null) {
+                        return c;
+                    }
+                }
+            }
+            List<String> fallback = jdbc.query(
+                buildStoreCurrencyCodeSelect(t, alive, storeId, StoreCurrencyScope.STRICT_STORE_ID, false)
+                    + " ORDER BY created_at ASC NULLS LAST LIMIT 1",
+                (rs, i) -> rs.getString("c"),
+                storeId.trim()
+            );
+            if (!fallback.isEmpty() && fallback.get(0) != null) {
+                return fallback.get(0);
+            }
+            if (countActiveStores() == 1) {
+                fallback = jdbc.query(
+                    buildStoreCurrencyCodeSelect(t, alive, storeId, StoreCurrencyScope.INCLUDE_NULL_STORE_ID, false)
+                        + " ORDER BY created_at ASC NULLS LAST LIMIT 1",
+                    (rs, i) -> rs.getString("c"),
+                    storeId.trim()
+                );
+                if (!fallback.isEmpty() && fallback.get(0) != null) {
+                    return fallback.get(0);
+                }
+                fallback = jdbc.query(
+                    buildStoreCurrencyCodeSelect(t, alive, storeId, StoreCurrencyScope.ANY_ROW_SINGLE_STORE, false)
+                        + " ORDER BY created_at ASC NULLS LAST LIMIT 1",
+                    (rs, i) -> rs.getString("c")
+                );
+                return fallback.isEmpty() ? null : fallback.get(0);
+            }
+            return null;
+        } catch (Exception e) {
+            log.debug("[admin-store] lookupDefaultStoreCurrency: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private String queryDefaultCurrencyCodeWithScope(String t, String alive, String storeId, StoreCurrencyScope scope) {
+        String sql =
+            buildStoreCurrencyCodeSelect(t, alive, storeId, scope, true) + " ORDER BY created_at ASC NULLS LAST LIMIT 1";
+        List<String> codes;
+        if (scope == StoreCurrencyScope.ANY_ROW_SINGLE_STORE) {
+            codes = jdbc.query(sql, (rs, i) -> rs.getString("c"));
+        } else {
+            codes = jdbc.query(sql, (rs, i) -> rs.getString("c"), storeId.trim());
+        }
+        return codes.isEmpty() ? null : codes.get(0);
+    }
+
+    private String buildStoreCurrencyCodeSelect(
+        String t,
+        String alive,
+        String storeId,
+        StoreCurrencyScope scope,
+        boolean requireIsDefault
+    ) {
+        StringBuilder sb = new StringBuilder("SELECT lower(currency_code::text) AS c FROM ").append(t).append(" WHERE ").append(alive);
+        if (requireIsDefault && schema.hasColumn(t, "is_default")) {
+            sb.append(" AND is_default = true");
+        }
+        sb.append(" AND ").append(storeIdWhereClause(scope));
+        return sb.toString();
+    }
+
+    private String storeIdWhereClause(StoreCurrencyScope scope) {
+        return switch (scope) {
+            case STRICT_STORE_ID -> "store_id::text = ?";
+            case INCLUDE_NULL_STORE_ID -> "(store_id::text = ? OR store_id IS NULL)";
+            case ANY_ROW_SINGLE_STORE -> "TRUE";
+        };
+    }
+
+    private String storeIdWhereClauseForAlias(String alias, StoreCurrencyScope scope) {
+        return switch (scope) {
+            case STRICT_STORE_ID -> alias + ".store_id::text = ?";
+            case INCLUDE_NULL_STORE_ID -> "(" + alias + ".store_id::text = ? OR " + alias + ".store_id IS NULL)";
+            case ANY_ROW_SINGLE_STORE -> "TRUE";
+        };
+    }
+
+    private long countActiveStores() {
+        String storeT = sanitizeTable(props.getStoreTable());
+        if (!schema.hasTable(storeT)) {
+            return 0;
+        }
+        String alive = schema.hasColumn(storeT, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+        try {
+            Long n = jdbc.queryForObject("SELECT COUNT(*) FROM " + storeT + " WHERE " + alive, Long.class);
+            return n == null ? 0 : n;
+        } catch (Exception e) {
+            log.debug("[admin-store] countActiveStores: {}", e.getMessage());
+            return 0;
+        }
+    }
+
+    private enum StoreCurrencyScope {
+        /** Match Medusa FK: {@code store_currency.store_id} equals the store row id. */
+        STRICT_STORE_ID,
+        /** Some DBs have {@code store_id} NULL for the only store’s rows (legacy / migration). */
+        INCLUDE_NULL_STORE_ID,
+        /** Single-tenant: use every {@code store_currency} row (only when exactly one active {@code store}). */
+        ANY_ROW_SINGLE_STORE
+    }
+
+    private void syncStoreDefaultCurrency(String storeId, String currencyCode) {
+        if (storeId == null || storeId.isBlank() || currencyCode == null || currencyCode.isBlank()) {
+            return;
+        }
+        String t = sanitizeTable(props.getStoreCurrencyTable());
+        if (!schema.hasTable(t)
+            || !schema.hasColumn(t, "store_id")
+            || !schema.hasColumn(t, "currency_code")
+            || !schema.hasColumn(t, "is_default")) {
+            return;
+        }
+        String alive = schema.hasColumn(t, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+        String norm = currencyCode.trim().toLowerCase(Locale.ROOT);
+        try {
+            jdbc.update(
+                "UPDATE " + t + " SET is_default = false, updated_at = NOW() WHERE store_id::text = ? AND " + alive,
+                storeId.trim()
+            );
+            int updated = jdbc.update(
+                "UPDATE " + t + " SET is_default = true, updated_at = NOW() WHERE store_id::text = ? AND lower(currency_code::text) = ? AND " + alive,
+                storeId.trim(),
+                norm
+            );
+            if (updated == 0 && schema.hasColumn(t, "id")) {
+                String newId = "scur_" + UUID.randomUUID().toString().replace("-", "");
+                if (schema.hasColumn(t, "created_at") && schema.hasColumn(t, "updated_at")) {
+                    jdbc.update(
+                        "INSERT INTO " + t + " (id, currency_code, is_default, store_id, created_at, updated_at) VALUES (?, ?, true, ?, NOW(), NOW())",
+                        newId,
+                        norm,
+                        storeId.trim()
+                    );
+                } else {
+                    jdbc.update(
+                        "INSERT INTO " + t + " (id, currency_code, is_default, store_id) VALUES (?, ?, true, ?)",
+                        newId,
+                        norm,
+                        storeId.trim()
+                    );
+                }
+            }
+        } catch (Exception e) {
+            log.warn("[admin-store] syncStoreDefaultCurrency: {}", e.getMessage());
         }
     }
 
@@ -254,8 +484,9 @@ public class AdminStoreService {
             return null;
         }
         try {
+            String alive = schema.hasColumn(cTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
             List<String> names = jdbc.query(
-                "SELECT name FROM " + cTable + " WHERE lower(code::text) = lower(?) AND deleted_at IS NULL LIMIT 1",
+                "SELECT name FROM " + cTable + " WHERE lower(code::text) = lower(?) AND " + alive + " LIMIT 1",
                 (rs, i) -> rs.getString("name"),
                 code.trim()
             );
@@ -265,9 +496,10 @@ public class AdminStoreService {
         }
     }
 
-    private Map<String, Object> loadOptions() {
+    private Map<String, Object> loadOptions(String storeId) {
         Map<String, Object> options = new LinkedHashMap<>();
-        options.put("currencies", listCurrencies());
+        options.put("store_currencies", listStoreCurrenciesTableOnly(storeId));
+        options.put("currencies", listCurrencyOptionsForDropdown(storeId));
         options.put("regions", listRegions());
         options.put("sales_channels", listSalesChannels());
         String locTable = sanitizeTable(props.getStockLocationTable());
@@ -275,14 +507,287 @@ public class AdminStoreService {
         return options;
     }
 
+    /**
+     * Code + name list for default-currency and other dropdowns (catalog + anything linked to the store).
+     */
+    private List<Map<String, String>> listCurrencyOptionsForDropdown(String storeId) {
+        return mergeCurrencyOptionRows(listCurrencies(), listCurrenciesLinkedToStore(storeId));
+    }
+
+    /**
+     * Currencies table in admin: only rows configured for this store ({@code store_currency}), never the full catalog.
+     * When {@code store_currency} is missing (legacy DB), falls back to at most the store default currency row.
+     * Each entry: {@code code}, {@code name}, {@code tax_inclusive_pricing}, optional {@code store_currency_id}.
+     */
+    private List<Map<String, Object>> listStoreCurrenciesTableOnly(String storeId) {
+        String scTable = sanitizeTable(props.getStoreCurrencyTable());
+        String cTable = sanitizeTable(props.getCurrencyTable());
+        String taxCol = resolveCurrencyTaxColumnForTable(cTable);
+        boolean joinableCurrency = schema.hasTable(cTable) && schema.hasColumn(cTable, "code");
+        if (schema.hasTable(scTable)
+            && storeId != null
+            && !storeId.isBlank()
+            && schema.hasColumn(scTable, "store_id")
+            && schema.hasColumn(scTable, "currency_code")) {
+            List<Map<String, Object>> rows =
+                queryStoreCurrenciesDetailed(scTable, cTable, joinableCurrency, taxCol, storeId, StoreCurrencyScope.STRICT_STORE_ID);
+            if (rows.isEmpty() && countActiveStores() == 1) {
+                rows = queryStoreCurrenciesDetailed(
+                    scTable,
+                    cTable,
+                    joinableCurrency,
+                    taxCol,
+                    storeId,
+                    StoreCurrencyScope.INCLUDE_NULL_STORE_ID
+                );
+            }
+            if (rows.isEmpty() && countActiveStores() == 1) {
+                rows = queryStoreCurrenciesDetailed(
+                    scTable,
+                    cTable,
+                    joinableCurrency,
+                    taxCol,
+                    storeId,
+                    StoreCurrencyScope.ANY_ROW_SINGLE_STORE
+                );
+            }
+            if (!rows.isEmpty()) {
+                return rows;
+            }
+            log.debug(
+                "[admin-store] store_currency: no rows for store id {} (strict / null-store_id / single-tenant fallbacks); trying legacy default",
+                storeId
+            );
+        }
+        return legacyDefaultCurrencyOnlyRows(storeId, cTable, taxCol, joinableCurrency);
+    }
+
+    private List<Map<String, Object>> legacyDefaultCurrencyOnlyRows(
+        String storeId,
+        String cTable,
+        String taxCol,
+        boolean joinableCurrency
+    ) {
+        String storeT = sanitizeTable(props.getStoreTable());
+        if (!schema.hasTable(storeT)) {
+            return List.of();
+        }
+        Map<String, Object> srow = loadStoreRow(storeT);
+        if (srow == null) {
+            return List.of();
+        }
+        String defCur = stringVal(srow.get("default_currency_code"));
+        if (defCur == null && storeId != null && !storeId.isBlank()) {
+            defCur = lookupDefaultStoreCurrency(storeId);
+        }
+        if (defCur == null || defCur.isBlank()) {
+            return List.of();
+        }
+        String codeLower = defCur.trim().toLowerCase(Locale.ROOT);
+        String nm = lookupCurrencyName(codeLower);
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("store_currency_id", null);
+        m.put("code", codeLower);
+        m.put("name", nm != null ? nm : codeLower.toUpperCase(Locale.ROOT));
+        m.put("tax_inclusive_pricing", joinableCurrency && taxCol != null ? readCurrencyTaxFlag(cTable, taxCol, codeLower) : false);
+        return List.of(m);
+    }
+
+    private List<Map<String, Object>> queryStoreCurrenciesDetailed(
+        String scTable,
+        String cTable,
+        boolean joinCurrency,
+        String taxCol,
+        String storeId,
+        StoreCurrencyScope scope
+    ) {
+        String scAlive = schema.hasColumn(scTable, "deleted_at") ? "sc.deleted_at IS NULL" : "TRUE";
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT sc.id::text AS store_currency_id, lower(trim(sc.currency_code::text)) AS code ");
+        if (joinCurrency) {
+            String cDel = schema.hasColumn(cTable, "deleted_at") ? " AND (c.code IS NULL OR c.deleted_at IS NULL)" : "";
+            sql.append(", COALESCE(NULLIF(trim(c.name::text), ''), upper(trim(sc.currency_code::text))) AS name ");
+            if (taxCol != null) {
+                sql.append(", (c.").append(taxCol).append(" IS TRUE) AS tax_flag ");
+            } else {
+                sql.append(", false AS tax_flag ");
+            }
+            sql.append(" FROM ").append(scTable).append(" sc ");
+            sql.append(" LEFT JOIN ").append(cTable).append(" c ON lower(trim(c.code::text)) = lower(trim(sc.currency_code::text))");
+            sql.append(cDel);
+        } else {
+            sql.append(", upper(trim(sc.currency_code::text)) AS name, false AS tax_flag ");
+            sql.append(" FROM ").append(scTable).append(" sc ");
+        }
+        sql.append(" WHERE ").append(scAlive);
+        sql.append(" AND (").append(storeIdWhereClauseForAlias("sc", scope)).append(")");
+        if (schema.hasColumn(scTable, "is_default")) {
+            sql.append(" ORDER BY sc.is_default DESC NULLS LAST, lower(trim(sc.currency_code::text))");
+        } else {
+            sql.append(" ORDER BY lower(trim(sc.currency_code::text))");
+        }
+        try {
+            if (scope == StoreCurrencyScope.ANY_ROW_SINGLE_STORE) {
+                return jdbc.query(sql.toString(), (rs, i) -> mapStoreCurrencyRow(rs));
+            }
+            return jdbc.query(sql.toString(), (rs, i) -> mapStoreCurrencyRow(rs), storeId.trim());
+        } catch (Exception e) {
+            log.warn("[admin-store] queryStoreCurrenciesDetailed scope={}: {}", scope, e.getMessage());
+            return List.of();
+        }
+    }
+
+    private static Map<String, Object> mapStoreCurrencyRow(java.sql.ResultSet rs) throws java.sql.SQLException {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("store_currency_id", rs.getString("store_currency_id"));
+        String code = rs.getString("code");
+        m.put("code", code != null ? code.toLowerCase(Locale.ROOT) : null);
+        m.put("name", rs.getString("name"));
+        m.put("tax_inclusive_pricing", rs.getBoolean("tax_flag"));
+        return m;
+    }
+
+    private boolean readCurrencyTaxFlag(String cTable, String taxCol, String code) {
+        if (code == null || taxCol == null || !schema.hasTable(cTable)) {
+            return false;
+        }
+        String alive = schema.hasColumn(cTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+        try {
+            Boolean b = jdbc.queryForObject(
+                "SELECT (" + taxCol + " IS TRUE) FROM " + cTable + " WHERE lower(code::text) = lower(?) AND " + alive + " LIMIT 1",
+                Boolean.class,
+                code.trim()
+            );
+            return Boolean.TRUE.equals(b);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private String resolveCurrencyTaxColumnForTable(String cTable) {
+        if (!schema.hasTable(cTable)) {
+            return null;
+        }
+        if (schema.hasColumn(cTable, "tax_inclusive_pricing")) {
+            return "tax_inclusive_pricing";
+        }
+        if (schema.hasColumn(cTable, "includes_tax")) {
+            return "includes_tax";
+        }
+        return null;
+    }
+
+    /** First active store id (for admin currency link removal). */
+    public String getDefaultStoreId() {
+        String storeT = sanitizeTable(props.getStoreTable());
+        if (!schema.hasTable(storeT)) {
+            return null;
+        }
+        try {
+            bootstrapStoreIfEmpty(storeT);
+            Map<String, Object> row = loadStoreRow(storeT);
+            return row == null ? null : stringVal(row.get("id"));
+        } catch (Exception e) {
+            log.debug("[admin-store] getDefaultStoreId: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    /** Adds ISO codes present on {@code store_currency} so the admin picker matches Medusa-supported currencies for this store. */
+    private List<Map<String, String>> listCurrenciesLinkedToStore(String storeId) {
+        if (storeId == null || storeId.isBlank()) {
+            return List.of();
+        }
+        String t = sanitizeTable(props.getStoreCurrencyTable());
+        if (!schema.hasTable(t) || !schema.hasColumn(t, "store_id") || !schema.hasColumn(t, "currency_code")) {
+            return List.of();
+        }
+        String alive = schema.hasColumn(t, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+        try {
+            List<Map<String, String>> rows = queryLinkedCurrencyOptionRows(t, alive, storeId, StoreCurrencyScope.STRICT_STORE_ID);
+            if (rows.isEmpty() && countActiveStores() == 1) {
+                rows = queryLinkedCurrencyOptionRows(t, alive, storeId, StoreCurrencyScope.INCLUDE_NULL_STORE_ID);
+            }
+            if (rows.isEmpty() && countActiveStores() == 1) {
+                rows = queryLinkedCurrencyOptionRows(t, alive, storeId, StoreCurrencyScope.ANY_ROW_SINGLE_STORE);
+            }
+            return rows;
+        } catch (Exception e) {
+            log.debug("[admin-store] listCurrenciesLinkedToStore: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<Map<String, String>> queryLinkedCurrencyOptionRows(
+        String t,
+        String alive,
+        String storeId,
+        StoreCurrencyScope scope
+    ) {
+        String sql =
+            "SELECT DISTINCT lower(currency_code::text) AS code FROM "
+                + t
+                + " WHERE "
+                + alive
+                + " AND ("
+                + storeIdWhereClause(scope)
+                + ") ORDER BY 1 LIMIT 200";
+        if (scope == StoreCurrencyScope.ANY_ROW_SINGLE_STORE) {
+            return jdbc.query(sql, (rs, i) -> mapLinkedCurrencyRow(rs));
+        }
+        return jdbc.query(sql, (rs, i) -> mapLinkedCurrencyRow(rs), storeId.trim());
+    }
+
+    private Map<String, String> mapLinkedCurrencyRow(java.sql.ResultSet rs) throws java.sql.SQLException {
+        Map<String, String> m = new LinkedHashMap<>();
+        String code = rs.getString("code");
+        m.put("code", code);
+        String nm = lookupCurrencyName(code);
+        m.put("name", nm != null ? nm : (code != null ? code.toUpperCase(Locale.ROOT) : ""));
+        return m;
+    }
+
+    private static List<Map<String, String>> mergeCurrencyOptionRows(
+        List<Map<String, String>> primary,
+        List<Map<String, String>> extra
+    ) {
+        if (extra == null || extra.isEmpty()) {
+            return primary;
+        }
+        Map<String, Map<String, String>> byCode = new LinkedHashMap<>();
+        for (Map<String, String> row : primary) {
+            if (row == null) {
+                continue;
+            }
+            String c = row.get("code");
+            if (c == null) {
+                continue;
+            }
+            byCode.put(c.toLowerCase(Locale.ROOT), new LinkedHashMap<>(row));
+        }
+        for (Map<String, String> row : extra) {
+            if (row == null) {
+                continue;
+            }
+            String c = row.get("code");
+            if (c == null) {
+                continue;
+            }
+            String key = c.toLowerCase(Locale.ROOT);
+            byCode.putIfAbsent(key, new LinkedHashMap<>(row));
+        }
+        return new ArrayList<>(byCode.values());
+    }
+
     private List<Map<String, String>> listCurrencies() {
         String cTable = sanitizeTable(props.getCurrencyTable());
         if (schema.hasTable(cTable) && schema.hasColumn(cTable, "code")) {
             try {
                 boolean hasName = schema.hasColumn(cTable, "name");
+                String cAlive = schema.hasColumn(cTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
                 String sel = hasName
-                    ? "SELECT lower(code::text) AS code, name FROM " + cTable + " WHERE deleted_at IS NULL ORDER BY code NULLS LAST LIMIT 500"
-                    : "SELECT lower(code::text) AS code FROM " + cTable + " WHERE deleted_at IS NULL ORDER BY code NULLS LAST LIMIT 500";
+                    ? "SELECT lower(code::text) AS code, name FROM " + cTable + " WHERE " + cAlive + " ORDER BY code NULLS LAST LIMIT 500"
+                    : "SELECT lower(code::text) AS code FROM " + cTable + " WHERE " + cAlive + " ORDER BY code NULLS LAST LIMIT 500";
                 return jdbc.query(sel, (rs, i) -> {
                     Map<String, String> m = new LinkedHashMap<>();
                     String code = rs.getString("code");

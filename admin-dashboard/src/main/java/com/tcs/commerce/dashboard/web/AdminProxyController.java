@@ -223,6 +223,22 @@ public class AdminProxyController {
         return proxy(props.getProductsUrl(), "/admin/store" + query(request), HttpMethod.PATCH, body, getToken(request));
     }
 
+    @PatchMapping(value = "/currencies/{code}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> adminCurrencyPatch(
+        HttpServletRequest request,
+        @PathVariable String code,
+        @RequestBody Map<String, Object> body
+    ) {
+        String enc = UriUtils.encodePathSegment(code, StandardCharsets.UTF_8);
+        return proxy(props.getProductsUrl(), "/admin/currencies/" + enc + query(request), HttpMethod.PATCH, body, getToken(request));
+    }
+
+    @DeleteMapping("/currencies/{code}")
+    public ResponseEntity<?> adminCurrencyDelete(HttpServletRequest request, @PathVariable String code) {
+        String enc = UriUtils.encodePathSegment(code, StandardCharsets.UTF_8);
+        return proxy(props.getProductsUrl(), "/admin/currencies/" + enc + query(request), HttpMethod.DELETE, null, getToken(request));
+    }
+
     private ResponseEntity<?> proxy(String baseUrl, String pathAndQuery, HttpMethod method, Map<String, Object> body, String token) {
         var result = proxyService.proxy(baseUrl, pathAndQuery, method, body, token);
         return ResponseEntity.status(result.status()).body(result.body());

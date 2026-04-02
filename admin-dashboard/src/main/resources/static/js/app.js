@@ -2550,7 +2550,15 @@
         '<div class="settings-dl-row"><span class="settings-dl-k">Default location</span><span class="settings-dl-v" id="stLoc">—</span></div>' +
         '</div></section>' +
         '<section class="settings-card">' +
-        '<div class="settings-card-head"><h2 class="settings-card-title">Currencies</h2></div>' +
+        '<div class="settings-card-head">' +
+        '<h2 class="settings-card-title">Currencies</h2>' +
+        '<div class="settings-card-menu-wrap">' +
+        '<button type="button" class="settings-card-menu" id="settingsCurHeadMenuBtn" aria-label="More options" aria-haspopup="true" aria-expanded="false">⋯</button>' +
+        '<div class="settings-store-dropdown hidden" id="settingsCurHeadDropdown" role="menu">' +
+        '<button type="button" class="settings-store-dropdown-item" id="settingsCurBulkEnableTax" role="menuitem">Enable tax inclusive pricing (selected)</button>' +
+        '<button type="button" class="settings-store-dropdown-item" id="settingsCurBulkDisableTax" role="menuitem">Disable tax inclusive pricing (selected)</button>' +
+        '</div></div></div>' +
+        '<p class="settings-cur-api-err hidden" id="settingsCurApiErr" role="alert"></p>' +
         '<div class="settings-card-body">' +
         '<div class="settings-cur-toolbar">' +
         '<div class="settings-cur-search">' +
@@ -2559,14 +2567,28 @@
         '<path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" /></svg>' +
         '<input type="search" id="settingsCurFilter" class="settings-cur-input" placeholder="Search" autocomplete="off" />' +
         '</div>' +
-        '<button type="button" class="settings-cur-filter-btn" aria-label="Filter">☰</button></div>' +
-        '<div class="settings-table-wrap"><table class="settings-table">' +
-        '<thead><tr><th class="settings-th-check"></th><th>Code</th><th>Name</th><th>Tax inclusive pricing</th></tr></thead>' +
+        '<div class="settings-cur-sort-wrap">' +
+        '<button type="button" class="settings-cur-filter-btn settings-cur-sort-open" id="settingsCurSortBtn" aria-label="Sort" aria-haspopup="true" aria-expanded="false">☰</button>' +
+        '<div class="settings-store-dropdown hidden settings-cur-sort-dropdown" id="settingsCurSortDropdown" role="menu">' +
+        '<div class="settings-cur-sort-heading">Sort by</div>' +
+        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="name" data-sort-dir="asc" role="menuitem">Name · Ascending</button>' +
+        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="name" data-sort-dir="desc" role="menuitem">Name · Descending</button>' +
+        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="code" data-sort-dir="asc" role="menuitem">Code · Ascending</button>' +
+        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="code" data-sort-dir="desc" role="menuitem">Code · Descending</button>' +
+        '</div></div></div>' +
+        '<div class="settings-table-wrap" id="settingsCurTableWrap">' +
+        '<table class="settings-table settings-table-currencies">' +
+        '<thead><tr>' +
+        '<th class="settings-th-check"><input type="checkbox" id="settingsCurSelectAll" aria-label="Select all rows" /></th>' +
+        '<th>Code</th><th>Name</th><th>Tax inclusive pricing</th>' +
+        '<th class="settings-th-actions"></th></tr></thead>' +
         '<tbody id="settingsCurBody"></tbody></table></div>' +
-        '<div class="settings-table-foot"><span id="settingsCurFoot">0 – 0 of 0 results</span>' +
-        '<span>1 of 1 pages</span>' +
-        '<span class="settings-table-nav"><button type="button" class="btn-outline" disabled>Prev</button> ' +
-        '<button type="button" class="btn-outline" disabled>Next</button></span></div></div></section>' +
+        '<div class="settings-table-foot">' +
+        '<span id="settingsCurFoot">0 – 0 of 0 results</span>' +
+        '<span id="settingsCurPageLabel">1 of 1 pages</span>' +
+        '<span class="settings-table-nav">' +
+        '<button type="button" class="btn-outline" id="settingsCurPrev">Prev</button> ' +
+        '<button type="button" class="btn-outline" id="settingsCurNext">Next</button></span></div></div></section>' +
         '<section class="settings-card settings-fold-card">' +
         '<div class="settings-card-head">' +
         '<h2 class="settings-card-title">Metadata <span class="settings-key-badge" id="stMetaCount">0 keys</span></h2>' +
@@ -2589,44 +2611,51 @@
     var stLoc = document.getElementById('stLoc');
     var tbody = document.getElementById('settingsCurBody');
     var foot = document.getElementById('settingsCurFoot');
+    var pageLabel = document.getElementById('settingsCurPageLabel');
+    var curPrev = document.getElementById('settingsCurPrev');
+    var curNext = document.getElementById('settingsCurNext');
+    var curApiErr = document.getElementById('settingsCurApiErr');
     var metaPre = document.getElementById('stMetaPre');
     var jsonPre = document.getElementById('stJsonPre');
     var metaCount = document.getElementById('stMetaCount');
     var jsonCount = document.getElementById('stJsonCount');
     var storeApiErr = document.getElementById('settingsStoreApiErr');
     var storePagePayload = null;
+    var storeCurrencyRows = [];
+    var currencySortKey = 'code';
+    var currencySortDir = 'asc';
+    var currencyPage = 1;
+    var currencyPageSize = 15;
 
-    function uniqCurrencies(regs) {
-      var seen = {};
-      var rows = [];
-      (regs || []).forEach(function(r) {
-        var c = (r.currency_code || '').toLowerCase().trim();
-        if (!c || seen[c]) return;
-        seen[c] = true;
-        var nm = (r.name || c.toUpperCase()).toString();
-        rows.push({ code: c.toUpperCase(), name: nm, taxInc: false });
-      });
-      if (!rows.length) {
-        rows.push({ code: 'USD', name: 'US Dollar', taxInc: false });
-      }
-      return rows;
-    }
-
-    function currenciesToRowsFromOptions(currencies) {
+    /** Table rows: only store-backed currencies from API ({@code store_currencies}); empty when none configured. */
+    function storeCurrenciesToRows(currencies) {
       var rows = [];
       (currencies || []).forEach(function(c) {
         var code = (c && c.code ? String(c.code) : '').trim().toLowerCase();
         if (!code) return;
+        var taxRaw = c && c.tax_inclusive_pricing;
+        var taxInc = taxRaw === true || taxRaw === 'true' || taxRaw === 1;
+        var sid = c && c.store_currency_id != null && c.store_currency_id !== '' ? String(c.store_currency_id) : '';
         rows.push({
           code: code.toUpperCase(),
           name: (c && c.name ? String(c.name) : code.toUpperCase()),
-          taxInc: false
+          taxInc: taxInc,
+          storeCurrencyId: sid
         });
       });
-      if (!rows.length) {
-        rows.push({ code: 'USD', name: 'US Dollar', taxInc: false });
-      }
       return rows;
+    }
+
+    function sortCurrencyRows(arr) {
+      var key = currencySortKey;
+      var dir = currencySortDir === 'desc' ? -1 : 1;
+      return arr.slice().sort(function(a, b) {
+        var va = (key === 'code' ? a.code : a.name || '').toLowerCase();
+        var vb = (key === 'code' ? b.code : b.name || '').toLowerCase();
+        if (va < vb) return -1 * dir;
+        if (va > vb) return 1 * dir;
+        return 0;
+      });
     }
 
     function renderCurRows(rows, filter) {
@@ -2634,34 +2663,402 @@
       var frows = rows.filter(function(r) {
         if (!filter) return true;
         return (
-          r.code.toLowerCase().indexOf(filter) >= 0 || r.name.toLowerCase().indexOf(filter) >= 0
+          (r.code && r.code.toLowerCase().indexOf(filter) >= 0) ||
+          (r.name && r.name.toLowerCase().indexOf(filter) >= 0)
         );
       });
+      frows = sortCurrencyRows(frows);
+      var total = frows.length;
+      var pages = Math.max(1, Math.ceil(total / currencyPageSize) || 1);
+      if (currencyPage > pages) currencyPage = pages;
+      if (currencyPage < 1) currencyPage = 1;
+      var startIdx = (currencyPage - 1) * currencyPageSize;
+      var pageRows = frows.slice(startIdx, startIdx + currencyPageSize);
       if (!tbody) return;
-      tbody.innerHTML = frows
+      tbody.innerHTML = pageRows
         .map(function(r) {
+          var taxOn = Boolean(r.taxInc);
+          var taxCell =
+            '<span class="settings-tax-cell">' +
+            '<span class="settings-tax-dot ' +
+            (taxOn ? 'settings-tax-dot--on' : 'settings-tax-dot--off') +
+            '" aria-hidden="true"></span>' +
+            '<span>' +
+            (taxOn ? 'True' : 'False') +
+            '</span></span>';
+          var canRemove = r.storeCurrencyId && String(r.storeCurrencyId).length > 0;
+          var menuTaxLabel = taxOn ? 'Disable tax inclusive pricing' : 'Enable tax inclusive pricing';
+          var menuTaxEnable = taxOn ? 'false' : 'true';
           return (
-            '<tr><td class="settings-td-check"><input type="checkbox" disabled aria-label="row" /></td>' +
-            '<td>' +
+            '<tr data-code="' +
+            escapeHtml(r.code) +
+            '"><td class="settings-td-check"><input type="checkbox" class="settings-cur-row-check" data-code="' +
+            escapeHtml(r.code) +
+            '" aria-label="Select ' +
+            escapeHtml(r.code) +
+            '" /></td><td>' +
             escapeHtml(r.code) +
             '</td><td>' +
             escapeHtml(r.name) +
-            '</td><td><span class="settings-bool-off" title="false">□</span></td></tr>'
+            '</td><td>' +
+            taxCell +
+            '</td><td class="settings-td-actions"><div class="settings-cur-actions-wrap">' +
+            '<button type="button" class="settings-cur-row-menu-btn" data-code="' +
+            escapeHtml(r.code) +
+            '" aria-haspopup="true" aria-expanded="false" aria-label="Row actions">⋯</button>' +
+            '<div class="settings-store-dropdown hidden settings-cur-row-dropdown" role="menu">' +
+            '<button type="button" class="settings-store-dropdown-item settings-cur-row-tax" data-code="' +
+            escapeHtml(r.code) +
+            '" data-enable="' +
+            menuTaxEnable +
+            '" role="menuitem">' +
+            escapeHtml(menuTaxLabel) +
+            '</button>' +
+            (canRemove
+              ? '<button type="button" class="settings-store-dropdown-item settings-cur-row-remove danger" data-code="' +
+                escapeHtml(r.code) +
+                '" role="menuitem">Remove</button>'
+              : '') +
+            '</div></div></td></tr>'
           );
         })
         .join('');
       if (foot) {
-        var n = frows.length;
-        foot.textContent = n ? '1 – ' + n + ' of ' + n + ' results' : '0 – 0 of 0 results';
+        if (!total) {
+          foot.textContent = '0 – 0 of 0 results';
+        } else {
+          var endIdx = Math.min(startIdx + pageRows.length, total);
+          foot.textContent = startIdx + 1 + ' – ' + endIdx + ' of ' + total + ' results';
+        }
+      }
+      if (pageLabel) {
+        pageLabel.textContent = pages ? currencyPage + ' of ' + pages + ' pages' : '1 of 1 pages';
+      }
+      if (curPrev) {
+        curPrev.disabled = currencyPage <= 1;
+      }
+      if (curNext) {
+        curNext.disabled = currencyPage >= pages || pages <= 1;
+      }
+      var selAll = document.getElementById('settingsCurSelectAll');
+      if (selAll) {
+        selAll.checked = false;
+        selAll.indeterminate = false;
       }
     }
 
-    var storeCurrencyRows = [];
+    function showCurApiErr(msg) {
+      if (!curApiErr) return;
+      curApiErr.textContent = msg || '';
+      if (msg) curApiErr.classList.remove('hidden');
+      else curApiErr.classList.add('hidden');
+    }
+
+    function closeAllCurrencyDropdowns() {
+      document.querySelectorAll('.settings-cur-row-dropdown').forEach(function(el) {
+        el.classList.add('hidden');
+      });
+      var hd = document.getElementById('settingsCurHeadDropdown');
+      if (hd) hd.classList.add('hidden');
+      var sd = document.getElementById('settingsCurSortDropdown');
+      if (sd) sd.classList.add('hidden');
+      var hb = document.getElementById('settingsCurHeadMenuBtn');
+      if (hb) hb.setAttribute('aria-expanded', 'false');
+      var sb = document.getElementById('settingsCurSortBtn');
+      if (sb) sb.setAttribute('aria-expanded', 'false');
+      document.querySelectorAll('.settings-cur-row-menu-btn').forEach(function(b) {
+        b.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function applyStorePayload(data) {
+      showCurApiErr('');
+      storePagePayload = data;
+      applyStoreAdminToCard(data);
+      storeCurrencyRows = storeCurrenciesToRows((data.options && data.options.store_currencies) || []);
+      currencyPage = 1;
+      var filtEl = document.getElementById('settingsCurFilter');
+      renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
+      wireStoreCardMenu();
+    }
+
+    function fetchStoreAndApply() {
+      return api('/admin/store')
+        .then(function(r) {
+          return r.json().then(function(d) {
+            return { ok: r.ok, data: d };
+          });
+        })
+        .then(function(res) {
+          if (!res.ok) {
+            var d = res.data || {};
+            showCurApiErr(String(d.message || d.detail || d.error || 'Could not refresh store'));
+            return;
+          }
+          applyStorePayload(res.data);
+        })
+        .catch(function() {
+          showCurApiErr('Network error refreshing currencies.');
+        });
+    }
+
+    function patchCurrencyTax(code, enabled, skipRefresh) {
+      var low = (code || '').toLowerCase().trim();
+      if (!low) return Promise.resolve();
+      return fetch('/admin/currencies/' + encodeURIComponent(low), {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ tax_inclusive_pricing: Boolean(enabled) })
+      })
+        .then(function(r) {
+          return r.json().then(function(data) {
+            return { ok: r.ok, data: data };
+          });
+        })
+        .then(function(res) {
+          if (!res.ok) {
+            var d = res.data || {};
+            showCurApiErr(String(d.message || d.detail || d.error || 'Update failed'));
+            throw new Error('cur-patch-fail');
+          }
+          closeAllCurrencyDropdowns();
+          if (!skipRefresh) return fetchStoreAndApply();
+        })
+        .catch(function(err) {
+          if (err && err.message === 'cur-patch-fail') return Promise.reject(err);
+          showCurApiErr('Network error.');
+          return Promise.reject(err);
+        });
+    }
+
+    function removeCurrencyLink(code) {
+      var low = (code || '').toLowerCase().trim();
+      if (!low) return Promise.resolve();
+      return fetch('/admin/currencies/' + encodeURIComponent(low), {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { Accept: 'application/json' }
+      })
+        .then(function(r) {
+          return r.json().then(function(data) {
+            return { ok: r.ok, data: data };
+          });
+        })
+        .then(function(res) {
+          if (!res.ok) {
+            var d = res.data || {};
+            showCurApiErr(String(d.message || d.detail || d.error || 'Remove failed'));
+            return;
+          }
+          closeAllCurrencyDropdowns();
+          return fetchStoreAndApply();
+        })
+        .catch(function() {
+          showCurApiErr('Network error.');
+        });
+    }
+
+    function getSelectedCurrencyCodes() {
+      var out = [];
+      document.querySelectorAll('.settings-cur-row-check:checked').forEach(function(cb) {
+        var c = cb.getAttribute('data-code');
+        if (c) out.push(c);
+      });
+      return out;
+    }
+
+    function wireCurrencyChromeOnce() {
+      var wrap = document.getElementById('settingsCurTableWrap');
+      if (!wrap || wrap.dataset.currencyChromeWired === '1') return;
+      wrap.dataset.currencyChromeWired = '1';
+
+      wrap.addEventListener('click', function(ev) {
+        var taxBtn = ev.target.closest('.settings-cur-row-tax');
+        if (taxBtn) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          var c = taxBtn.getAttribute('data-code');
+          var en = taxBtn.getAttribute('data-enable') === 'true';
+          patchCurrencyTax(c, en).catch(function() {});
+          return;
+        }
+        var rm = ev.target.closest('.settings-cur-row-remove');
+        if (rm) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          var c2 = rm.getAttribute('data-code');
+          if (window.confirm('Remove ' + c2 + ' from this store’s supported currencies?')) {
+            removeCurrencyLink(c2);
+          }
+          return;
+        }
+        var menuBtn = ev.target.closest('.settings-cur-row-menu-btn');
+        if (menuBtn) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          closeAllCurrencyDropdowns();
+          var rowDrop = menuBtn.parentElement && menuBtn.parentElement.querySelector('.settings-cur-row-dropdown');
+          if (rowDrop) {
+            rowDrop.classList.remove('hidden');
+            menuBtn.setAttribute('aria-expanded', 'true');
+          }
+          setTimeout(function() {
+            document.addEventListener(
+              'click',
+              function docC() {
+                closeAllCurrencyDropdowns();
+                document.removeEventListener('click', docC);
+              },
+              { once: true }
+            );
+          }, 0);
+          return;
+        }
+      });
+
+      var headBtn = document.getElementById('settingsCurHeadMenuBtn');
+      var headDrop = document.getElementById('settingsCurHeadDropdown');
+      if (headBtn && headDrop) {
+        headBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var hidden = headDrop.classList.contains('hidden');
+          closeAllCurrencyDropdowns();
+          if (!hidden) return;
+          headDrop.classList.remove('hidden');
+          headBtn.setAttribute('aria-expanded', 'true');
+          setTimeout(function() {
+            document.addEventListener(
+              'click',
+              function h() {
+                closeAllCurrencyDropdowns();
+                document.removeEventListener('click', h);
+              },
+              { once: true }
+            );
+          }, 0);
+        });
+      }
+
+      var bulkEn = document.getElementById('settingsCurBulkEnableTax');
+      var bulkDis = document.getElementById('settingsCurBulkDisableTax');
+      if (bulkEn) {
+        bulkEn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var sel = getSelectedCurrencyCodes();
+          if (!sel.length) {
+            showCurApiErr('Select one or more currencies first.');
+            return;
+          }
+          closeAllCurrencyDropdowns();
+          showCurApiErr('');
+          var chain = Promise.resolve();
+          sel.forEach(function(c) {
+            chain = chain.then(function() {
+              return patchCurrencyTax(c, true, true);
+            });
+          });
+          chain
+            .then(function() {
+              return fetchStoreAndApply();
+            })
+            .catch(function() {});
+        });
+      }
+      if (bulkDis) {
+        bulkDis.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var sel = getSelectedCurrencyCodes();
+          if (!sel.length) {
+            showCurApiErr('Select one or more currencies first.');
+            return;
+          }
+          closeAllCurrencyDropdowns();
+          showCurApiErr('');
+          var chain = Promise.resolve();
+          sel.forEach(function(c) {
+            chain = chain.then(function() {
+              return patchCurrencyTax(c, false, true);
+            });
+          });
+          chain
+            .then(function() {
+              return fetchStoreAndApply();
+            })
+            .catch(function() {});
+        });
+      }
+
+      var sortBtn = document.getElementById('settingsCurSortBtn');
+      var sortDrop = document.getElementById('settingsCurSortDropdown');
+      if (sortBtn && sortDrop) {
+        sortBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var hid = sortDrop.classList.contains('hidden');
+          closeAllCurrencyDropdowns();
+          if (!hid) return;
+          sortDrop.classList.remove('hidden');
+          sortBtn.setAttribute('aria-expanded', 'true');
+          setTimeout(function() {
+            document.addEventListener(
+              'click',
+              function s() {
+                sortDrop.classList.add('hidden');
+                sortBtn.setAttribute('aria-expanded', 'false');
+                document.removeEventListener('click', s);
+              },
+              { once: true }
+            );
+          }, 0);
+        });
+        sortDrop.querySelectorAll('.settings-cur-sort-opt').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            currencySortKey = btn.getAttribute('data-sort-key') || 'code';
+            currencySortDir = btn.getAttribute('data-sort-dir') || 'asc';
+            currencyPage = 1;
+            sortDrop.classList.add('hidden');
+            sortBtn.setAttribute('aria-expanded', 'false');
+            var filtEl = document.getElementById('settingsCurFilter');
+            renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
+          });
+        });
+      }
+
+      var selAll = document.getElementById('settingsCurSelectAll');
+      if (selAll) {
+        selAll.addEventListener('change', function() {
+          var on = selAll.checked;
+          document.querySelectorAll('.settings-cur-row-check').forEach(function(cb) {
+            cb.checked = on;
+          });
+        });
+      }
+
+      if (curPrev) {
+        curPrev.addEventListener('click', function() {
+          if (currencyPage > 1) {
+            currencyPage--;
+            var filtEl = document.getElementById('settingsCurFilter');
+            renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
+          }
+        });
+      }
+      if (curNext) {
+        curNext.addEventListener('click', function() {
+          currencyPage++;
+          var filtEl = document.getElementById('settingsCurFilter');
+          renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
+        });
+      }
+    }
 
     function bindCurrencyFilter() {
       var filt = document.getElementById('settingsCurFilter');
-      if (!filt) return;
+      if (!filt || filt.dataset.currencyFiltWired === '1') return;
+      filt.dataset.currencyFiltWired = '1';
       filt.addEventListener('input', function() {
+        currencyPage = 1;
         renderCurRows(storeCurrencyRows, filt.value);
       });
     }
@@ -2841,11 +3238,7 @@
               }
               return;
             }
-            storePagePayload = res.data;
-            applyStoreAdminToCard(res.data);
-            storeCurrencyRows = currenciesToRowsFromOptions((res.data.options && res.data.options.currencies) || []);
-            var filtEl = document.getElementById('settingsCurFilter');
-            renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
+            applyStorePayload(res.data);
             closeStoreEditDrawer();
           })
           .catch(function() {
@@ -2901,7 +3294,7 @@
     api('/admin/store')
       .then(function(r) {
         return r.json().then(function(data) {
-          return { ok: r.ok, data: data };
+          return { ok: r.ok, data: data, status: r.status };
         });
       })
       .then(function(res) {
@@ -2910,20 +3303,20 @@
           storeApiErr.textContent = '';
         }
         if (!res.ok) {
-          var msg =
-            res.data && res.data.message ? String(res.data.message) : 'Could not load store (' + (res.data && res.data.error ? res.data.error : 'error') + ')';
+          var d = res.data || {};
+          var piece = d.message || d.detail || d.title || d.error;
+          var msg = piece
+            ? String(piece)
+            : 'Could not load store (HTTP ' + (res.status != null ? res.status : '?') + ')';
           if (storeApiErr) {
             storeApiErr.textContent = msg;
             storeApiErr.classList.remove('hidden');
           }
           return Promise.reject(new Error('store'));
         }
-        storePagePayload = res.data;
-        applyStoreAdminToCard(res.data);
-        storeCurrencyRows = currenciesToRowsFromOptions((res.data.options && res.data.options.currencies) || []);
-        renderCurRows(storeCurrencyRows, '');
+        applyStorePayload(res.data);
         bindCurrencyFilter();
-        wireStoreCardMenu();
+        wireCurrencyChromeOnce();
       })
       .catch(function() {
         return Promise.all([
@@ -2934,17 +3327,22 @@
             return r.json();
           })
         ]).then(function(pair) {
-          var regs = (pair[0] && pair[0].regions) || [];
-          storeCurrencyRows = uniqCurrencies(regs);
-          renderCurRows(storeCurrencyRows, '');
+          storeCurrencyRows = [];
+          currencyPage = 1;
+          var filtEl = document.getElementById('settingsCurFilter');
+          renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
           bindCurrencyFilter();
+          wireCurrencyChromeOnce();
           wireStoreCardMenu();
         });
       })
       .catch(function() {
-        storeCurrencyRows = uniqCurrencies([]);
-        renderCurRows(storeCurrencyRows, '');
+        storeCurrencyRows = [];
+        currencyPage = 1;
+        var filtEl2 = document.getElementById('settingsCurFilter');
+        renderCurRows(storeCurrencyRows, filtEl2 ? filtEl2.value : '');
         bindCurrencyFilter();
+        wireCurrencyChromeOnce();
         wireStoreCardMenu();
       });
 

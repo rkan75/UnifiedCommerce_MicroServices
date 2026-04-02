@@ -40,6 +40,7 @@ app:
     product-sales-channel-link-table: ${CATALOG_PRODUCT_SALES_CHANNEL_LINK_TABLE:}
     sales-channel-table: ${CATALOG_SALES_CHANNEL_TABLE:sales_channel}
     store-table: ${CATALOG_STORE_TABLE:store}
+    store-currency-table: ${CATALOG_STORE_CURRENCY_TABLE:store_currency}
     stock-location-table: ${CATALOG_STOCK_LOCATION_TABLE:stock_location}
     currency-table: ${CATALOG_CURRENCY_TABLE:currency}
     # Pivot product_tags (product_id, product_tag_id). Set CATALOG_PRODUCT_TAG_LINK_TABLE empty to disable relational tags.
