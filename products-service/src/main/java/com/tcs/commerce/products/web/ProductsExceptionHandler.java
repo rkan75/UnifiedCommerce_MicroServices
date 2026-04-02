@@ -1,5 +1,6 @@
 package com.tcs.commerce.products.web;
 
+import com.tcs.commerce.products.service.ProductWriteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -10,6 +11,17 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ProductsExceptionHandler {
+
+    @ExceptionHandler(ProductWriteException.class)
+    public ResponseEntity<Map<String, String>> handleProductWrite(ProductWriteException ex) {
+        HttpStatus st = ex.getStatus() != null ? ex.getStatus() : HttpStatus.BAD_REQUEST;
+        return ResponseEntity
+            .status(st)
+            .body(Map.of(
+                "error", "Product write failed",
+                "message", ex.getMessage() != null ? ex.getMessage() : st.getReasonPhrase()
+            ));
+    }
 
     @ExceptionHandler(CannotGetJdbcConnectionException.class)
     public ResponseEntity<Map<String, String>> handleDatabaseUnavailable(CannotGetJdbcConnectionException ex) {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="DB-253.31033.21">
-    <data-source name="postgres@localhost" uuid="1f3a409a-3d42-4005-b16d-b761bd957a4c">
+    <data-source name="gnc_store@localhost" uuid="26614fbe-e6a8-4b7c-8110-490c04a2405b">
       <database-info product="PostgreSQL" version="18.3 (Postgres.app)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="18.3" exact-driver-version="42.7">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
-      <user-name>postgres</user-name>
+      <user-name>grocery_app</user-name>
       <schema-mapping>
         <introspection-scope>
           <node kind="database" qname="@">

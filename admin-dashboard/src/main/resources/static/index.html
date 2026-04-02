@@ -23,7 +23,7 @@
               </span>
             </a>
             <div class="account-separator" aria-hidden="true"></div>
-            <a href="/app/settings" class="account-item" role="menuitem">
+            <a href="/app/settings/store" class="account-item" role="menuitem">
               <span class="icon" aria-hidden="true">⚙️</span>
               <span class="account-item-title">Store settings</span>
             </a>
@@ -56,7 +56,7 @@
         </div>
       </nav>
       <div class="sidebar-footer">
-        <a href="/app/settings" class="nav-item" data-page="settings">⚙️ Settings</a>
+        <a href="/app/settings/store" class="nav-item" data-page="settings">⚙️ Settings</a>
         <div class="sidebar-divider"></div>
         <button id="profileMenuTrigger" type="button" class="profile-menu-trigger">
           <span class="avatar">K</span>
@@ -90,6 +90,203 @@
       </div>
     </div>
   </div>
+  <div id="productExportBackdrop" class="export-drawer-backdrop hidden" aria-hidden="true"></div>
+  <aside id="productExportDrawer" class="export-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="productExportTitle" aria-hidden="true">
+    <div class="export-drawer-inner">
+      <header class="export-drawer-head">
+        <h2 id="productExportTitle" class="export-drawer-title">Export Product List</h2>
+        <div class="export-drawer-head-actions">
+          <span class="export-drawer-kbd">esc</span>
+          <button type="button" id="productExportClose" class="export-drawer-x" aria-label="Close">×</button>
+        </div>
+      </header>
+      <div class="export-drawer-body">
+        <h3 class="export-drawer-section-title">Filters</h3>
+        <p class="export-drawer-hint">Apply filters in the table overview to adjust this view</p>
+        <ul id="productExportFilterList" class="export-drawer-filter-list"></ul>
+      </div>
+      <footer class="export-drawer-foot">
+        <button type="button" id="productExportCancel" class="export-drawer-btn export-drawer-btn--ghost">Cancel</button>
+        <button type="button" id="productExportConfirm" class="export-drawer-btn export-drawer-btn--primary">Export</button>
+      </footer>
+    </div>
+  </aside>
+  <div id="productImportBackdrop" class="import-modal-backdrop hidden" aria-hidden="true">
+    <div id="productImportModal" class="import-modal" role="dialog" aria-modal="true" aria-labelledby="productImportTitle" aria-hidden="true">
+      <header class="import-modal-head">
+        <h2 id="productImportTitle" class="import-modal-title">Import Product List</h2>
+        <div class="import-modal-head-actions">
+          <span class="import-modal-kbd">esc</span>
+          <button type="button" id="productImportClose" class="import-modal-x" aria-label="Close">×</button>
+        </div>
+      </header>
+      <div class="import-modal-body">
+        <h3 class="import-modal-section-title">Upload a CSV file</h3>
+        <p class="import-modal-hint">Through imports you can add or update products. To update existing products you must use the existing handle and ID; to update existing variants you must use the existing ID. You will be asked for confirmation before the table is updated from this file.</p>
+        <input type="file" id="productImportFileInput" class="import-hidden-input" accept=".csv,text/csv" />
+        <button type="button" id="productImportDropzone" class="import-dropzone" aria-label="Choose CSV file">
+          <span class="import-dropzone-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg>
+          </span>
+          <span class="import-dropzone-title">Import Products</span>
+          <span class="import-dropzone-sub">Drag and drop a CSV file or click to upload</span>
+          <span id="productImportFileLabel" class="import-dropzone-file hidden"></span>
+        </button>
+        <h3 class="import-modal-section-title import-modal-section-title--spaced">Unsure about how to arrange your list?</h3>
+        <p class="import-modal-hint">Download the template below to ensure you are following the correct format (Medusa product import).</p>
+        <a href="/product-import-template.csv" download="product-import-template.csv" class="import-template-card">
+          <span class="import-template-icon" aria-hidden="true">▦</span>
+          <span class="import-template-name">product-import-template.csv</span>
+          <span class="import-template-dl" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 21h16"/></svg>
+          </span>
+        </a>
+      </div>
+      <footer class="import-modal-foot">
+        <button type="button" id="productImportCancel" class="import-modal-btn import-modal-btn--ghost">Cancel</button>
+        <button type="button" id="productImportConfirm" class="import-modal-btn import-modal-btn--primary" disabled>Import</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="pcShortcutsBackdrop" class="pc-shortcuts-backdrop hidden" aria-hidden="true">
+    <div class="pc-shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="pcShortcutsTitle">
+      <header class="pc-shortcuts-head">
+        <h2 id="pcShortcutsTitle" class="pc-shortcuts-title">Shortcuts</h2>
+        <div class="pc-shortcuts-head-actions">
+          <span class="import-modal-kbd">esc</span>
+          <button type="button" id="pcShortcutsClose" class="import-modal-x" aria-label="Close">×</button>
+        </div>
+      </header>
+      <div class="pc-shortcuts-search-wrap">
+        <span class="pc-shortcuts-search-icon" aria-hidden="true">🔎</span>
+        <input type="search" id="pcShortcutsSearch" class="pc-shortcuts-search" placeholder="Search shortcuts…" autocomplete="off" />
+      </div>
+      <div id="pcShortcutsList" class="pc-shortcuts-list">
+        <div class="pc-sc-section">Editing</div>
+        <div class="pc-sc-row"><span>Undo</span><span class="pc-keys"><kbd>⌘</kbd><kbd>Z</kbd></span></div>
+        <div class="pc-sc-row"><span>Redo</span><span class="pc-keys"><kbd>⇧</kbd><kbd>⌘</kbd><kbd>Z</kbd></span></div>
+        <div class="pc-sc-row"><span>Copy</span><span class="pc-keys"><kbd>⌘</kbd><kbd>C</kbd></span></div>
+        <div class="pc-sc-row"><span>Paste</span><span class="pc-keys"><kbd>⌘</kbd><kbd>V</kbd></span></div>
+        <div class="pc-sc-row"><span>Edit</span><span class="pc-keys"><kbd>↵</kbd></span></div>
+        <div class="pc-sc-row"><span>Delete</span><span class="pc-keys"><kbd>⌫</kbd></span></div>
+        <div class="pc-sc-row"><span>Clear</span><span class="pc-keys"><kbd>Space</kbd></span></div>
+        <div class="pc-sc-row"><span>Move up</span><span class="pc-keys"><kbd>↑</kbd></span></div>
+        <div class="pc-sc-row"><span>Move down</span><span class="pc-keys"><kbd>↓</kbd></span></div>
+        <div class="pc-sc-row"><span>Move left</span><span class="pc-keys"><kbd>←</kbd></span></div>
+        <div class="pc-sc-row"><span>Move right</span><span class="pc-keys"><kbd>→</kbd></span></div>
+        <div class="pc-sc-section">Selection &amp; navigation</div>
+        <div class="pc-sc-row"><span>Move to top</span><span class="pc-keys"><kbd>⌘</kbd><kbd>↑</kbd></span></div>
+        <div class="pc-sc-row"><span>Move to bottom</span><span class="pc-keys"><kbd>⌘</kbd><kbd>↓</kbd></span></div>
+        <div class="pc-sc-row"><span>Select down</span><span class="pc-keys"><kbd>⇧</kbd><kbd>↓</kbd></span></div>
+        <div class="pc-sc-row"><span>Select up</span><span class="pc-keys"><kbd>⇧</kbd><kbd>↑</kbd></span></div>
+        <div class="pc-sc-row"><span>Select column down</span><span class="pc-keys"><kbd>⇧</kbd><kbd>⌘</kbd><kbd>↓</kbd></span></div>
+        <div class="pc-sc-row"><span>Select column up</span><span class="pc-keys"><kbd>⇧</kbd><kbd>⌘</kbd><kbd>↑</kbd></span></div>
+        <div class="pc-sc-row"><span>Focus toolbar</span><span class="pc-keys"><kbd>⌃</kbd><kbd>⌥</kbd><kbd>,</kbd></span></div>
+        <div class="pc-sc-row"><span>Focus cancel</span><span class="pc-keys"><kbd>⌃</kbd><kbd>⌥</kbd><kbd>.</kbd></span></div>
+        <p class="pc-shortcuts-footnote">On Windows/Linux, use <kbd>Ctrl</kbd> instead of <kbd>⌘</kbd>. Shortcuts apply on the Variants tab when the variant grid or price fields are in use.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="productCreateBackdrop" class="create-product-backdrop hidden" aria-hidden="true">
+    <div class="create-product-modal" role="dialog" aria-modal="true" aria-labelledby="productCreateHeading">
+      <header class="create-product-top">
+        <div class="create-product-top-left">
+          <span class="import-modal-kbd">esc</span>
+          <button type="button" id="productCreateClose" class="import-modal-x" aria-label="Close">×</button>
+        </div>
+        <nav class="create-product-tabs" aria-label="Create product steps">
+          <button type="button" class="create-product-tab is-active" id="productCreateTab-details" role="tab" aria-selected="true">Details</button>
+          <button type="button" class="create-product-tab" id="productCreateTab-organize" role="tab" aria-selected="false">Organize</button>
+          <button type="button" class="create-product-tab" id="productCreateTab-variants" role="tab" aria-selected="false">Variants</button>
+        </nav>
+        <div class="create-product-top-spacer"></div>
+      </header>
+      <h1 id="productCreateHeading" class="create-product-page-title">Create Product</h1>
+
+      <div id="productCreatePanel-details" class="create-product-panel" role="tabpanel">
+        <div class="create-product-row3">
+          <label class="pc-field"><span class="pc-label">Title <span class="pc-req">*</span></span><input type="text" id="pcFieldTitle" placeholder="Winter jacket" autocomplete="off" /></label>
+          <label class="pc-field"><span class="pc-label">Subtitle <span class="pc-opt">(Optional)</span></span><input type="text" id="pcFieldSubtitle" placeholder="Warm and cosy" autocomplete="off" /></label>
+          <label class="pc-field"><span class="pc-label">Handle <span class="pc-opt">(Optional)</span> <span class="pc-info" title="URL slug">i</span></span><span class="pc-handle-wrap"><span class="pc-handle-prefix">/</span><input type="text" id="pcFieldHandle" placeholder="winter-jacket" autocomplete="off" /></span></label>
+        </div>
+        <label class="pc-field pc-field-block"><span class="pc-label">Description <span class="pc-opt">(Optional)</span></span><textarea id="pcFieldDescription" rows="5" placeholder="A warm and cozy jacket"></textarea></label>
+        <label class="pc-label">Media <span class="pc-opt">(Optional)</span></label>
+        <input type="file" id="pcMediaInput" class="import-hidden-input" accept="image/*" multiple />
+        <button type="button" class="pc-media-zone" id="pcMediaZone"><span class="pc-media-icon" aria-hidden="true">↑</span><span class="pc-media-title">Upload images</span><span class="pc-media-hint">Drag and drop images here or click to upload.</span></button>
+        <div class="pc-variants-toggle-block">
+          <span class="pc-variants-toggle-title">Variants</span>
+          <label class="pc-switch"><input type="checkbox" id="pcHasVariants" /><span class="pc-switch-ui"></span></label>
+          <div class="pc-switch-text"><strong>Yes, this is a product with variants</strong><p class="pc-muted">When unchecked, we will create a default variant for you.</p></div>
+        </div>
+        <div id="pcDetailsVariantsInner" class="pc-details-variants-inner hidden" aria-hidden="true">
+          <div class="pc-variant-options-head"><h3 class="create-product-section-title">Product options</h3><button type="button" class="btn-outline" id="pcAddOptionBtnDetails">Add</button></div>
+          <p class="pc-muted">Define the options for the product, e.g. color, size, etc.</p>
+          <div id="pcVariantOptionsErrorDetails" class="pc-alert hidden" role="alert"><span class="pc-alert-icon">!</span> Please create at least one option.</div>
+          <div id="pcOptionsContainerDetails"></div>
+          <h3 class="create-product-section-title">Product variants</h3>
+          <p class="pc-muted">This ranking will affect the variants’ order in your storefront.</p>
+          <div id="pcVariantListDetails"></div>
+          <p class="pc-variant-tip"><strong>Tip:</strong> Variants left unchecked won’t be created. You can always create and edit variants afterwards; this list reflects your product options.</p>
+        </div>
+      </div>
+
+      <div id="productCreatePanel-organize" class="create-product-panel hidden" role="tabpanel">
+        <h2 class="create-product-section-title">Organize</h2>
+        <div class="pc-organize-toggle">
+          <label class="pc-switch"><input type="checkbox" id="pcDiscountable" checked /><span class="pc-switch-ui"></span></label>
+          <div><strong>Discountable <span class="pc-opt">(Optional)</span></strong><p class="pc-muted">When unchecked, discounts will not be applied to this product.</p></div>
+        </div>
+        <div class="create-product-row2">
+          <label class="pc-field"><span class="pc-label">Type <span class="pc-opt">(Optional)</span></span><select id="pcSelectType"></select></label>
+          <label class="pc-field"><span class="pc-label">Collection <span class="pc-opt">(Optional)</span></span><select id="pcSelectCollection"></select></label>
+        </div>
+        <div class="create-product-row2">
+          <label class="pc-field"><span class="pc-label">Categories <span class="pc-opt">(Optional)</span></span><select id="pcCategories" multiple size="5" class="pc-multi"></select></label>
+          <label class="pc-field"><span class="pc-label">Tags <span class="pc-opt">(Optional)</span></span><select id="pcTags" multiple size="5" class="pc-multi"></select></label>
+        </div>
+        <label class="pc-field pc-field-block"><span class="pc-label">Shipping profile <span class="pc-opt">(Optional)</span></span><input type="text" id="pcShippingProfile" placeholder="Profile id or name (configure in Medusa if needed)" autocomplete="off" /><p class="pc-muted">Connect the product to a shipping profile.</p></label>
+        <div class="pc-sales-head">
+          <span class="pc-label">Sales channels <span class="pc-opt">(Optional)</span></span>
+          <button type="button" class="btn-outline pc-add-btn" id="pcAddSalesChannelBtn">Add</button>
+        </div>
+        <p class="pc-muted">This product will only be available in the default sales channel if left untouched.</p>
+        <div id="pcSalesChannelMenu" class="pc-sales-menu hidden" role="menu"></div>
+        <div id="pcSalesChannelTags" class="pc-channel-tags"></div>
+        <button type="button" class="pc-link-btn" id="pcClearSalesChannels">Clear all</button>
+      </div>
+
+      <div id="productCreatePanel-variants" class="create-product-panel hidden" role="tabpanel">
+        <div class="pc-variants-toolbar">
+          <button type="button" class="btn-outline" id="pcShortcutsBtn">Keyboard shortcuts</button>
+          <div tabindex="0" id="pcVariantToolbar" class="pc-variant-toolbar-focus"></div>
+        </div>
+        <div class="pc-variants-toggle-block">
+          <span class="pc-variants-toggle-title">Variants</span>
+          <label class="pc-switch"><input type="checkbox" id="pcHasVariantsMirror" /><span class="pc-switch-ui"></span></label>
+          <div class="pc-switch-text"><strong>Yes, this is a product with variants</strong><p class="pc-muted">When unchecked, we will create a default variant for you.</p></div>
+        </div>
+        <div class="pc-variant-options-head"><h3 class="create-product-section-title">Product options</h3><button type="button" class="btn-outline" id="pcAddOptionBtn">Add</button></div>
+        <p class="pc-muted">Define the options for the product, e.g. color, size, etc.</p>
+        <div id="pcVariantOptionsError" class="pc-alert hidden" role="alert"><span class="pc-alert-icon">!</span> Please create at least one option.</div>
+        <div id="pcOptionsContainer"></div>
+        <h3 class="create-product-section-title">Product variants</h3>
+        <p class="pc-muted">This ranking will affect the variants’ order in your storefront.</p>
+        <div id="pcVariantList"></div>
+        <p class="pc-variant-tip"><strong>Tip:</strong> Variants left unchecked won’t be created. You can always create and edit variants afterwards; this list reflects your product options.</p>
+      </div>
+
+      <footer class="create-product-footer">
+        <button type="button" id="productCreateCancel" class="import-modal-btn import-modal-btn--ghost">Cancel</button>
+        <button type="button" id="productCreateSaveDraft" class="import-modal-btn import-modal-btn--secondary">Save as draft</button>
+        <button type="button" id="productCreateContinue" class="import-modal-btn import-modal-btn--primary">Continue</button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="exportToastHost" class="export-toast-host" aria-live="polite"></div>
+  <script src="/js/create-product-modal.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>

@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="gnc_store@localhost">
+<dataSource name="postgres@localhost">
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.54">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <Grants>5||-9223372036854775808|c|G
+      <Grants>1||-9223372036854775808|c|G
+1||10|c|G
+1||10|C|G
+1||10|T|G
+4||-9223372036854775808|c|G
+4||10|c|G
+4||10|C|G
+4||10|T|G
+5||-9223372036854775808|c|G
 5||10|c|G
 5||19861|c|G
 5||10|C|G
 5||-9223372036854775808|T|G
 5||10|T|G</Grants>
-      <IntrospectionStateNumber>4838</IntrospectionStateNumber>
+      <IntrospectionStateNumber>4837</IntrospectionStateNumber>
       <ServerVersion>18.3</ServerVersion>
       <StartupTime>1774392773</StartupTime>
       <TimeZones>true ACDT
@@ -818,7 +826,7 @@ false Zulu
 13674||10|C|G
 13674||-9223372036854775808|U|G
 13674||10|U|G</Grants>
-      <IntrospectionStateNumber>4838</IntrospectionStateNumber>
+      <IntrospectionStateNumber>4837</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>postgres</OwnerName>
     </database>
@@ -4350,9 +4358,9 @@ false Zulu
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <LastIntrospectionL1Xid>4838</LastIntrospectionL1Xid>
-      <LastIntrospectionL2Xid>4838</LastIntrospectionL2Xid>
-      <LastIntrospectionL3Xid>4838</LastIntrospectionL3Xid>
+      <LastIntrospectionL1Xid>4837</LastIntrospectionL1Xid>
+      <LastIntrospectionL2Xid>4837</LastIntrospectionL2Xid>
+      <LastIntrospectionL3Xid>4837</LastIntrospectionL3Xid>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
       <LastIntrospectionLocalTimestamp>2026-03-30.19:21:03</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>

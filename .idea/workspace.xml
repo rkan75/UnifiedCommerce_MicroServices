@@ -5,13 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/UnifiedCommerce.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/auth/forgot-password.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/auth/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/auth/reset-password.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/service/BackofficeMeService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/web/AdminMeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/examples/README.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/examples/products-service-configmap.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/examples/search-service-configmap.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/Annexure-A-BRD-Task-WBS-Effort-Legend.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/Annexure-A-BRD-Task-WBS.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/Annexure-A-BRD-UnifiedCommerce-Master.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/products-service/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/src/main/java/com/tcs/commerce/search/config/AdminSearchProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/src/main/java/com/tcs/commerce/search/service/AdminSearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/src/main/java/com/tcs/commerce/search/web/AdminSearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/search-service/src/main/java/com/tcs/commerce/search/web/AdminSearchResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/d2ccommerce_store.kptO2w/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/78cb3c43-0cf8-4853-ae97-b63017e82527/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
@@ -21,6 +43,7 @@
       <change beforePath="$PROJECT_DIR$/admin-dashboard/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-dashboard/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/restart-dev.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/DashboardProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/DashboardProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/WebClientConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/WebClientConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/config/WebConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/service/ProxyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/service/ProxyService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminController.java" afterDir="false" />
@@ -46,10 +69,12 @@
       <change beforePath="$PROJECT_DIR$/customer-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/customer-service/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/ADMIN_PLATFORM_E2E_AND_JAVA_REWRITE.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/ADMIN_PLATFORM_E2E_AND_JAVA_REWRITE.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/products-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/products-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/restart-dev.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/config/ProductsProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/config/ProductsProperties.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/ProductsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/ProductsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/web/ProductsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/web/ProductsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/web/ProductsExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/web/ProductsExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/products-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/search-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/search-service/restart-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/restart-dev.sh" afterDir="false" />
@@ -75,20 +100,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "microservices-main",
-    "last_opened_file_path": "/Users/kannanramakrishnan"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;microservices-main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/kannanramakrishnan&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="" />

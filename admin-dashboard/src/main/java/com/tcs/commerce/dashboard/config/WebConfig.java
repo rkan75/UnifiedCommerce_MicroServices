@@ -25,6 +25,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/admin-login").setViewName("forward:/admin-login.html");
         registry.addViewController("/app").setViewName("forward:/index.html");
         registry.addViewController("/app/products").setViewName("forward:/index.html");
+        registry.addViewController("/app/products/{id}").setViewName("forward:/index.html");
+        registry.addViewController("/app/products/{id}/edit").setViewName("forward:/index.html");
         registry.addViewController("/app/product-categories").setViewName("forward:/index.html");
         registry.addViewController("/app/product-collections").setViewName("forward:/index.html");
         registry.addViewController("/app/orders").setViewName("forward:/index.html");
@@ -40,5 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/app/price-update").setViewName("forward:/index.html");
         registry.addViewController("/app/search").setViewName("forward:/index.html");
         registry.addViewController("/app/settings").setViewName("forward:/index.html");
+        // SPA client routes under /app/settings/* (e.g. /app/settings/store) — must forward or full navigation 404s
+        registry.addViewController("/app/settings/**").setViewName("forward:/index.html");
     }
 }

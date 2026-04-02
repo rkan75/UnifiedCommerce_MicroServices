@@ -45,10 +45,14 @@ public class ProductsController {
         @RequestParam(required = false, name = "updated_after") String updatedAfter,
         @RequestParam(required = false, name = "updated_before") String updatedBefore,
         @RequestParam(required = false) String order,
-        @RequestParam(required = false) String fields
+        @RequestParam(required = false) String fields,
+        /** When true/1, do not apply {@code CATALOG_DEFAULT_PRODUCT_TYPE_ID} so admin lists all product types. */
+        @RequestParam(required = false, name = "admin_catalog") String adminCatalog
     ) {
         String categoryId = firstNonBlank(categoryIds);
         String collectionId = firstNonBlank(collectionIds);
+        boolean skipDefaultTypeScope = adminCatalog != null
+            && ("1".equals(adminCatalog.trim()) || "true".equalsIgnoreCase(adminCatalog.trim()));
         // "fields" (Medusa sparse fieldset) is ignored; response is full StoreProduct-like shape.
         ProductsResponse response = productsService.getProducts(
             handle,
@@ -68,7 +72,8 @@ public class ProductsController {
             createdBefore,
             updatedAfter,
             updatedBefore,
-            order
+            order,
+            skipDefaultTypeScope
         );
         return ResponseEntity.ok(response);
     }
