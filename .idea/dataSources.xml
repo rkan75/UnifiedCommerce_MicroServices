@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/gnc_store</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="promomanagement@localhost" uuid="b7c6c8cc-601c-4f1e-8e14-1d791be76008">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/promomanagement</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

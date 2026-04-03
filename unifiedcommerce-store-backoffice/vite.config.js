@@ -14,12 +14,34 @@ export default defineConfig({
         port: 7000,
         proxy: {
             "/admin": {
-                target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9000",
+                target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9010",
                 changeOrigin: true,
+                configure: function (proxy) {
+                    proxy.on("error", function (err, _req, res) {
+                        if (res && !res.headersSent && err.code === "ECONNREFUSED") {
+                            res.writeHead(503, { "Content-Type": "application/json" });
+                            res.end(JSON.stringify({
+                                message: "Backend unreachable. Start admin-dashboard on 9010 (Java) or Medusa on 9000; set VITE_MEDUSA_BACKEND_URL if needed.",
+                                code: "ECONNREFUSED",
+                            }));
+                        }
+                    });
+                },
             },
             "/auth": {
-                target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9000",
+                target: process.env.VITE_MEDUSA_BACKEND_URL || "http://localhost:9010",
                 changeOrigin: true,
+                configure: function (proxy) {
+                    proxy.on("error", function (err, _req, res) {
+                        if (res && !res.headersSent && err.code === "ECONNREFUSED") {
+                            res.writeHead(503, { "Content-Type": "application/json" });
+                            res.end(JSON.stringify({
+                                message: "Backend unreachable. Start admin-dashboard on 9010 (Java) or Medusa on 9000; set VITE_MEDUSA_BACKEND_URL if needed.",
+                                code: "ECONNREFUSED",
+                            }));
+                        }
+                    });
+                },
             },
         },
     },
