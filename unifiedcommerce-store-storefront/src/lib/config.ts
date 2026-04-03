@@ -36,6 +36,16 @@ import { getLocaleHeader } from "@lib/util/get-locale-header"
 import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
 import Medusa, { FetchArgs, FetchInput } from "@medusajs/js-sdk"
 
+const PUBLISHABLE_KEY_SETUP_MESSAGE =
+  "Set NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY in your environment (e.g. .env.local)."
+
+export class PublishableKeySetupError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "PublishableKeySetupError"
+  }
+}
+
 // Defaults to standard port for Medusa server
 let MEDUSA_BACKEND_URL = normalizeLocalhostForServerFetch("http://localhost:9000")
 

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Admin currency updates: tax-inclusive flag on {@code currency}, remove link from {@code store_currency}.
@@ -44,32 +45,85 @@ public class AdminCurrencyService {
             throw new ProductWriteException(HttpStatus.BAD_REQUEST, "tax_inclusive_pricing boolean required");
         }
         boolean value = body.get("tax_inclusive_pricing").asBoolean(false);
+        String codeNorm = code.trim().toLowerCase(Locale.ROOT);
         String cTable = sanitizeTable(props.getCurrencyTable());
         if (!schema.hasTable(cTable) || !schema.hasColumn(cTable, "code")) {
             throw new ProductWriteException(HttpStatus.NOT_FOUND, "Currency table not available");
         }
         String taxCol = resolveCurrencyTaxColumn(cTable);
-        if (taxCol == null) {
+        boolean ppOk = canUpsertPricePreference();
+        if (taxCol == null && !ppOk) {
             throw new ProductWriteException(
                 HttpStatus.BAD_REQUEST,
-                "Currency table has no tax_inclusive_pricing or includes_tax column"
+                "No tax column on currency and price_preference table missing; cannot update tax-inclusive flag"
             );
         }
-        String alive = schema.hasColumn(cTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
-        StringBuilder upd = new StringBuilder("UPDATE ").append(cTable).append(" SET ").append(taxCol).append(" = ?");
-        if (schema.hasColumn(cTable, "updated_at")) {
-            upd.append(", updated_at = NOW()");
+        if (taxCol != null) {
+            String alive = schema.hasColumn(cTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+            StringBuilder upd = new StringBuilder("UPDATE ").append(cTable).append(" SET ").append(taxCol).append(" = ?");
+            if (schema.hasColumn(cTable, "updated_at")) {
+                upd.append(", updated_at = NOW()");
+            }
+            upd.append(" WHERE lower(code::text) = lower(?) AND ").append(alive);
+            int n;
+            try {
+                n = jdbc.update(upd.toString(), value, codeNorm);
+            } catch (Exception e) {
+                log.warn("[admin-currency] patch tax (currency table): {}", e.getMessage());
+                throw new ProductWriteException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update currency: " + e.getMessage());
+            }
+            if (n != 1) {
+                throw new ProductWriteException(HttpStatus.NOT_FOUND, "Currency not found: " + codeNorm);
+            }
         }
-        upd.append(" WHERE lower(code::text) = lower(?) AND ").append(alive);
-        int n;
+        if (ppOk) {
+            upsertPricePreferenceTaxInclusive(codeNorm, value);
+        }
+    }
+
+    /**
+     * Medusa v2 aligns with {@link com.tcs.commerce.products.service.AdminStoreService} reads: tax-inclusive for a
+     * store currency is stored in {@code price_preference} ({@code attribute=currency_code}).
+     */
+    private boolean canUpsertPricePreference() {
+        String pp = "price_preference";
+        return schema.hasTable(pp)
+            && schema.hasColumn(pp, "id")
+            && schema.hasColumn(pp, "attribute")
+            && schema.hasColumn(pp, "value")
+            && schema.hasColumn(pp, "is_tax_inclusive");
+    }
+
+    private void upsertPricePreferenceTaxInclusive(String currencyCodeLower, boolean taxInclusive) {
+        String pp = "price_preference";
         try {
-            n = jdbc.update(upd.toString(), value, code.trim());
+            StringBuilder upd =
+                new StringBuilder("UPDATE ")
+                    .append(pp)
+                    .append(" SET is_tax_inclusive = ?, updated_at = NOW()");
+            if (schema.hasColumn(pp, "deleted_at")) {
+                upd.append(", deleted_at = NULL");
+            }
+            upd.append(" WHERE attribute = 'currency_code' AND lower(trim(value::text)) = lower(?)");
+            int n = jdbc.update(upd.toString(), taxInclusive, currencyCodeLower);
+            if (n >= 1) {
+                return;
+            }
+            String newId = "ppref_" + UUID.randomUUID().toString().replace("-", "");
+            jdbc.update(
+                "INSERT INTO "
+                    + pp
+                    + " (id, attribute, value, is_tax_inclusive, created_at, updated_at) VALUES (?, 'currency_code', ?, ?, NOW(), NOW())",
+                newId,
+                currencyCodeLower,
+                taxInclusive
+            );
         } catch (Exception e) {
-            log.warn("[admin-currency] patch tax: {}", e.getMessage());
-            throw new ProductWriteException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update currency: " + e.getMessage());
-        }
-        if (n != 1) {
-            throw new ProductWriteException(HttpStatus.NOT_FOUND, "Currency not found: " + code.trim());
+            log.warn("[admin-currency] upsert price_preference: {}", e.getMessage());
+            throw new ProductWriteException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Could not update price preference: " + e.getMessage()
+            );
         }
     }
 

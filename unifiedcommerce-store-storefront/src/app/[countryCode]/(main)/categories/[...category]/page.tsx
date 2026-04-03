@@ -60,6 +60,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       params.category,
       params.countryCode
     )
+    if (!productCategory) {
+      notFound()
+    }
 
     const title = productCategory.name + " | Unified Commerce Store"
 

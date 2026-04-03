@@ -6,7 +6,7 @@ type Props = {
   customer: boolean
   dashboard: React.ReactNode
   login: React.ReactNode
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 /**

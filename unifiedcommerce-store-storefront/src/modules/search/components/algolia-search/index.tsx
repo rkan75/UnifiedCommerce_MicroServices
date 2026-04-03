@@ -224,24 +224,25 @@ export default function AlgoliaSearch({
   useEffect(() => {
     if (!searchClient) return
 
-    const originalRequest = searchClient.search
-    searchClient.search = async function (requests: any[]) {
+    const originalSearch = searchClient.search as (...args: any[]) => Promise<any>
+    // Patch search() for graceful API failure; Algolia typings do not describe this wrapper.
+    ;(searchClient as any).search = async (...args: any[]) => {
       try {
-        return await originalRequest.call(this, requests)
-      } catch (error: any) {
-        // Check for referer/API key errors
+        return await originalSearch.apply(searchClient, args)
+      } catch (error: unknown) {
+        const err = error as { message?: string; status?: number }
         if (
-          error?.message?.includes("referer") ||
-          error?.message?.includes("Method not allowed") ||
-          error?.status === 403 ||
-          error?.status === 401
+          err?.message?.includes("referer") ||
+          err?.message?.includes("Method not allowed") ||
+          err?.status === 403 ||
+          err?.status === 401
         ) {
           console.warn(
             "[Algolia] API error detected, falling back to basic search:",
-            error.message
+            err.message
           )
           setHasError(true)
-          // Return empty results to prevent UI errors
+          const requests = Array.isArray(args[0]) ? args[0] : []
           return {
             results: requests.map(() => ({
               hits: [],
@@ -254,7 +255,8 @@ export default function AlgoliaSearch({
         throw error
       }
     }
-  }, [searchClient])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Algolia client is a module singleton; patch once
+  }, [])
 
   if (!isAlgoliaConfigured) {
     return null

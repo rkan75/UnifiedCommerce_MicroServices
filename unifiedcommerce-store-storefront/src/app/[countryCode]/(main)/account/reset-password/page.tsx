@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import Link from "next/link"
 
 import ResetPasswordForm from "@modules/account/components/reset-password-form"
 
@@ -8,13 +9,15 @@ export const metadata: Metadata = {
 }
 
 type Props = {
+  params: Promise<{ countryCode: string }>
   searchParams: Promise<{ token?: string; email?: string }>
 }
 
-export default async function ResetPasswordPage({ searchParams }: Props) {
-  const params = await searchParams
-  const token = (params.token ?? "").trim()
-  const email = (params.email ?? "").trim()
+export default async function ResetPasswordPage({ params, searchParams }: Props) {
+  const { countryCode } = await params
+  const query = await searchParams
+  const token = (query.token ?? "").trim()
+  const email = (query.email ?? "").trim()
 
   if (!token) {
     return (
@@ -23,12 +26,12 @@ export default async function ResetPasswordPage({ searchParams }: Props) {
         <p className="text-center text-base-regular text-ui-fg-base mb-8">
           This reset link is invalid or has expired. Please request a new password reset from the sign in page.
         </p>
-        <a
-          href="/account"
+        <Link
+          href={`/${countryCode}/account`}
           className="text-small-regular text-ui-fg-interactive hover:underline"
         >
           Back to sign in
-        </a>
+        </Link>
       </div>
     )
   }

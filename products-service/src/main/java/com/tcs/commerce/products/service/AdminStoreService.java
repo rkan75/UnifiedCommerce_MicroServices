@@ -1,5 +1,6 @@
 package com.tcs.commerce.products.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.commerce.products.config.ProductsProperties;
@@ -108,6 +109,24 @@ public class AdminStoreService {
         if (schema.hasColumn(storeT, "default_currency_code") && currencyCode != null) {
             sql.append(", default_currency_code = ?");
             args.add(currencyCode);
+        }
+
+        // Medusa v2: store-level custom fields live in public.store.metadata (jsonb).
+        if (schema.hasColumn(storeT, "metadata") && body.has("metadata") && !body.get("metadata").isNull()) {
+            JsonNode metaNode = body.get("metadata");
+            if (!metaNode.isObject()) {
+                throw new ProductWriteException(HttpStatus.BAD_REQUEST, "metadata must be a JSON object");
+            }
+            Map<String, Object> metaMap = objectMapper.convertValue(metaNode, new TypeReference<Map<String, Object>>() {});
+            try {
+                PGobject pg = new PGobject();
+                pg.setType("jsonb");
+                pg.setValue(objectMapper.writeValueAsString(metaMap));
+                sql.append(", metadata = ?");
+                args.add(pg);
+            } catch (Exception e) {
+                throw new ProductWriteException(HttpStatus.BAD_REQUEST, "Invalid metadata: " + e.getMessage());
+            }
         }
 
         sql.append(" WHERE id::text = ?");
@@ -589,8 +608,90 @@ public class AdminStoreService {
         m.put("store_currency_id", null);
         m.put("code", codeLower);
         m.put("name", nm != null ? nm : codeLower.toUpperCase(Locale.ROOT));
-        m.put("tax_inclusive_pricing", joinableCurrency && taxCol != null ? readCurrencyTaxFlag(cTable, taxCol, codeLower) : false);
+        m.put(
+            "tax_inclusive_pricing",
+            resolveTaxInclusiveForCurrencyCode(codeLower, cTable, taxCol, joinableCurrency)
+        );
         return List.of(m);
+    }
+
+    /**
+     * Medusa v2 persists per-store currency tax-inclusive in pricing {@code price_preference}
+     * ({@code attribute='currency_code'}, {@code value} = code), not on {@code currency}.
+     * Prefer that row when present; otherwise fall back to {@code currency} columns.
+     */
+    private boolean resolveTaxInclusiveForCurrencyCode(
+        String codeLower,
+        String cTable,
+        String taxCol,
+        boolean joinableCurrency
+    ) {
+        Boolean fromPreference = readPricePreferenceTaxInclusive(codeLower);
+        if (fromPreference != null) {
+            return Boolean.TRUE.equals(fromPreference);
+        }
+        return joinableCurrency && taxCol != null && readCurrencyTaxFlag(cTable, taxCol, codeLower);
+    }
+
+    /**
+     * @return {@code null} if table missing, no row, or error; otherwise DB value
+     */
+    private Boolean readPricePreferenceTaxInclusive(String currencyCodeLower) {
+        if (currencyCodeLower == null || currencyCodeLower.isBlank() || !canUsePricePreferenceTable()) {
+            return null;
+        }
+        String ppTable = pricePreferenceTable();
+        String del = schema.hasColumn(ppTable, "deleted_at") ? "deleted_at IS NULL" : "TRUE";
+        try {
+            return jdbc.queryForObject(
+                "SELECT is_tax_inclusive FROM "
+                    + ppTable
+                    + " WHERE attribute = 'currency_code' AND lower(trim(value::text)) = lower(?) AND "
+                    + del
+                    + " LIMIT 1",
+                Boolean.class,
+                currencyCodeLower.trim()
+            );
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
+        } catch (Exception e) {
+            log.debug("[admin-store] readPricePreferenceTaxInclusive: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private boolean canUsePricePreferenceTable() {
+        String t = pricePreferenceTable();
+        return schema.hasTable(t)
+            && schema.hasColumn(t, "id")
+            && schema.hasColumn(t, "attribute")
+            && schema.hasColumn(t, "value")
+            && schema.hasColumn(t, "is_tax_inclusive");
+    }
+
+    private static String pricePreferenceTable() {
+        return "price_preference";
+    }
+
+    /**
+     * SQL expression for tax-inclusive display: Medusa v2 {@code price_preference} overrides {@code currency}.* when joined.
+     */
+    private String buildTaxFlagSelectSql(boolean usePp, String cTable, String taxCol, boolean joinCurrency) {
+        if (usePp && joinCurrency && taxCol != null) {
+            return "CASE WHEN pp.id IS NOT NULL THEN (pp.is_tax_inclusive IS TRUE) ELSE (c."
+                + taxCol
+                + " IS TRUE) END";
+        }
+        if (usePp && joinCurrency) {
+            return "CASE WHEN pp.id IS NOT NULL THEN (pp.is_tax_inclusive IS TRUE) ELSE false END";
+        }
+        if (usePp) {
+            return "CASE WHEN pp.id IS NOT NULL THEN (pp.is_tax_inclusive IS TRUE) ELSE false END";
+        }
+        if (joinCurrency && taxCol != null) {
+            return "(c." + taxCol + " IS TRUE)";
+        }
+        return "false";
     }
 
     private List<Map<String, Object>> queryStoreCurrenciesDetailed(
@@ -602,22 +703,38 @@ public class AdminStoreService {
         StoreCurrencyScope scope
     ) {
         String scAlive = schema.hasColumn(scTable, "deleted_at") ? "sc.deleted_at IS NULL" : "TRUE";
+        boolean usePp = canUsePricePreferenceTable();
+        String ppTable = pricePreferenceTable();
+        String ppAlive = usePp && schema.hasColumn(ppTable, "deleted_at") ? "pp.deleted_at IS NULL" : "TRUE";
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT sc.id::text AS store_currency_id, lower(trim(sc.currency_code::text)) AS code ");
         if (joinCurrency) {
             String cDel = schema.hasColumn(cTable, "deleted_at") ? " AND (c.code IS NULL OR c.deleted_at IS NULL)" : "";
             sql.append(", COALESCE(NULLIF(trim(c.name::text), ''), upper(trim(sc.currency_code::text))) AS name ");
-            if (taxCol != null) {
-                sql.append(", (c.").append(taxCol).append(" IS TRUE) AS tax_flag ");
-            } else {
-                sql.append(", false AS tax_flag ");
-            }
+            sql.append(", ").append(buildTaxFlagSelectSql(usePp, cTable, taxCol, joinCurrency)).append(" AS tax_flag ");
             sql.append(" FROM ").append(scTable).append(" sc ");
+            if (usePp) {
+                sql.append(" LEFT JOIN ")
+                    .append(ppTable)
+                    .append(
+                        " pp ON pp.attribute = 'currency_code' AND lower(trim(pp.value::text)) = lower(trim(sc.currency_code::text)) AND "
+                    )
+                    .append(ppAlive);
+            }
             sql.append(" LEFT JOIN ").append(cTable).append(" c ON lower(trim(c.code::text)) = lower(trim(sc.currency_code::text))");
             sql.append(cDel);
         } else {
-            sql.append(", upper(trim(sc.currency_code::text)) AS name, false AS tax_flag ");
+            sql.append(", upper(trim(sc.currency_code::text)) AS name, ");
+            sql.append(buildTaxFlagSelectSql(usePp, cTable, taxCol, false)).append(" AS tax_flag ");
             sql.append(" FROM ").append(scTable).append(" sc ");
+            if (usePp) {
+                sql.append(" LEFT JOIN ")
+                    .append(ppTable)
+                    .append(
+                        " pp ON pp.attribute = 'currency_code' AND lower(trim(pp.value::text)) = lower(trim(sc.currency_code::text)) AND "
+                    )
+                    .append(ppAlive);
+            }
         }
         sql.append(" WHERE ").append(scAlive);
         sql.append(" AND (").append(storeIdWhereClauseForAlias("sc", scope)).append(")");

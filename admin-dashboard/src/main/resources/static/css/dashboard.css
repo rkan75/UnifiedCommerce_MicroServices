@@ -4027,6 +4027,10 @@ body.pdp-cv-open {
   width: 100%;
   box-sizing: border-box;
 }
+/* Row action menus use position:absolute; default overflow:hidden on card + overflow:auto on table wrap clips them. */
+.settings-card.settings-card--overflow-visible {
+  overflow: visible;
+}
 .settings-card-head {
   display: flex;
   align-items: flex-start;
@@ -4171,6 +4175,9 @@ body.pdp-cv-open {
   width: 100%;
   box-sizing: border-box;
 }
+.settings-cur-table-wrap {
+  overflow: visible;
+}
 .settings-table {
   width: 100%;
   border-collapse: collapse;
@@ -4277,10 +4284,14 @@ body.pdp-cv-open {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+.settings-store-dropdown.settings-cur-sort-dropdown {
+  z-index: 200;
+}
 .settings-cur-actions-wrap {
   position: relative;
   display: flex;
   justify-content: flex-end;
+  z-index: 2;
 }
 .settings-cur-row-menu-btn {
   border: none;
@@ -4301,6 +4312,9 @@ body.pdp-cv-open {
   right: 0;
   left: auto;
   min-width: 14rem;
+}
+.settings-table-currencies .settings-td-actions {
+  overflow: visible;
 }
 .settings-store-dropdown-item.danger {
   color: #b91c1c;
@@ -4389,6 +4403,9 @@ body.pdp-cv-open {
 .settings-store-dropdown.hidden {
   display: none !important;
 }
+.settings-store-dropdown.settings-cur-row-dropdown {
+  z-index: 200;
+}
 .settings-store-dropdown-item {
   display: flex;
   align-items: center;
@@ -4422,6 +4439,129 @@ body.pdp-cv-open {
 .settings-pill-text {
   font-weight: 500;
   color: #111827;
+}
+
+/* Store settings: collapsed metadata bar + edit drawer */
+.settings-meta-collapsed {
+  overflow: visible;
+}
+.settings-meta-collapsed .settings-card-head {
+  border-bottom: none;
+}
+.settings-meta-bar-head {
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin: 0;
+}
+.settings-meta-bar-spacer {
+  flex: 1;
+  min-width: 0.5rem;
+}
+.settings-meta-drawer-trigger {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.settings-meta-drawer-trigger:hover {
+  background: #fafafa;
+  border-color: #d1d5db;
+  color: #111827;
+}
+.settings-meta-drawer-trigger:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+.settings-meta-drawer-trigger:focus:not(:focus-visible) {
+  outline: none;
+}
+.settings-meta-drawer-trigger:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+.settings-meta-external-ico {
+  display: block;
+  flex-shrink: 0;
+}
+body.store-meta-drawer-open {
+  overflow: hidden;
+}
+.store-meta-drawer-backdrop {
+  z-index: 300;
+}
+.store-meta-drawer-panel {
+  z-index: 310;
+}
+.store-meta-kv-table {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.store-meta-kv-thead {
+  display: grid;
+  grid-template-columns: minmax(5rem, 1fr) minmax(6rem, 2fr) 2.25rem;
+  gap: 0.35rem;
+  padding: 0.5rem 0.65rem;
+  background: #fafafa;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  align-items: center;
+}
+.store-meta-kv-tbody {
+  max-height: min(50vh, 22rem);
+  overflow-y: auto;
+  background: #fff;
+}
+.store-meta-kv-row {
+  display: grid;
+  grid-template-columns: minmax(5rem, 1fr) minmax(6rem, 2fr) 2.25rem;
+  gap: 0.35rem;
+  padding: 0.45rem 0.65rem;
+  align-items: center;
+  border-top: 1px solid #f3f4f6;
+}
+.store-meta-kv-row .store-edit-input {
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.store-meta-row-remove {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  color: #6b7280;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.store-meta-row-remove:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.store-meta-add-btn {
+  width: 100%;
+  margin-bottom: 0.35rem;
 }
 
 /* Edit Store drawer (light, right rail) */

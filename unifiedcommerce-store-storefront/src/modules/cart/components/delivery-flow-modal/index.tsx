@@ -47,7 +47,10 @@ type DeliveryFlowModalProps = {
   isOpen: boolean
   close: () => void
   customer: HttpTypes.StoreCustomer | null
-  cart: (HttpTypes.StoreCart & { region?: HttpTypes.StoreRegion; metadata?: Record<string, unknown> }) | null
+  cart: (HttpTypes.StoreCart & {
+    region?: HttpTypes.StoreRegion
+    metadata?: Record<string, unknown> | null
+  }) | null
   checkoutStep: string
   onSuccess?: () => void
   /** When opening from checkout "Change Store" / "Change timeslot", open at this step and prefill from cart */
@@ -99,7 +102,9 @@ export default function DeliveryFlowModal({
   const topStoresLimit = getDeliveryFulfillmentStoreCount()
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
   const [formData, setFormData] = useState<Record<string, string>>(initialFormState)
-  const [selectedAddress, setSelectedAddress] = useState<HttpTypes.StoreCustomerAddress | null>(null)
+  const [selectedAddress, setSelectedAddress] = useState<
+    HttpTypes.StoreCustomerAddress | HttpTypes.StoreCartAddress | null
+  >(null)
   const [useNewAddress, setUseNewAddress] = useState(false)
   const [topStores, setTopStores] = useState<StoreLocation[]>([])
   const [selectedStore, setSelectedStore] = useState<StoreLocation | null>(null)
@@ -779,8 +784,9 @@ export default function DeliveryFlowModal({
               </Text>
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-small-medium text-ui-fg-base mb-1">Phone number</label>
                   <Input
+                    name="delivery_contact_phone"
+                    label="Phone number"
                     type="tel"
                     placeholder="Enter phone number"
                     value={contactPhone}

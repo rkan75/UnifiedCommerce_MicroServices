@@ -4,6 +4,7 @@ import com.tcs.commerce.search.config.AdminSearchProperties;
 import com.tcs.commerce.search.web.AdminSearchResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -77,7 +78,8 @@ public class AdminSearchService {
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<Map> upstream = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            ResponseEntity<Map<String, Object>> upstream = restTemplate.exchange(
+                url, HttpMethod.GET, entity, new ParameterizedTypeReference<Map<String, Object>>() {});
             Map<String, Object> body = toMap(upstream.getBody());
             List<Map<String, Object>> items = extractItems(body, target.getResponseKey());
             int count = extractCount(body, items.size());

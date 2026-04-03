@@ -105,7 +105,7 @@ export const RECIPES: Recipe[] = [
       { name: "Vodka", quantity: "2 oz" },
       { name: "Fresh lemon juice", quantity: "1 oz", productHandle: "galaapple" },
       { name: "Simple syrup", quantity: "3/4 oz" },
-      { name: "Ice" },
+      { name: "Ice", quantity: "as needed" },
     ],
     directions: [
       "Combine vodka, lemon juice, and simple syrup in a shaker with ice.",

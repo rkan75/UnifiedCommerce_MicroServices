@@ -35,7 +35,7 @@ const AddressSelect = ({
   return (
     <Listbox
       onChange={handleSelect}
-      value={selectedAddress?.id ?? null}
+      value={selectedAddress?.id ?? undefined}
     >
       <div className="relative">
         <Listbox.Button

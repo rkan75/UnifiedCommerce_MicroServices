@@ -9,7 +9,7 @@ import DeliveryFlowModal from "@modules/cart/components/delivery-flow-modal"
 import { useRouter } from "next/navigation"
 
 type CartWithMetadata = HttpTypes.StoreCart & {
-  metadata?: Record<string, unknown>
+  metadata?: Record<string, unknown> | null
   region?: HttpTypes.StoreRegion
 }
 

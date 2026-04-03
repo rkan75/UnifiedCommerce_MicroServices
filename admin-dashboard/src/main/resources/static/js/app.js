@@ -2361,6 +2361,7 @@
   }
 
   var storeEditEscHandler = null;
+  var storeMetaEscHandler = null;
 
   function closeStoreEditDrawer() {
     var bd = document.getElementById('storeEditBackdrop');
@@ -2549,7 +2550,7 @@
         '<div class="settings-dl-row"><span class="settings-dl-k">Default sales channel</span><span class="settings-dl-v" id="stCh">—</span></div>' +
         '<div class="settings-dl-row"><span class="settings-dl-k">Default location</span><span class="settings-dl-v" id="stLoc">—</span></div>' +
         '</div></section>' +
-        '<section class="settings-card">' +
+        '<section class="settings-card settings-card--overflow-visible">' +
         '<div class="settings-card-head">' +
         '<h2 class="settings-card-title">Currencies</h2>' +
         '<div class="settings-card-menu-wrap">' +
@@ -2571,12 +2572,10 @@
         '<button type="button" class="settings-cur-filter-btn settings-cur-sort-open" id="settingsCurSortBtn" aria-label="Sort" aria-haspopup="true" aria-expanded="false">☰</button>' +
         '<div class="settings-store-dropdown hidden settings-cur-sort-dropdown" id="settingsCurSortDropdown" role="menu">' +
         '<div class="settings-cur-sort-heading">Sort by</div>' +
-        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="name" data-sort-dir="asc" role="menuitem">Name · Ascending</button>' +
-        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="name" data-sort-dir="desc" role="menuitem">Name · Descending</button>' +
-        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="code" data-sort-dir="asc" role="menuitem">Code · Ascending</button>' +
-        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="code" data-sort-dir="desc" role="menuitem">Code · Descending</button>' +
+        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="name" data-sort-dir="asc" role="menuitem">Name</button>' +
+        '<button type="button" class="settings-store-dropdown-item settings-cur-sort-opt" data-sort-key="code" data-sort-dir="asc" role="menuitem">Code</button>' +
         '</div></div></div>' +
-        '<div class="settings-table-wrap" id="settingsCurTableWrap">' +
+        '<div class="settings-table-wrap settings-cur-table-wrap" id="settingsCurTableWrap">' +
         '<table class="settings-table settings-table-currencies">' +
         '<thead><tr>' +
         '<th class="settings-th-check"><input type="checkbox" id="settingsCurSelectAll" aria-label="Select all rows" /></th>' +
@@ -2589,11 +2588,17 @@
         '<span class="settings-table-nav">' +
         '<button type="button" class="btn-outline" id="settingsCurPrev">Prev</button> ' +
         '<button type="button" class="btn-outline" id="settingsCurNext">Next</button></span></div></div></section>' +
-        '<section class="settings-card settings-fold-card">' +
-        '<div class="settings-card-head">' +
+        '<section class="settings-card settings-meta-collapsed" aria-label="Store metadata">' +
+        '<div class="settings-card-head settings-meta-bar-head">' +
         '<h2 class="settings-card-title">Metadata <span class="settings-key-badge" id="stMetaCount">0 keys</span></h2>' +
-        '<button type="button" class="settings-icon-btn" id="stMetaPop" title="Open" aria-label="Open metadata">↗</button></div>' +
-        '<div class="settings-card-body"><pre class="settings-pre" id="stMetaPre">{}</pre></div></section>' +
+        '<span class="settings-meta-bar-spacer"></span>' +
+        '<button type="button" class="settings-meta-drawer-trigger" id="stMetaDrawerBtn" title="Edit metadata" aria-label="Edit metadata">' +
+        '<svg class="settings-meta-external-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M15 3h6v6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="m10 14 11-11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg></button></div></section>' +
+        '<pre class="settings-pre" id="stMetaPre" hidden aria-hidden="true">{}</pre>' +
         '<section class="settings-card settings-fold-card">' +
         '<div class="settings-card-head">' +
         '<h2 class="settings-card-title">JSON <span class="settings-key-badge" id="stJsonCount">0 keys</span></h2>' +
@@ -2780,6 +2785,221 @@
       var filtEl = document.getElementById('settingsCurFilter');
       renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
       wireStoreCardMenu();
+      wireStoreMetaBarOnce();
+    }
+
+    function appendStoreMetaRow(container, key, val) {
+      if (!container) return;
+      var row = document.createElement('div');
+      row.className = 'store-meta-kv-row';
+      row.setAttribute('role', 'row');
+      var inpK = document.createElement('input');
+      inpK.type = 'text';
+      inpK.className = 'store-edit-input store-meta-kv-key';
+      inpK.placeholder = 'Key';
+      inpK.value = key != null ? String(key) : '';
+      inpK.setAttribute('aria-label', 'Metadata key');
+      var inpV = document.createElement('input');
+      inpV.type = 'text';
+      inpV.className = 'store-edit-input store-meta-kv-val';
+      inpV.placeholder = 'Value';
+      inpV.value = val != null ? String(val) : '';
+      inpV.setAttribute('aria-label', 'Metadata value');
+      var rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'store-meta-row-remove';
+      rm.setAttribute('aria-label', 'Remove row');
+      rm.textContent = '×';
+      rm.addEventListener('click', function() {
+        if (container.children.length > 1) {
+          row.remove();
+        } else {
+          inpK.value = '';
+          inpV.value = '';
+        }
+      });
+      row.appendChild(inpK);
+      row.appendChild(inpV);
+      row.appendChild(rm);
+      container.appendChild(row);
+    }
+
+    function collectStoreMetaFromRows() {
+      var out = {};
+      var tb = document.getElementById('storeMetaRows');
+      if (!tb) return out;
+      tb.querySelectorAll('.store-meta-kv-row').forEach(function(row) {
+        var kIn = row.querySelector('.store-meta-kv-key');
+        var vIn = row.querySelector('.store-meta-kv-val');
+        if (!kIn) return;
+        var k = kIn.value.trim();
+        if (!k) return;
+        out[k] = vIn ? vIn.value : '';
+      });
+      return out;
+    }
+
+    function ensureStoreMetaDrawerShell() {
+      if (document.getElementById('storeMetaBackdrop')) return;
+      document.body.insertAdjacentHTML(
+        'beforeend',
+        '<div id="storeMetaBackdrop" class="store-edit-backdrop store-meta-drawer-backdrop hidden" aria-hidden="true"></div>' +
+          '<div id="storeMetaDrawer" class="store-edit-drawer store-meta-drawer-panel hidden" role="dialog" aria-modal="true" aria-labelledby="storeMetaTitle">' +
+          '<div class="store-edit-inner">' +
+          '<div class="store-edit-head">' +
+          '<h2 id="storeMetaTitle" class="store-edit-title">Edit Metadata</h2>' +
+          '<div class="store-edit-head-actions">' +
+          '<span class="store-edit-kbd">Esc</span>' +
+          '<button type="button" class="store-edit-x" id="storeMetaClose" aria-label="Close">×</button></div></div>' +
+          '<div class="store-edit-body">' +
+          '<div class="store-meta-kv-table" role="table" aria-label="Metadata entries">' +
+          '<div class="store-meta-kv-thead" role="row">' +
+          '<span role="columnheader">Key</span><span role="columnheader">Value</span>' +
+          '<span class="store-meta-kv-actions-h" aria-hidden="true"></span></div>' +
+          '<div id="storeMetaRows" class="store-meta-kv-tbody"></div></div>' +
+          '<button type="button" class="btn-outline store-meta-add-btn" id="storeMetaAddRow">Add row</button>' +
+          '<p class="store-edit-err hidden" id="smErr" role="alert"></p></div>' +
+          '<div class="store-edit-foot">' +
+          '<button type="button" class="btn-outline" id="smCancel">Cancel</button>' +
+          '<button type="button" class="btn-solid" id="smSave">Save</button></div></div></div>'
+      );
+      document.getElementById('storeMetaBackdrop').addEventListener('click', closeStoreMetaDrawer);
+      document.getElementById('storeMetaClose').addEventListener('click', closeStoreMetaDrawer);
+      document.getElementById('smCancel').addEventListener('click', closeStoreMetaDrawer);
+      document.getElementById('storeMetaAddRow').addEventListener('click', function() {
+        appendStoreMetaRow(document.getElementById('storeMetaRows'), '', '');
+      });
+    }
+
+    function closeStoreMetaDrawer() {
+      var bd = document.getElementById('storeMetaBackdrop');
+      var dr = document.getElementById('storeMetaDrawer');
+      if (bd) bd.classList.add('hidden');
+      if (dr) dr.classList.add('hidden');
+      document.body.classList.remove('store-meta-drawer-open');
+      if (storeMetaEscHandler) {
+        document.removeEventListener('keydown', storeMetaEscHandler);
+        storeMetaEscHandler = null;
+      }
+      var saveBtn = document.getElementById('smSave');
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.onclick = null;
+      }
+    }
+
+    function fillStoreMetaDrawerFromStore() {
+      ensureStoreMetaDrawerShell();
+      var tb = document.getElementById('storeMetaRows');
+      if (!tb) return;
+      tb.innerHTML = '';
+      var st = storePagePayload && storePagePayload.store;
+      var meta = st && st.metadata;
+      if (meta == null || typeof meta !== 'object' || Array.isArray(meta)) meta = {};
+      var keys = Object.keys(meta);
+      if (keys.length === 0) {
+        appendStoreMetaRow(tb, '', '');
+      } else {
+        keys.forEach(function(k) {
+          var v = meta[k];
+          if (v != null && typeof v === 'object') {
+            try {
+              v = JSON.stringify(v);
+            } catch (e) {
+              v = String(v);
+            }
+          } else if (v != null) {
+            v = String(v);
+          } else {
+            v = '';
+          }
+          appendStoreMetaRow(tb, k, v);
+        });
+        appendStoreMetaRow(tb, '', '');
+      }
+    }
+
+    function openStoreMetaDrawer() {
+      if (!storePagePayload || !storePagePayload.store) return;
+      ensureStoreMetaDrawerShell();
+      fillStoreMetaDrawerFromStore();
+      var smErr = document.getElementById('smErr');
+      if (smErr) {
+        smErr.classList.add('hidden');
+        smErr.textContent = '';
+      }
+      document.getElementById('storeMetaBackdrop').classList.remove('hidden');
+      document.getElementById('storeMetaDrawer').classList.remove('hidden');
+      document.body.classList.add('store-meta-drawer-open');
+      storeMetaEscHandler = function(ev) {
+        if (ev.key === 'Escape') closeStoreMetaDrawer();
+      };
+      document.addEventListener('keydown', storeMetaEscHandler);
+      document.getElementById('smSave').onclick = function() {
+        var st = storePagePayload.store;
+        var body = {
+          name: (st.name || '').trim(),
+          default_currency_code: st.default_currency_code || null,
+          default_region_id: st.default_region_id || null,
+          default_sales_channel_id: st.default_sales_channel_id || null,
+          default_location_id: st.default_location_id || null,
+          metadata: collectStoreMetaFromRows()
+        };
+        if (!body.name) {
+          if (smErr) {
+            smErr.textContent = 'Store name is missing; reload the page.';
+            smErr.classList.remove('hidden');
+          }
+          return;
+        }
+        var saveBtn = document.getElementById('smSave');
+        if (saveBtn) saveBtn.disabled = true;
+        fetch('/admin/store', {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(body)
+        })
+          .then(function(r) {
+            return r.json().then(function(data) {
+              return { ok: r.ok, data: data };
+            });
+          })
+          .then(function(res) {
+            if (saveBtn) saveBtn.disabled = false;
+            if (!res.ok) {
+              var msg =
+                res.data && (res.data.message || res.data.error)
+                  ? String(res.data.message || res.data.error)
+                  : 'Save failed';
+              if (smErr) {
+                smErr.textContent = msg;
+                smErr.classList.remove('hidden');
+              }
+              return;
+            }
+            applyStorePayload(res.data);
+            closeStoreMetaDrawer();
+          })
+          .catch(function() {
+            if (saveBtn) saveBtn.disabled = false;
+            if (smErr) {
+              smErr.textContent = 'Network error.';
+              smErr.classList.remove('hidden');
+            }
+          });
+      };
+    }
+
+    function wireStoreMetaBarOnce() {
+      var metaBtn = document.getElementById('stMetaDrawerBtn');
+      if (!metaBtn || metaBtn.dataset.metaBarWired === '1') return;
+      metaBtn.dataset.metaBarWired = '1';
+      metaBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openStoreMetaDrawer();
+      });
     }
 
     function fetchStoreAndApply() {
@@ -3334,6 +3554,7 @@
           bindCurrencyFilter();
           wireCurrencyChromeOnce();
           wireStoreCardMenu();
+          wireStoreMetaBarOnce();
         });
       })
       .catch(function() {
@@ -3344,6 +3565,7 @@
         bindCurrencyFilter();
         wireCurrencyChromeOnce();
         wireStoreCardMenu();
+        wireStoreMetaBarOnce();
       });
 
     function openTabJson(txt) {
@@ -3354,13 +3576,7 @@
         }
       } catch (e) {}
     }
-    var mp = document.getElementById('stMetaPop');
     var jp = document.getElementById('stJsonPop');
-    if (mp) {
-      mp.addEventListener('click', function() {
-        openTabJson(metaPre ? metaPre.textContent : '{}');
-      });
-    }
     if (jp) {
       jp.addEventListener('click', function() {
         openTabJson(jsonPre ? jsonPre.textContent : '{}');

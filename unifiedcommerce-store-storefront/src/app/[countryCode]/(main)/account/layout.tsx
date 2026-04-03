@@ -20,8 +20,9 @@ export default async function AccountPageLayout({
         customer={!!customer}
         dashboard={dashboard}
         login={login}
-        children={children}
-      />
+      >
+        {children}
+      </AccountSlotContent>
       <Toaster />
     </AccountLayout>
   )

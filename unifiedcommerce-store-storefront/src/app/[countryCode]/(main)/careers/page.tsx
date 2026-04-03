@@ -157,7 +157,7 @@ export default async function CareersPage() {
                   <Heading level="h3" className="text-2xl font-semibold mb-3 text-ui-fg-base">
                     Impact
                   </Heading>
-                  <Heading level="h4" className="text-xl font-semibold mb-2 text-ui-fg-base">
+                  <Heading level="h3" className="text-xl font-semibold mb-2 text-ui-fg-base">
                     Leading with purpose
                   </Heading>
                   <Text className="text-lg text-ui-fg-subtle">
@@ -177,7 +177,7 @@ export default async function CareersPage() {
                   <Heading level="h3" className="text-2xl font-semibold mb-3 text-ui-fg-base">
                     Development
                   </Heading>
-                  <Heading level="h4" className="text-xl font-semibold mb-2 text-ui-fg-base">
+                  <Heading level="h3" className="text-xl font-semibold mb-2 text-ui-fg-base">
                     Continuous learning
                   </Heading>
                   <Text className="text-lg text-ui-fg-subtle">

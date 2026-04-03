@@ -132,7 +132,7 @@ export default async function ContactPage() {
                 href="mailto:analyst@unifiedomnichannel.com"
                 className="block"
               >
-                <Heading level="h4" className="text-lg font-medium mb-1 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-medium mb-1 text-ui-fg-base">
                   Analyst Relations
                 </Heading>
                 <Text className="text-sm text-ui-fg-subtle">
@@ -145,7 +145,7 @@ export default async function ContactPage() {
                 href="mailto:csr@unifiedomnichannel.com"
                 className="block"
               >
-                <Heading level="h4" className="text-lg font-medium mb-1 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-medium mb-1 text-ui-fg-base">
                   CSR
                 </Heading>
                 <Text className="text-sm text-ui-fg-subtle">
@@ -158,7 +158,7 @@ export default async function ContactPage() {
                 href="mailto:partnerships@unifiedomnichannel.com"
                 className="block"
               >
-                <Heading level="h4" className="text-lg font-medium mb-1 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-medium mb-1 text-ui-fg-base">
                   Partnerships
                 </Heading>
                 <Text className="text-sm text-ui-fg-subtle">
@@ -171,7 +171,7 @@ export default async function ContactPage() {
                 href="mailto:feedback@unifiedomnichannel.com"
                 className="block"
               >
-                <Heading level="h4" className="text-lg font-medium mb-1 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-medium mb-1 text-ui-fg-base">
                   Website Feedback
                 </Heading>
                 <Text className="text-sm text-ui-fg-subtle">
@@ -191,7 +191,7 @@ export default async function ContactPage() {
             <div className="flex items-start gap-4">
               <MapPin className="w-6 h-6 text-ui-fg-interactive flex-shrink-0 mt-1" />
               <div>
-                <Heading level="h4" className="text-lg font-semibold mb-2 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-semibold mb-2 text-ui-fg-base">
                   Address
                 </Heading>
                 <Text className="text-ui-fg-subtle">
@@ -204,7 +204,7 @@ export default async function ContactPage() {
             <div className="flex items-start gap-4">
               <Envelope className="w-6 h-6 text-ui-fg-interactive flex-shrink-0 mt-1" />
               <div>
-                <Heading level="h4" className="text-lg font-semibold mb-2 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-semibold mb-2 text-ui-fg-base">
                   Email
                 </Heading>
                 <Text className="text-ui-fg-subtle">
@@ -220,7 +220,7 @@ export default async function ContactPage() {
             <div className="flex items-start gap-4">
               <Phone className="w-6 h-6 text-ui-fg-interactive flex-shrink-0 mt-1" />
               <div>
-                <Heading level="h4" className="text-lg font-semibold mb-2 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-semibold mb-2 text-ui-fg-base">
                   Phone
                 </Heading>
                 <Text className="text-ui-fg-subtle">
@@ -236,7 +236,7 @@ export default async function ContactPage() {
             <div className="flex items-start gap-4">
               <Buildings className="w-6 h-6 text-ui-fg-interactive flex-shrink-0 mt-1" />
               <div>
-                <Heading level="h4" className="text-lg font-semibold mb-2 text-ui-fg-base">
+                <Heading level="h3" className="text-lg font-semibold mb-2 text-ui-fg-base">
                   Global Presence
                 </Heading>
                 <Text className="text-ui-fg-subtle">

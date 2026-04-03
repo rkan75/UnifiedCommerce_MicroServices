@@ -14,11 +14,15 @@ const LineItemUnitPrice = ({
   currencyCode,
 }: LineItemUnitPriceProps) => {
   const { total, original_total } = item
-  const hasReducedPrice = total < original_total
+  const totalAmt = total ?? 0
+  const originalAmt = original_total ?? 0
+  const qty = item.quantity && item.quantity > 0 ? item.quantity : 1
+  const hasReducedPrice = totalAmt < originalAmt
 
-  const percentage_diff = Math.round(
-    ((original_total - total) / original_total) * 100
-  )
+  const percentage_diff =
+    originalAmt > 0
+      ? Math.round(((originalAmt - totalAmt) / originalAmt) * 100)
+      : 0
 
   return (
     <div className="flex flex-col text-ui-fg-muted justify-center h-full">
@@ -33,7 +37,7 @@ const LineItemUnitPrice = ({
               data-testid="product-unit-original-price"
             >
               {convertToLocale({
-                amount: original_total / item.quantity,
+                amount: originalAmt / qty,
                 currency_code: currencyCode,
                 fromMinorUnit: true,
               })}
@@ -51,7 +55,7 @@ const LineItemUnitPrice = ({
         data-testid="product-unit-price"
       >
         {convertToLocale({
-          amount: total / item.quantity,
+          amount: totalAmt / qty,
           currency_code: currencyCode,
           fromMinorUnit: true,
         })}
