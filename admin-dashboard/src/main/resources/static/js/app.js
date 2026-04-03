@@ -2788,6 +2788,23 @@
       wireStoreMetaBarOnce();
     }
 
+    function mirrorStoreMetaRowToDataset(row) {
+      if (!row) return;
+      var kIn = row.querySelector('.store-meta-kv-key');
+      var vIn = row.querySelector('.store-meta-kv-val');
+      if (kIn) row.dataset.storeMetaKey = kIn.value;
+      if (vIn) row.dataset.storeMetaVal = vIn.value;
+    }
+
+    function syncAllStoreMetaRowDatasets() {
+      var tb = document.getElementById('storeMetaRows');
+      if (!tb) return;
+      var rows = tb.getElementsByClassName('store-meta-kv-row');
+      for (var i = 0; i < rows.length; i++) {
+        mirrorStoreMetaRowToDataset(rows[i]);
+      }
+    }
+
     function appendStoreMetaRow(container, key, val) {
       if (!container) return;
       var row = document.createElement('div');
@@ -2805,6 +2822,22 @@
       inpV.placeholder = 'Value';
       inpV.value = val != null ? String(val) : '';
       inpV.setAttribute('aria-label', 'Metadata value');
+      function onMetaFieldInput() {
+        mirrorStoreMetaRowToDataset(row);
+      }
+      inpK.addEventListener('input', onMetaFieldInput);
+      inpV.addEventListener('input', onMetaFieldInput);
+      inpK.addEventListener('change', onMetaFieldInput);
+      inpV.addEventListener('change', onMetaFieldInput);
+      inpK.addEventListener('compositionend', onMetaFieldInput);
+      inpV.addEventListener('compositionend', onMetaFieldInput);
+      inpK.addEventListener('paste', function() {
+        window.setTimeout(onMetaFieldInput, 0);
+      });
+      inpV.addEventListener('paste', function() {
+        window.setTimeout(onMetaFieldInput, 0);
+      });
+      mirrorStoreMetaRowToDataset(row);
       var rm = document.createElement('button');
       rm.type = 'button';
       rm.className = 'store-meta-row-remove';
@@ -2816,6 +2849,7 @@
         } else {
           inpK.value = '';
           inpV.value = '';
+          mirrorStoreMetaRowToDataset(row);
         }
       });
       row.appendChild(inpK);
@@ -2831,15 +2865,35 @@
       var rows = tb.getElementsByClassName('store-meta-kv-row');
       for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
-        var inputs = row.querySelectorAll('input.store-edit-input');
-        var kIn = inputs[0];
-        var vIn = inputs[1];
-        if (!kIn) continue;
-        var k = kIn.value.trim();
+        var kIn = row.querySelector('.store-meta-kv-key');
+        var vIn = row.querySelector('.store-meta-kv-val');
+        var kRaw =
+          row.dataset.storeMetaKey !== undefined ? row.dataset.storeMetaKey : kIn ? kIn.value : '';
+        var k = String(kRaw).trim();
         if (!k) continue;
-        out[k] = vIn ? vIn.value : '';
+        var v =
+          row.dataset.storeMetaVal !== undefined ? row.dataset.storeMetaVal : vIn ? vIn.value : '';
+        out[k] = v;
       }
       return out;
+    }
+
+    function prepareStoreMetaSaveThen(run) {
+      var dr = document.getElementById('storeMetaDrawer');
+      var ae = document.activeElement;
+      if (
+        dr &&
+        ae &&
+        dr.contains(ae) &&
+        ae !== document.getElementById('smSave') &&
+        (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')
+      ) {
+        ae.blur();
+      }
+      window.requestAnimationFrame(function() {
+        syncAllStoreMetaRowDatasets();
+        window.requestAnimationFrame(run);
+      });
     }
 
     function performStoreMetaSave() {
@@ -2950,7 +3004,7 @@
         );
         smSaveEl.addEventListener('click', function(e) {
           e.preventDefault();
-          window.setTimeout(performStoreMetaSave, 0);
+          prepareStoreMetaSaveThen(performStoreMetaSave);
         });
       }
     }
