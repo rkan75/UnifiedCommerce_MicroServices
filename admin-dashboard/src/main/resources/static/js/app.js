@@ -2828,15 +2828,75 @@
       var out = {};
       var tb = document.getElementById('storeMetaRows');
       if (!tb) return out;
-      tb.querySelectorAll('.store-meta-kv-row').forEach(function(row) {
-        var kIn = row.querySelector('.store-meta-kv-key');
-        var vIn = row.querySelector('.store-meta-kv-val');
-        if (!kIn) return;
+      var rows = tb.getElementsByClassName('store-meta-kv-row');
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var inputs = row.querySelectorAll('input.store-edit-input');
+        var kIn = inputs[0];
+        var vIn = inputs[1];
+        if (!kIn) continue;
         var k = kIn.value.trim();
-        if (!k) return;
+        if (!k) continue;
         out[k] = vIn ? vIn.value : '';
-      });
+      }
       return out;
+    }
+
+    function performStoreMetaSave() {
+      var smErr = document.getElementById('smErr');
+      if (!storePagePayload || !storePagePayload.store) return;
+      var st = storePagePayload.store;
+      var body = {
+        name: (st.name || '').trim(),
+        default_currency_code: st.default_currency_code || null,
+        default_region_id: st.default_region_id || null,
+        default_sales_channel_id: st.default_sales_channel_id || null,
+        default_location_id: st.default_location_id || null,
+        metadata: collectStoreMetaFromRows()
+      };
+      if (!body.name) {
+        if (smErr) {
+          smErr.textContent = 'Store name is missing; reload the page.';
+          smErr.classList.remove('hidden');
+        }
+        return;
+      }
+      var saveBtn = document.getElementById('smSave');
+      if (saveBtn) saveBtn.disabled = true;
+      fetch('/admin/store', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(body)
+      })
+        .then(function(r) {
+          return r.json().then(function(data) {
+            return { ok: r.ok, data: data };
+          });
+        })
+        .then(function(res) {
+          if (saveBtn) saveBtn.disabled = false;
+          if (!res.ok) {
+            var msg =
+              res.data && (res.data.message || res.data.error)
+                ? String(res.data.message || res.data.error)
+                : 'Save failed';
+            if (smErr) {
+              smErr.textContent = msg;
+              smErr.classList.remove('hidden');
+            }
+            return;
+          }
+          applyStorePayload(res.data);
+          closeStoreMetaDrawer();
+        })
+        .catch(function() {
+          if (saveBtn) saveBtn.disabled = false;
+          if (smErr) {
+            smErr.textContent = 'Network error.';
+            smErr.classList.remove('hidden');
+          }
+        });
     }
 
     function ensureStoreMetaDrawerShell() {
@@ -2869,6 +2929,30 @@
       document.getElementById('storeMetaAddRow').addEventListener('click', function() {
         appendStoreMetaRow(document.getElementById('storeMetaRows'), '', '');
       });
+      var smSaveEl = document.getElementById('smSave');
+      if (smSaveEl) {
+        smSaveEl.addEventListener(
+          'mousedown',
+          function() {
+            var drCheck = document.getElementById('storeMetaDrawer');
+            if (!drCheck || drCheck.classList.contains('hidden')) return;
+            var ae = document.activeElement;
+            if (
+              ae &&
+              ae !== smSaveEl &&
+              drCheck.contains(ae) &&
+              (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')
+            ) {
+              ae.blur();
+            }
+          },
+          true
+        );
+        smSaveEl.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.setTimeout(performStoreMetaSave, 0);
+        });
+      }
     }
 
     function closeStoreMetaDrawer() {
@@ -2882,10 +2966,7 @@
         storeMetaEscHandler = null;
       }
       var saveBtn = document.getElementById('smSave');
-      if (saveBtn) {
-        saveBtn.disabled = false;
-        saveBtn.onclick = null;
-      }
+      if (saveBtn) saveBtn.disabled = false;
     }
 
     function fillStoreMetaDrawerFromStore() {
@@ -2935,60 +3016,6 @@
         if (ev.key === 'Escape') closeStoreMetaDrawer();
       };
       document.addEventListener('keydown', storeMetaEscHandler);
-      document.getElementById('smSave').onclick = function() {
-        var st = storePagePayload.store;
-        var body = {
-          name: (st.name || '').trim(),
-          default_currency_code: st.default_currency_code || null,
-          default_region_id: st.default_region_id || null,
-          default_sales_channel_id: st.default_sales_channel_id || null,
-          default_location_id: st.default_location_id || null,
-          metadata: collectStoreMetaFromRows()
-        };
-        if (!body.name) {
-          if (smErr) {
-            smErr.textContent = 'Store name is missing; reload the page.';
-            smErr.classList.remove('hidden');
-          }
-          return;
-        }
-        var saveBtn = document.getElementById('smSave');
-        if (saveBtn) saveBtn.disabled = true;
-        fetch('/admin/store', {
-          method: 'PATCH',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(body)
-        })
-          .then(function(r) {
-            return r.json().then(function(data) {
-              return { ok: r.ok, data: data };
-            });
-          })
-          .then(function(res) {
-            if (saveBtn) saveBtn.disabled = false;
-            if (!res.ok) {
-              var msg =
-                res.data && (res.data.message || res.data.error)
-                  ? String(res.data.message || res.data.error)
-                  : 'Save failed';
-              if (smErr) {
-                smErr.textContent = msg;
-                smErr.classList.remove('hidden');
-              }
-              return;
-            }
-            applyStorePayload(res.data);
-            closeStoreMetaDrawer();
-          })
-          .catch(function() {
-            if (saveBtn) saveBtn.disabled = false;
-            if (smErr) {
-              smErr.textContent = 'Network error.';
-              smErr.classList.remove('hidden');
-            }
-          });
-      };
     }
 
     function wireStoreMetaBarOnce() {
