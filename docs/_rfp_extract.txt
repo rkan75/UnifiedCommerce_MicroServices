@@ -1,0 +1,4472 @@
+
+--- PAGE 1 ---
+Published  by:  EDION  Corporation
+RFP  (Request  for  Proposal)
+Publication  date:  March  27,  2026
+Request  for  proposals  regarding  the  redesign  of  
+our  e-commerce  website  and  smartphone  app.
+Machine Translated by Google
+--- PAGE 2 ---
+...
+...
+. . . . .
+. . . . .
+...
+.
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+...
+5
+.
+. . . . .
+. . . . .
+i
+...
+.
+6
+...
+.
+. . . . .
+...
+.
+...
+...
+. . . . .
+. . . . .
+. . . . .
+13
+.
+. . . . .
+. . . . .
+.
+...
+...
+8
+. . . . .
+. . . . .
+.
+3.  E-commerce  business  and  smartphone  apps
+...
+...
+.
+.
+.
+...
+. . . . .
+. . . . .
+9
+. . . . .
+. . . . .
+.
+3
+. . . . .
+...
+. . . . .
+. . . . .
+...
+...
+... . . . . .
+.
+.
+.
+. . . . .
+...
+.
+11
+. . . . .
+.
+4
+.
+...
+...
+. . . . .
+...
+.
+.
+. . . . .
+7
+...
+.
+. . . . .
+...
+. . . . .
+...
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+...
+...
+1
+. . . . .
+...
+...
+...
+. . . . .
+. . . . .
+...
+. . . . .
+...
+. . . . .
+. 12
+...
+...
+.
+3.4.1  Market  Environment  and  Current  
+Situation  Analysis  3.4.2  Medium-  to  Long-Term  Vision:  Integration  
+of  Stores  and  Online  3.4.3  
+Sales  Trends  and  Targets  
+3.4.4  Key  Initiatives  3.5  Medium-Term  Vision  
+for  System  Development  
+3.5.1  Market  Environment  3.5.2  
+Medium-Term  Initiatives  3.5.3  Value  Created  by  Medium-Term  
+Initiatives  3.5.4  Customer  Experience  Image  for  Improving  Customer  
+Convenience  3.5.5  Modernization  of  System  
+Design  3.6  Strategic  
+Challenges  1.  Standardization  of  Customer  Experience  and  Reduction  of  Learning  Costs
+...
+...
+...
+8
+...
+...
+. . . . .
+.
+2
+...
+...
+...
+.
+...
+5
+...
+...
+. . . . .
+.
+. . . . .
+...
+...
+...
+12
+...
+. . . . .
+. . . . .
+...
+...
+...
+...
+...
+...
+...
+...
+3.1  Evolution  and  Positioning  of  the  E-
+commerce  Business . . .  3.2  Current  Status  of  the  Smartphone  App  (Edion  App) . . .
+...
+. . . . .
+9
+...
+...
+.
+. . . . .
+...
+...
+5
+14
+.
+...
+...
+. . . . .
+...
+.. . . . .
+...
+...
+...
+.
+...
+...
+...
+...
+...
+...
+.
+...
+3
+. . . . .
+...
+. . . . .
+...
+.
+11
+...
+...
+...
+. . . . .
+. . . . .
+.
+...
+.
+. . . . .
+. . . . .
+.
+. . . . .
+...
+. . . . .
+. . . . .
+1.  Purpose  of  this  RFP
+. . . . .
+.
+...
+...
+...
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+.
+. . . . .
+. . . . .
+. . . . .
+...
+. . . . .
+. . . . .
+...
+6
+2
+...
+...
+. . . . .
+...
+.
+...
+2.  Deepening  OMO  (Online  Merges  with  Offline)  and  aligning  pricing  
+strategies.  3.  Adapting  to  generative  AI  and  next-
+generation  commerce  technologies.  4.  Improving  development  agility  and  a  sustainable  engineering  
+system.  5.  Ensuring  stable  operation  and  thoroughly  
+improving  performance.  3.7  
+Target  Schedule  Target  for  
+October  2028  Target  for  April  2030
+. . . . .
+. . . . .
+. . . . .
+...
+. . . . .
+.
+. . . . .
+7
+. . . . .
+. . . . .
+...
+.
+.
+. . . . .
+...
+. . . . .
+...
+. . . . .
+. . . . .
+.
+12
+.
+. . . . .
+...
+.
+. . . . .
+. . . . . 13
+. . . . .
+...
+...
+. . . . .
+. . . . .
+.
+...
+5
+. . . . .
+...
+...
+. . . . .
+. . . . .
+.
+...
+.
+...
+...
+...
+3.3  Progress  of  OMO  (Online  Merges  with  Offline)
+. . . . .
+. . . . .
+.
+...
+.
+3
+.
+...
+14
+...
+.
+. . . . .
+.
+. . . . .
+9
+4
+.
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+...
+...
+. . . . .
+. . . . .
+3
+...
+...
+. . . . .
+6
+...
+...
+. . . . .
+...
+...
+. . . . .
+...
+...
+...
+. . . . .
+...
+...
+.
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+. . . . .
+...
+.
+...
+. . . . .
+...
+. . . . .
+. . . . .
+.
+. . . . .
+. . . . .
+2
+...
+7
+...
+...
+5
+...
+...
+...
+. . . . .
+.
+.
+...
+...
+...
+...
+. . . . .
+...
+...
+...
+...
+... 13
+.
+. . . . .
+. . . . .
+...
+...
+. . . . .
+...
+4
+...
+...
+...
+.
+...
+. . . . .
+. . . . .
+...
+.
+...
+.
+.
+...
+...
+. . . . .
+...
+.
+5
+. . . . .
+...
+...
+...
+.
+...
+.
+. . . . .
+3
+...
+...
+.
+.
+3.4  E-commerce  Growth  Vision
+.
+9
+...
+...
+.
+10
+. . . . .
+.
+...
+. . . . .
+.
+4.  Current  System  
+4.1  Overall  Configuration . . . .
+...
+. . . . .
+.
+...
+. . . . .
+...
+...
+...
+...
+. . . . .
+...
+.
+4
+...
+...
+...
+...
+...
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+. . . . .
+2.  Company  
+Overview  2.1  Company  
+Information . . . .  2.2  History  of  
+Value  Creation . .  2.3  Key  
+Business  Indicators . .  2.4  
+Management  Philosophy . . .  2.5  Corporate  
+Message . . .  2.6  Business  
+Activities . . . .  Business  
+Model . .  Businesses  that  contribute  to  
+customers  and  society . . .  Value  Circulation  
+(Ecosystem) . . .  2.7  Store  
+Network . .  Store  Network  
+Overview .  Number  
+of  Stores  by  Region .  2.8  Edion's  
+Strengths . .  Customer  
+Service  and  Proposal  
+Capabilities . .  "Connections"  
+with  Customers .  Comprehensive  
+Services .  Industry-Leading  Warranty  and  Repair  System .  Stable  Financial  Foundation .
+.
+.
+...
+. . . . .
+. . . . .
+6
+7
+. . . . .
+. . . . .
+.
+.
+.
+.
+...
+. . . . .
+.
+.
+12
+.
+.
+...
+. . . . .
+.
+. . . . .
+2
+. . . . .
+. . . . .
+. . . . .. . . . .
+. . . . .
+. . . . .
+...
+. . . . .
+. . . . .
+table  of  contents
+Machine Translated by Google
+--- PAGE 3 ---
+twenty  five
+...
+.
+. . . . .
+.
+...
+...
+...
+...
+. . . . .
+...
+. . . . .
+.
+...
+...
+...
+. . . . .
+.
+.
+. . . . .
+27
+. . . . .
+...
+. . . . .
+.
+.
+...
+...
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+. . . . .
+...
+. . . . .
+19
+. . . . .
+...
+. . . . .
+. . . . .
+...
+31
+. . . . .
+.
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+. . . . .
+.
+...
+...
+...
+...
+.
+. . . . .
+. . . . .
+...
+14
+...
+.
+...
+. . . . .
+...
+...
+.
+.
+...
+. . . . .
+. . . . .
+16
+.
+29
+.
+. . . . .
+. . . . .
+...
+...
+. . . . .
+.
+...
+. . . . .
+...
+...
+27
+...
+...
+...
+...
+...
+...
+.
+. . . . .
+.
+...
+...
+.
+.
+...
+...
+...
+.
+.
+. . . . .
+.
+...
+. . . . .
+. . . . .
+...
+...
+twenty  two
+.
+...
+4.2.4  Management  functions  for  EC.
+...
+26
+.
+. . . . .
+...
+...
+...
+...
+...
+...
+.
+...
+1.  Contribution  to  the  e-commerce  growth  
+vision.  2.  Realization  of  the  medium-term  
+system  development  
+vision.  3.  Resolution  of  strategic  issues.  5.4  
+Project  success  criteria  
+(provisional)  5.4.1  
+Quantitative  success  criteria  5.4.2  
+Qualitative  success  
+criteria  5.5  Project  
+scope  5.5.1  Scope  5.5.2  
+Exclusions  5.6  
+Assumptions  and  
+constraints  5.6.1  Assumptions  5.6.2  
+Constraints  5.7  Project  
+structure  (provisional)  
+5.7.1  Our  structure  5.7.2  Roles  
+and  responsibilities  
+5.7.3  Communication  
+5.7.4  Work  location  
+5.7.5  Work  terminals  5.7.6  Tools  Used  5.8  Schedule  (Tentative)
+16
+...
+.
+. . . . .
+. . . . .
+. . . . .
+...
+...
+. . . . .
+.
+. . . . .
+...
+...
+...
+...
+twenty  four
+.
+.
+.
+twenty  five
+29
+. . . . .
+...
+...
+. . . . .
+...
+...
+...
+...
+. . . . .
+. . . . .
+...
+.
+...
+.
+...
+...
+.
+. . . . .
+. . . . .
+. . . . .
+27
+...
+...
+. . . . .
+.
+14
+...
+. . . . .
+.
+...
+. . . . .
+...
+...
+...
+...
+. . . . .
+...
+. . . . .
+. . . . .
+19
+...
+.
+...
+...
+...
+...
+...
+.
+.
+... 32
+.
+...
+...
+.
+. . . . .
+...
+.
+...
+...
+. . . . .
+.
+...
+.
+19
+. . . . .
+...
+...
+...
+...
+.
+30
+...
+.
+. . . . .
+...
+...
+. . . . .
+. . . . .
+...
+.
+...
+...
+. . . . .
+. . . . .
+...
+.
+...
+.
+16
+...
+. . . . .
+. . . . .
+. . . . .
+4.2.3  Front-end  functions  for  EC  (Environmental  Controls)
+. . . . .
+...
+. . . . .
+...
+...
+.
+...
+. . . . .
+...
+twenty  four
+.
+. . . . .
+.
+. . . . .
+. . . . .
+.
+...
+...
+...
+. . . . .
+26
+. . . . .
+...
+. . . . .
+.
+20.
+.
+. . . . .
+. . . . .
+...
+.
+.
+.
+...
+...
+...
+. . . . .
+. . . . .
+. . . . .
+...
+16
+. . . . .
+.
+. . . . .
+5.  Project  Overview  
+5.1  Project  Name  (Provisional)  
+5.2  Project  Background  
+5.3  Project  Objectives
+26
+. . . . .
+.
+...
+.
+. . . . .
+.
+. . . . .
+...
+. . . . .
+. . . . .
+.
+. . . . .
+. . . . .
+.
+.
+...
+...
+.
+...
+.
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+...
+. . . . .
+. . . . .
+.
+. . . . .
+.
+...
+...
+...
+.
+...
+14
+. . . . .
+...
+. . . . .
+...
+...
+.
+. . . . .
+28
+.
+. . . . .
+...
+. . . . .
+.
+...
+17
+...
+...
+. . . . .
+. . . . .
+.
+.
+. . . . .
+...
+. . . . .
+.
+...
+...
+. . . . .
+27
+...
+...
+. . . . .
+16
+.
+.
+. . . . .
+.
+. . . . .
+...
+31
+. . . . .
+.
+. . . . .
+.
+...
+...
+...
+.
+...
+. . . . .
+. . . . . .... . . . .
+...
+...
+. . . . .
+.
+. . . . .
+. . . . .
+...
+.
+.
+. . . . .
+. . . . .
+.
+. . . . .
+.
+...
+...
+. . . . .
+.
+...
+.
+...
+29
+.
+.
+twenty  three
+...
+...
+.
+...
+4.2  E-commerce  Site . . . .  
+4.2.1  Basic  Information . . .  
+4.2.2  Technical  Configuration . . .
+...
+...
+...
+.
+...
+...
+. . . . .
+. . . . .
+. . . . .
+.
+4.3.6  API  
+4.3.7  [Core]  Batch  function  for  member  site  4.3.8  Data  4.3.9  
+Operational  data  
+4.3.10  Integration  systems  
+4.3.11  Operational  structure  
+4.4  Data  provision  service  
+platform  4.3.11
+. . . . .
+...
+...
+26
+...
+...
+...
+...
+. . . . .
+. . . . .
+...
+...
+...
+...
+...
+. . . . .
+.
+. . . . .
+...
+.
+...
+. . . . .
+26
+...
+. . . . .
+...
+.
+.
+...
+.
+.
+... ...
+...
+...
+.
+...
+...
+...
+...
+.
+. . . . .
+...
+28
+twenty  five
+.
+...
+16
+...
+...
+...
+. . . . .
+. . . . .
+.
+...
+...
+.
+...
+...
+19
+. . . . .
+.
+. . . . .
+. . . . .
+...
+...
+. . . . .
+.
+...
+.
+.
+.
+...
+27
+.
+...
+. . . . .
+...
+. . . . .
+...
+.
+...
+... ...
+...
+...
+. . . . .
+. . . . .
+.
+. . . . .
+. . . . .
+...
+. . . . .
+...
+. . . . .
+...
+...
+...
+...
+...
+...
+.
+. . . . .
+...
+.
+14
+31
+...
+...
+.
+16
+. . . . .
+...
+...
+...
+.
+.
+...
+.
+...
+...
+.
+.
+. . . . .
+...
+.
+...
+...
+.
+...
+.
+29
+.
+...
+. . . . .
+.
+.
+...
+twenty  two
+...
+. . . . .
+. . . . .
+.
+27
+. . . . .
+. . . . .
+...
+. . . . .
+...
+...
+4.1.1  System  Configuration  Diagram
+. . . . .
+.
+...
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+4.2.5  Batch  Processing  for  E-
+commerce  4.2.6  [Core  System]  Management  
+Functions  for  E-commerce  4.2.7  [Core  System]  
+Batch  Processing  Functions  for  E-commerce  4.2.8  
+[Core  System]  
+Common  Functions  for  Store  
+E-commerce  4.2.9  Data  4.2.10  
+Operational  Data  4.2.11  
+Linked  Systems  4.2.12  Operational  
+Structure  4.3  Smartphone  
+Application  4.3.1  Basic  
+Information  4.3.2  Technical  
+Configuration  4.3.3  Front-end  
+Functions  4.3.4  Management  Functions  4.3.5  Batch  Processing
+...
+. . . . .
+.
+...
+...
+...
+.
+. . . . .
+.
+. . . . .
+...
+. . . . .
+.
+. . . . .
+. . . . .
+.
+...
+26
+.
+...
+. . . . .
+...
+...
+. . . . .
+. . . . .
+. . . . .
+.
+...
+. . . . .
+.
+ii
+16
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+...
+28...
+twenty  four
+...
+.
+. . . . .
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+.
+...
+Machine Translated by Google
+--- PAGE 4 ---
+. . . . .
+38
+34
+...
+.
+32
+...
+53
+.
+...
+. . . . .
+. . . . .
+.
+...
+.
+.
+...
+. . . . .
+.
+54
+...
+.
+. . . . .
+...
+. . . . .
+...
+...
+. . . . .
+.
+.... . . . .
+...
+.
+. . . . .
+.
+... .
+33
+...
+.
+...
+...
+...
+...
+...
+...
+...
+...
+. . . . .
+47
+.
+...
+...
+. . . . .
+. . . . .
+...
+6.2.3  EC  Batch  Function  
+6.2.4  Smartphone  App  Frontend  Function  6.2.5  Smartphone  
+App  Management  Function  6.2.6  Smartphone  App  
+Batch  Function  6.2.7  Common  Backend  Function  
+6.3  Non-Functional  Requirements  6.3.1  
+Availability  Requirements  
+6.3.2  Performance  
+Requirements  6.3.3  
+Scalability  Requirements  
+6.3.4  Backup  and  Disaster  Recovery  
+6.3.5  Security  Requirements  6.3.6  
+Compliance  Requirements  6.3.7  Audit  
+Requirements  6.3.8  
+Usability  Requirements  6.3.9  
+Design  Requirements  
+6.3.10  Supported  
+Environments  6.3.11  
+Maintenance  and  
+Operation  6.3.12  
+Technical  Requirements  
+6.3.13  Data  Migration  6.3.14  Test  
+Requirements  6.4  Transitional  
+Period  Management  6.5  Cost  6.6  Contract  Type  and  Development  Methodology
+.
+. . . . .
+35
+...
+. . . . .
+...
+.
+41
+...
+...
+. . . . .
+...
+...
+.
+...
+...
+...
+.
+...
+. . . . .
+.
+. . . . .
+. . . . .
+...
+...
+...
+.
+.
+. . . . .
+. . . . .
+. . . . .
+...
+.
+36
+...
+.
+...
+...
+...
+. . . . .
+34
+.
+...
+.
+...
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+.
+. . . . .
+...
+...
+.
+... ...
+.
+.
+...
+...
+. . . . .
+...
+36
+...
+.
+. . . . .
+...
+...
+. . . . . ...
+. . . . .
+.
+. . . . .
+. . . . .
+...
+.
+33
+. . . . .
+. . . . .
+37
+. . . . .
+. . . . .
+...
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+...
+. . . . .
+. . . . .
+... 54
+...
+...
+.
+.
+.
+...
+...
+.
+...
+...
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+.
+.
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+.
+32
+...
+.
+53
+...
+.
+54
+.
+. . . . .
+...
+...
+...
+. . . . .
+...
+. . . . .
+.
+48
+.
+...
+...
+. . . . .
+...
+. . . . .
+. . . . .
+...
+. . . . .
+. . . . .
+. . . . .
+.
+...
+...
+6.  
+Requirements  6.1  Desired  Overall  Architecture  and  Scope  of  this  RFP  
+6.2  Functional  Requirements . . . .
+.
+. . . . .
+...
+.
+...
+...
+.
+. . . . .
+...
+. . . . .
+43
+5.8.1  Overall  Schedule . . .  5.8.2  
+Key  Milestones . .  5.8.3  Phased  
+Release .  5.9  Deliverables  
+(Provisional) . .  5.9.1  
+Project  Management . . .  5.9.2  
+Requirements  Definition  
+Documents .  5.9.3  
+Design  Documents . . .  
+5.9.4  Design  
+Deliverables .  5.9.5  
+Program . .  5.9.6  Test-
+Related . .  5.9.7  Operation-Related . . .  
+5.9.8  User  
+Documentation . .  5.9.9  Other .  5.9.10  Delivery  Format . .
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+...
+36
+. . . . .
+.
+. . . . .
+. . . . .
+. . . . .
+...
+.
+. . . . .
+40
+...
+...
+...
+. . . . .
+. . . . .
+...
+.
+...
+. . . . .
+...
+...
+. . . . .
+... ...
+...
+...
+. . . . .
+...
+...
+...
+...
+.
+. . . . .
+36
+...
+. . . . .
+55
+.
+. . . . .
+. . . . .
+. . . . .
+...
+...
+.
+33
+...
+...
+. . . . .
+...
+...
+. . . . .
+.
+.
+. . . . .
+37
+...
+. . . . .
+...
+.
+. . . . .
+...
+. . . . .
+54
+. . . . .
+...
+. . . . .
+...
+...
+...
+...
+...
+. . . . .
+. . . . .
+...
+. . . . .
+.
+38
+...
+.
+32
+...
+. . . . .
+.
+.
+. . . . .
+...
+...
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+...
+. . . . .
+. . . . .
+49
+...
+. . . . .
+.
+7.  Request  for  
+Proposal  7.1  Proposal  
+Content . . . .  1.  Understanding  of  the  
+Project . . .  2.  Scope  
+of  Proposal . .  3.  System  
+Proposal . .  4.  
+Functional  Proposal . .  5.  
+Design  Proposal . .  6.  Development  Methodology  and  Process . . .
+...
+...
+. . . . .
+.
+...
+...
+.
+...
+...
+...
+.
+. . . . .
+...
+. . . . .
+...
+. . . . .
+...
+...
+...
+.
+44
+.
+...
+. . . . .
+.
+.
+...
+...
+...
+. . . . .
+...
+...
+...
+.
+. . . . .
+...
+...
+...
+. . . . .
+. . . . .
+35
+...
+...
+...
+. . . . .
+. . . . .
+.
+32
+...
+.
+.
+...
+. . . . .
+. ...
+35
+...
+.
+.
+. . . . .
+. . . . .
+. . . . .
+6.2.1  EC  Frontend  Functionality
+...
+...
+...
+41
+.
+36. . . . .
+...
+. . . . .
+...
+...
+iii
+.
+...
+.
+.
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+.
+...
+...
+. . . . .
+. . . . .
+...
+...
+36
+.
+. . . . .
+.
+. . . . .
+. . . . .
+...
+...
+.
+...
+33
+... ...
+...
+...
+. . . . .
+...
+...
+...
+. . . . .
+.
+34
+...
+.
+. . . . .
+54
+. . . . .
+.
+...
+...
+32
+.
+...
+...
+...
+. . . . .
+...
+...
+.
+...
+54
+.
+.
+...
+.
+. . . . .
+.
+.
+. . . . .
+...
+. . . . .
+. . . . .
+. . . . .
+.
+...
+32
+. . . . .
+...
+...
+52
+.
+...
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+...
+.
+. . . . .
+...
+. . . . .
+...
+6.2.2  EC  Management  Functions.
+...
+. . . . .
+.
+. . . . .
+...
+. . . . .
+.
+. . . . .
+.
+.
+...
+.
+. . . . .
+35
+...
+. . . . .
+45
+.
+. . . . .
+...
+...
+. . . . .
+...
+. . . . .
+...
+.
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+...
+...
+.
+...
+...
+.
+. . . . .
+...
+...
+. . . . .
+...
+...
+...
+.
+...
+. . . . .
+. . . . .
+...
+.
+.
+. . . . .
+.
+36
+. . . . .
+. . . . .
+. . . . .
+.
+.
+...
+. . . . .
+.
+...
+...
+. . . . .
+36
+...
+33
+.
+. . . . .
+...
+...
+...
+...
+.
+.
+...
+. . . . .
+. . . . .
+.
+...
+.
+...
+...
+. . . . .
+...
+54
+...
+.
+. . . . .
+...
+...
+. . . . .
+. . . . .
+...
+...
+...
+.
+Machine Translated by Google
+--- PAGE 5 ---
+.
+...
+.
+. . . . .
+.
+56
+.
+...
+.
+. . . . .
+.
+...
+...
+. . . . .
+...
+. . . . .
+. . . . .
+.
+. . . . .
+.
+. . . . .
+. . . . .
+.
+...
+...
+62
+. . . . .
+...
+...
+...
+... 59
+.
+...
+...
+.
+...
+.
+.
+...
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+...
+55
+. . . . .
+. . . . .
+...
+61
+...
+...
+iv
+...
+. . . . .
+. . . . . .
+...
+. . . . .
+. . . . .
+.
+...
+. . . . .
+. . . . .
+...
+...
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+...
+.
+.
+.
+55
+. . . . .
+58
+...
+.
+...
+...
+62
+.
+.
+. . . . .
+. . . . ..
+...
+...
+. . . . .
+.
+59
+.
+.
+56
+...
+.
+...
+.
+. . . . .
+. . . . .
+...
+.
+. . . . .
+...
+. . . . .
+62
+. . . . .
+...
+...
+. . . . .
+.
+...
+.
+. . . . .
+57
+. . . . .
+...
+. . . . .
+. . . . .
+. . . . .
+...
+56
+. . . . .
+...
+. . . . .
+...
+...
+...
+...
+...
+. . . . .
+. . . . .
+...
+...
+...
+...
+...
+...
+...
+. . . . .
+...
+...
+.
+...
+. . . . .
+.
+...
+. . . . .
+.
+.
+. . . . .
+59
+. . . . .
+.
+62
+...
+...
+. . . . .
+. . . . .
+.
+....
+...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+61
+...
+...
+. . . . .
+. . . . .
+.
+. . . . .
+...
+.
+55
+. . . . .
+...
+...
+...
+. . . . .
+...
+.
+. . . . .
+...
+...
+.
+.
+. . . . .
+...
+. . . . .
+...
+. . . . .
+7.  Implementation  
+Structure  8.  Schedule  9.  
+Test  Plan  10.  Risk  
+Management  and  Assumptions  11.  
+Maintenance  and  Operation  
+Proposal  12.  Contract  Type  (Contract  for  Work/
+Quasi-Mandate)  13.  
+Intellectual  Property  Rights  14.  Liability  for  Non-Conformity  
+(Former  Warranty  Liability)  
+15.  Contract  
+Termination  
+Conditions  16.  Damages  17.  
+Case  Studies  18.  Other  Special  
+Notes  7.2  Quotation  
+and  Cost  Conditions  7.2.1  
+Quotation  7.2.2  Payment  Terms  7.2.3  Maintenance  and  Operation  Costs
+...
+. . . . .
+.
+.
+59
+...
+.
+...
+.
+... . . . . .
+. . . . .
+56
+8.  Selection  Process  
+8.1  Submission  Deadline  and  
+Method .  Submission  
+Method . . .  
+Submission  Format . . .  8.2  
+Selection  Schedule . .  8.3  Question  
+Acceptance  and  Answering  
+Method .  8.3.1  Question  
+Deadline . .  8.3.2  Question  
+Method . .  8.3.3  Answer  Method . .  8.3.4  
+Implementation  of  Individual  QA  
+Meetings .  8.4  
+Presentation .  Implementation  
+Overview . . .  Presentation  
+Content .  8.5  
+Evaluation  Criteria . . .  8.6  Submitted  Materials .  Proposal  Structure .
+.
+. . . . .
+...
+. . . . .
+...
+57
+...
+. . . . .
+.
+...
+...
+. . . . .
+...
+...
+. . . . .
+. . . . .
+...
+.
+. . . . .
+.
+56
+...
+...
+...
+...
+.
+. . . . . . . . . .
+.
+...
+. . . . .
+...
+.
+.
+.
+. ...
+.
+...
+...
+.
+...
+...
+...
+...
+...
+60
+. . . . .
+...
+...
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+...
+.
+...
+...
+. . . . .
+...
+...
+... .
+. . . . .
+. . . . .
+. . . . .
+...
+.
+.
+...
+. . . . .
+...
+62
+.
+55
+...
+. . . . .
+.
+. . . . .
+...
+...
+.
+. . . . .
+. . . . .
+...
+...
+.
+.
+.
+58
+...
+.
+.
+.
+...
+.
+...
+. . . . .
+.
+59
+...
+...
+...
+. . . . .
+7.2.4  TCO  Simulation ...
+...
+58
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+...
+. . . . .
+...
+...
+59
+...
+.
+. . . . .
+. . . . .
+...
+...
+...
+...
+56
+.
+...
+...
+...
+. . . . .
+.
+. . . . .
+.
+.
+.
+.
+...
+...
+56
+...
+. . . . .
+10.  Contact  Information
+.
+...
+...
+. . . . .
+...
+...
+. . . . .
+...
+.
+. . . . .
+. . . . .
+57
+62
+. . . . .
+...
+.
+. . . . .
+...
+...
+...
+...
+. . . . .
+.
+...
+. . . . .
+...
+.
+... ...
+. . . . .
+.
+...
+. . . . .
+. . . . .
+.
+. . . . .
+60
+. . . . .
+. . . . .
+. . . . .
+.
+. . . . .
+...
+. . . . .
+....
+...
+. . . . .
+...
+...
+...
+...
+...
+...
+...
+. . . . .
+.
+9.  Notes  9.1  
+Handling  of  Proposals . . .  9.2  
+Selection  Process . .  9.3  
+Prohibited  Actions . . .  
+9.4  Confidentiality . . .  
+9.5  Accuracy  of  Provided  Information  and  
+Disclaimer . .  9.6  Other .
+.
+. . . . .
+...
+...
+.
+.
+.
+. . . . .
+...
+. . . . .
+.
+.
+...
+. . . . ....
+55
+...
+. . . . .
+...
+. . . . .
+. . . . .
+. . . . .
+...
+...
+.
+58
+...
+.
+...
+.
+. . . . .
+...
+. . . . .
+. . . . .
+...
+...
+. . . . .
+. . . . .
+. . . . .
+.
+...
+. . . . .
+...
+.
+. . . . .
+. . . . .
+55
+...
+.
+...
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+58
+59
+...
+.
+... 63
+...
+. . . . . .
+.
+.
+. . . . .
+.
+...
+...
+...
+...
+.
+56
+...
+64
+...
+.
+. . . . .
+. . . . .
+...
+...
+. . . . .
+...
+...
+.
+...
+...
+Machine Translated by Google
+--- PAGE 6 ---
+Based  on  the  information  presented  in  this  book,  we  look  forward  to  receiving  your  optimal  proposal,  leveraging  your  company's  knowledge  and  technical  capabilities.
+This  RFP  (Request  for  Proposal)  is  to  request  your  company  to  submit  a  specific  proposal  and  estimate  for  the  launch  
+of  the  renewal  project  (hereinafter  referred  to  as  "this  project")  for  Edion  Corporation's  (hereinafter  referred  to  as  "our  
+company")  e-commerce  site  and  smartphone  application  (Edion  app).
+1
+1.  Purpose  of  this  RFP
+Machine Translated by Google
+--- PAGE 7 ---
+2.3  Key  business  indicators
+2.1  Company  Information
+2.2  The  Path  to  Value  Creation
+2.  Company  Overview
+-  Representative:  Masanori  Kubo
+-  2013  -  Capital  and  business  alliance  with  LIXIL  (changed  to  business  alliance  in  April  2022)
+-  2005  -  Midori  Denka  becomes  a  subsidiary.
+-  Company  name:  EDION  Corporation
+-Established :  March  29,  2002
+-  2022  -  Capital  and  business  alliance  with  Nitori  Holdings
+-  2002  -  Deodeo  and  Eiden  jointly  establish  Edion  Co.,  Ltd.
+-  2008  -  Edion  E.com  Internet  Shopping  Site  Relaunched
+-  2007  -  Ishimaru  Electric  makes  Thank  You  a  subsidiary.
+-  Number  of  employees  (consolidated):  15,966  (9,315  full-time  employees,  6,651  temporary  employees)  A  diverse  
+workforce  is  employed,  including  individuals  of  various  genders,  nationalities,  ages,  and  employment  types.
+-  2024  -  Azabu  becomes  a  subsidiary,  and  the  new  soccer  stadium  "Edion  Peace  Wing  Hiroshima"  opens.
+-Consolidated  sales:  768.1  billion  yen
+-Head  Office:  Osaka  Mitsui  Bussan  Building,  2-3-33  Nakanoshima,  Kita-ku,  Osaka  City,  Osaka  Prefecture
+-  2012  -  Store  brands  unified  under  "Edion,"  and  E.R.  Japan  was  established.
+-  2019  -  Yumemiru  acquires  J-Top  as  a  subsidiary  and  opens  its  Namba  flagship  store.
+-  Capital  stock:  11.94  billion  yen
+-  Business  activities:  Operation  of  the  consumer  electronics  retail  chain  "Edion,"  and  related  businesses  such  as  home  renovation,  
+telecommunications,  sales  and  installation  of  solar  power  generation  systems,  and  sales  of  toys,  games,  and  video  software.
+-  2018  -  e-Logi  established,  "e  angle"  sales  begin.
+-  2023  -  Sanfrecce  Hiroshima  becomes  a  subsidiary,  Yokohama  West  Exit  Main  Store  opens.
+Release
+To  help  you  understand  our  company  and  the  background  to  this  proposal,  we  have  provided  the  following  overview.  Please  use  this  as  basic  
+information.  (*All  data  is  based  on  information  as  of  March  31,  2025)
+Over  80%  of  our  sales  come  from  our  home  appliance  and  home  renovation  businesses.
+-  2017  -  Forest  becomes  a  subsidiary,  new  Edion  online  shop  opens,  new  Edion  app  launched.
+2
+At  Edion,  we  have  transformed  and  grown  by  adapting  to  the  trends  of  the  times  and  changes  in  society.  Leveraging  the  strengths  we  have  
+built  up  over  our  long  history,  we  will  continue  to  contribute  to  the  development  of  the  economy  and  society,  as  well  as  to  our  customers.
+Machine Translated by Google
+--- PAGE 8 ---
+Business  Model
+-  Renovation  (ELS)  construction  projects:  1.203  million  
+projects  *  A  service  unique  to  consumer  electronics  retailers,  boasting  top-class  results  in  the  industry  *Cumulative  results  
+since  fiscal  year  2014
+-  Number  of  employee  training  program  contents:  319.  We  are  working  to  
+improve  the  learning  environment  and  support  the  growth  of  each  and  every  employee.
+Providing  utility:  
+Rather  than  simply  selling  products,  we  offer  "value"  and  "satisfaction"  through  our  products,  along  with  enjoyment,  richness,  and  convenience.
+-  Home  Appliances  Business:  Providing  attractive  products  and  reliable  service.
+-  Sales  composition  ratio  of  private  label/original  products:  31.7%
+3
+-Logistics  business:  A  nationwide  logistics  network
+We  are  
+committed  to  providing  comprehensive  service  to  ensure  that  you  can  use  our  products  in  the  best  possible  condition  for  as  long  as  possible.
+-  Number  of  consolidated  subsidiaries  in  the  
+group:  14  companies.  We  are  expanding  our  business  scale  through  strategic  M&A.
+We  aspire  to  be  a  company  that  provides  lasting  support  for  our  customers'  enriched  lives.  We  offer  a  wide  variety  of  attractive  products  that  are  useful  in  
+people's  lives,  and  we  value  taking  responsibility  for  assisting  our  customers  until  the  very  end,  ensuring  they  can  continue  to  use  our  products  in  the  best  
+possible  condition  after  purchase.
+-  Edion  Card  Membership:  4.8  million  members  *  We  offer  a  
+wide  range  of  services  including  member-exclusive  sales  and  extended  warranties.  *100-Man  Volt  Card  
+membership  is  not  included.
+-  CO2  emission  reduction  target  (by  FY2030):  46%  reduction*
+We  are  focusing  on  developing  original  products  based  on  customer  feedback.
+"Realizing  a  customer-first  approach  through  the  provision  of  usefulness  and  complete  sales."
+We  have  formulated  a  CO2  reduction  roadmap  and  are  continuing  our  efforts.  *Compared  to  
+FY2013
+"Buy  with  confidence,  and  be  satisfied  for  years  to  come."
+The  Edion  Group  operates  consumer  electronics  stores  and  offers  a  variety  of  services,  including  home  renovation.  As  a  "comprehensive  lifestyle  solutions  
+company,"  we  support  our  customers'  comfortable  lives.
+Businesses  that  contribute  to  customers  and  society
+-  Franchise  business:  A  detailed  service  network  rooted  in  the  local  community.
+2.5  Corporate  Message
+2.4  Management  Philosophy
+2.6  Business  details
+Machine Translated by Google
+--- PAGE 9 ---
+-  Hokkaido  and  Tohoku  regions:  8  directly  managed  stores,  0  franchise  stores
+-  Number  of  programming  classrooms:  184  classrooms
+-Chugoku  region:  86  directly  managed  stores,  230  franchise  stores
+-Total  number  of  stores:  1,190  stores
+4
+-  Programming  education  business:  Fostering  the  learning  abilities  of  children  who  will  shape  the  future.
+Store  Network  Overview
+Value  cycle  (ecosystem)
+-Chubu  region:  147  directly  managed  stores,  115  franchise  stores
+-  E-commerce  business:  Providing  the  safety  and  service  of  physical  stores  online  as  well.
+-  Franchise  locations:  736  stores
+-  Shikoku  region:  15  directly  managed  stores,  71  franchise  stores
+-  Real  estate  sales  brokerage  business:  A  real  estate  agency  that  is  close  by  and  easy  to  consult  with.
+-  Company-owned  stores:  454  stores
+-  Contribution  to  customers  and  society:  We  will  create  a  rich  living  environment  by  providing  diverse  services.
+-  Growth  investment  and  shareholder  returns:  We  will  use  the  profits  we  generate  to  invest  in  further  growth  and  to  return  profits  to  shareholders.
+-  Cash  flow  generation:  We  generate  stable  cash  flow  through  each  of  our  businesses.
+*For  more  detailed  information  on  each  business  initiative,  please  refer  to  the  integrated  report:  https://www.edion.co.jp/ir/library/
+integration
+Number  of  stores  by  region
+-  Kanto  region:  16  directly  managed  stores,  1  franchise  store
+-  Hokuriku  region:  20  directly  managed  stores,  1  franchise  store
+-  Kinki  region:  117  directly  managed  stores,  101  franchise  stores
+-  ELS  Business  (Renovation):  Creating  comfortable  homes  with  reliable  construction  quality  and  long-term  support.
+-  Telecommunications  (ISP)  business:  Proposing  the  optimal  communication  environment  for  our  customers'  lives.
+-  Kyushu  and  Okinawa  regions:  45  directly  managed  stores,  217  franchise  stores
+vinegar.
+Leveraging  our  nationwide  store  network,  we  support  our  customers'  comfortable  lifestyles.
+-  Number  of  service  centers  (logistics)  locations:  89  locations
+2.7  Store  Network
+Machine Translated by Google
+--- PAGE 10 ---
+"Connection"  with  our  customers
+-  Air  conditioner  cleaning  record:  270,000  units
+Customer  service  skills  and  proposal  skills
+-  Edion  Card  members:  4.8  million*  *100-Man  Volt  Card  
+members  are  not  included.
+Under  our  corporate  message,  "Buy  with  confidence,  be  satisfied  forever,"  we  provide  long-term  repair  warranties  and  support  so  that  our  customers  can  shop  
+with  peace  of  mind.
+Comprehensive  services
+-  Comprehensive  training  program
+Stable  financial  foundation
+-  Operating  profit  margin:  3.2%
+-  Operating  cash  flow:  30.7  billion  yen
+-  Expansion  of  services  through  a  nationwide  logistics  network
+We  actively  support  our  employees  in  obtaining  qualifications  and  developing  their  skills,  and  we  practice  customer  service  and  making  suggestions  based  on  their  extensive  
+product  knowledge.
+-  Unique  product  planning  "e  angle"
+-  Unique  store  operations  that  prioritize  customer  experience
+With  a  nationwide  network  of  approximately  1,200  home  appliance  stores,  we  offer  comprehensive  after-sales  service,  ensuring  peace  of  mind  for  our  customers.
+We  have  built  a  stable  financial  foundation  through  sound  financial  practices,  a  community-focused  sales  strategy,  and  cost  reductions  achieved  through  
+operational  efficiency.
+-  Number  of  members  with  peace  of  mind  guarantee:  8.63  million
+Industry-leading  warranty  and  repair  system
+-Equity  ratio:  51.2%
+-  Number  of  service  centers  (logistics)  locations:  89  locations
+-  App  download  count:  12.91  million
+-  Number  of  certified  home  appliance  advisors:  4,613
+-  Development  of  IoT  smart  applications:  Launching  in  April  2025
+5
+-  Guaranteed  products:  Over  100  varieties
+We  strive  to  respond  quickly  and  appropriately  to  customer  feedback  received  in  various  situations,  and  we  share  this  feedback  with  relevant  departments  to  
+utilize  it  in  the  development  and  improvement  of  our  products  and  services.
+2.8  Edion's  Strengths
+Machine Translated by Google
+--- PAGE 11 ---
+3.3  Progress  of  OMO  (Online  Merges  with  Offline)
+3.1  Evolution  and  Positioning  of  the  E-commerce  Business
+3.2  Current  Status  of  Smartphone  Apps  (Edion  App)
+3.  E-commerce  business  and  smartphone  apps
+It  is.
+A  place  for  transformation,  and  a  place  for  securing  sales.
+-Sales  promotion  support:  Coupon  distribution,  flyer  viewing,  campaign  participation.
+Our  current  e-commerce  business  is  more  than  just  a  sales  channel;  it  also  functions  as  a  place  to  check  store  inventory,  an  entry  point  for  
+renovation  consultations,  and  a  platform  for  providing  added  value  to  Edion  card  members.
+-  Digital  membership  card:  Earn  and  use  points  at  physical  stores.
+-  Strategic  role:  A  hub  for  maximizing  LTV  (Customer  Lifetime  Value)  by  digitally  replicating  the  "customer  service  quality"  and  
+"sense  of  security"  of  physical  stores.
+-  Service  integration:  Booking  and  checking  the  progress  of  air  conditioner  cleaning  and  repair  requests.
+Our  company  aims  to  provide  "the  same  level  of  security  and  service  as  in  our  physical  stores,  but  online  as  well,"  and  has  implemented  the  following  OMO  (Online  
+Merges  Offline)  initiatives.
+-  Member  Rank  Check:  Displays  your  current  member  rank  and  progress  towards  the  next  rank.
+-Current  challenges:  There  is  a  need  to  provide  a  more  sophisticated  customer  experience,  such  as  insufficient  integration  with  the  e-commerce  purchase  experience.
+-Main  roles:
+-  External  channels:  Rakuten  Market,  Mercari  Shops
+Through  the  renewal  of  the  Edion  E.com  internet  shopping  site  in  2008  and  the  renewal  to  Edion  Net  Shop  in  2017,  we  have  been  working  
+to  expand  our  e-commerce  business  by  promoting  the  integration  of  physical  stores  and  online  services.
+-Current  challenges:  Chronic  deficits.  In  particular,  we  need  to  make  our  own  website  profitable.
+While  our  core  business  is  our  own  website,  "Edion  Net  Shop,"  we  are  pursuing  a  diversified  strategy  by  also  opening  stores  on  multiple  
+external  online  marketplaces.
+vinegar.
+The  Edion  app  is  our  digital  customer  base,  having  recorded  a  cumulative  total  of  12.91  million  downloads  since  its  release  in  2017  (as  of  
+March  2025).
+6
+-  Strategic  role:  Acquiring  new  customers,  providing  diverse  touchpoints  for  expanding  brand  awareness,  and  distributing  long-term  stagnant  inventory.
+This  document  outlines  our  e-commerce  business  and  smartphone  applications,  as  well  as  strategic  themes  such  as  the  vision,  challenges,  
+and  directions  for  improvement  from  the  perspective  of  each  business  unit.  Please  understand  and  utilize  this  as  the  starting  point  for  this  
+project.
+-  Our  own  channels:  Edion  online  shop,  Edion  app
+-  Edion  Games:  Edion  Coins  are  awarded  through  games.  Encourages  daily  app  usage.
+Machine Translated by Google
+--- PAGE 12 ---
+3.4  E-commerce  Growth  Vision
+The  mechanism.
+1.  Store  inventory  display:  Real-time  inventory  check  of  physical  stores  on  the  e-commerce  site.
+2.  Store  pickup  service:  Order  online  and  pick  up  your  order  at  your  nearest  Edion  store  free  of  charge  (no  shipping  or  handling  fees).
+Under  the  banner  of  "integrating  in-store  and  online  shopping  styles,"  we  aim  to  realize  "convenient  and  safe  shopping"  based  on  the  following  three  pillars.
+Its  most  notable  feature  is  its  extremely  high  value.
+-  Unified  shopping  cart:  The  new  POS  system  and  the  customer's  smartphone  "shopping  cart"  are  linked  ÿ  Products  in  EC/store
+-  Repeat  customer  trend:  Areas  with  physical  stores  have  a  higher  repeat  customer  rate  than  areas  without  stores,  indicating  that  "mutual  customer  referral"  is  functioning,  where  
+customers  make  repeat  purchases  at  physical  stores  or  online  after  purchasing  online.
+3.4.3  Sales  Trends  and  Targets
+E-commerce  Business  Sales  Trends :  Our  e-commerce  business  aims  to  grow  from  47.6  billion  yen  in  sales  in  fiscal  year  2025  (current  fiscal  year)  to  76.8  billion  yen  in  fiscal  
+year  2030.  (Unit:  100  million  yen)
+7
+vinegar.
+-  Our  user  characteristics:  69%  of  our  users  are  customers  within  a  5km  radius  of  our  physical  stores,  and  use  is  limited  to  the  store's  trading  area.
+We  present  the  roadmap  envisioned  by  our  E-commerce  Division  for  2030.  This  project  is  not  merely  a  website  redesign,  but  is  positioned  as  a  growth  engine  to  achieve  these  
+business  objectives.  Based  on  this  vision,  we  look  forward  to  proposals  that  are  committed  to  business  success.
+-  Inventory  sharing  and  lead  time  reduction:  Centralize  warehouse  and  store  inventory  and  provide  precise  delivery  date  information.
+We  offer  an  experience  that  integrates  selection  and  payment.
+It  is  being  measured.
+-  Price  unification:  We  will  eliminate  separate  pricing  for  our  e-commerce  site  and  allow  customers  to  purchase  products  at  the  same  price  whether  they  purchase  them  on  our  website  
+or  in  our  physical  stores.  We  will  also  consider  internal  evaluation  criteria,  such  as  including  e-commerce  sales  as  sales  in  the  customer's  "My  Store"  account.
+-User  Needs:  When  choosing  an  e-commerce  site,  "reliability  of  the  operating  company  (45.6%)"  and  "low  shipping  costs  (62.2%)"  are  considered  important.  When  choosing  
+a  site  for  repeat  purchases,  "extensive  product  lineup  (69.0%)",  "low  product  prices  (54.1%)",  and  "free  shipping  (50.8%)"  are  supported.  In  terms  of  features,  "real-time  
+inventory  status  (60.0%)"  and  "simple  return/exchange  process  (56.6%)"  are  considered  convenient.
+-  Trends  in  e-commerce  penetration  rate:  The  e-commerce  penetration  rate  for  home  appliances  is  expected  to  continue  expanding  from  21.8%  in  2024  to  26%  in  2028.
+3.  Points/Warranty:  A  common  points  and  warranty  system  applies  to  both  in-store  and  online  purchases.
+3.4.1  Market  Environment  and  Current  Situation  Analysis
+3.4.2  Medium-  to  Long-Term  Vision:  Integration  of  Stores  and  Online  Services
+This  addresses  the  immediate  need  for  "I  need  it  today."
+However,  achieving  the  "seamless  experience  that  blurs  the  lines  between  online  and  offline"  outlined  in  the  mid-term  vision  for  2030  requires  merging  multiple  channels  such  
+as  the  company's  website,  app,  and  stores  to  provide  a  more  sophisticated  experience.
+-Market  forecast:  The  total  domestic  demand  for  home  appliances  is  projected  to  remain  relatively  flat  (approximately  6.8  to  6.9  trillion  yen)  from  fiscal  year  2025  onwards.
+Machine Translated by Google
+--- PAGE 13 ---
+3.5  Mid-term  Vision  for  System  Development
+Table  1:  Trends  and  targets  for  e-commerce  business  sales
+*These  measures  are  primarily  planned  to  be  implemented  using  the  current  system.  Equivalent  functionality  will  be  available  in  the  renewed  system.
+total
+50  40
+-2.5  -1.9  -1.7
+FY21  FY22  FY23  FY24  FY25  FY26  FY27  FY28  FY29  FY30
+-  Rakuten  Points:  Rakuten  Points  will  be  awarded  and  redeemed  on  our  own  website  (from  fiscal  year  2027  onwards).
+-  Initiatives  regarding  products  and  services:  (Ongoing)
+-  Expansion  of  our  own  delivery  area:  Large-scale  commercial  goods  will  be  delivered  by  switching  to  our  own  delivery  service  in  Hokkaido  and  Hokuriku  (formerly  the  Thank  You  area).
+classification
+Please  understand  the  target  indicators  and  reflect  them  in  your  proposal.
+Forest  154  153  155  159  176  187  200  210  220  230
+We  will  now  present  excerpts  from  the  vision  that  are  relevant  to  this  RFP.  Direction  of  System  Development
+EDION  total  -10.8  -6.6  -6.4  -5.2  -5.4  -3.1  -2.0  -0.5
+60
+4.  Expanding  the  Forest  product  lineup
+classification
+8
+-  Strengthening  product  lineup:  Reviewing  product  ranking  strategy,  increasing  the  visibility  of  non-standard  products  (ongoing)
+FY21  FY22  FY23  FY24  FY25  FY26  FY27  FY28  FY29  FY30
+It  needs  to  be  implemented,  but  information  about  projects  that  haven't  started  yet  cannot  be  gleaned  from  the  current  system  data.
+-  Category-specific  discounts:  Store-specific  coupons  will  be  made  available  on  our  own  website  (from  fiscal  year  2026  onwards).
+2.0  3.2  5.7
+65
+Table  2:  Profit  and  Loss  Plan
+The  profit  and  loss  situation  for  each  channel  is  as  follows:  (Unit:  100  million  yen)
+4.0
+Our  website:  112  142  187  211  235  272  311  357  413  508
+-  Digital  Communication:  Starting  with  the  Edion  app  and  SEO  in  the  Kanto  and  Tohoku  areas
+-1.1  0.3  1.0  -4.2  -3.4  -3.0-1.3  
+-3.8
+68
+3.4.4  Priority  measures
+Mall  66  55  30
+Strengthen  digital  communication  and  promote  the  acquisition  of  new  customers  (from  FY2026)
+3.  Expanding  sales  of  ELS  products
+Please  note  this.
+1.  Strengthening  sales  of  original  products  (e  angle)
+1.3
+64
+In  response  to  the  e-commerce  growth  vision,  the  IT  Strategy  Headquarters  has  formulated  a  medium-term  plan  for  system  development  looking  ahead  to  2030.
+349  359  410  436  476  519  566  617  673  768
+2.  Expansion  of  cleaning  services
+Company  website  -5.8  -2.4  -2.1  Mall  
+-5.6  -4.3  -3.8
+Increased  sales  of  the  product  (from  fiscal  year  2025)
+83
+Machine Translated by Google
+--- PAGE 14 ---
+-  Store  staff  use  tablet  devices  to  complete  sales  negotiations,  inventory  checks,  and  payments  right  next  to  the  customer,  eliminating  checkout  waiting  times.
+1.  Population  decline/low  birthrate:  Normalization  of  labor  shortages,  acceleration  of  employee  turnover  within  companies.
+Customer  experience  image  3:  Smart  pickup  of  warehouse  inventory  items
+2.  Increased  competition:  Expanding  entry  of  e-commerce  companies  and  companies  from  other  industries  into  the  home  appliance  sales  market.
+-  Establish  a  process  that  allows  customers  to  select  and  pay  for  in-store  warehouse  stock  items  via  the  app,  and  then  immediately  pick  them  up  at  the  counter  upon  receiving  a  
+notification  that  they  are  ready.
+How  can  we  provide  customers  with  a  smooth  and  convenient  shopping  experience  with  a  minimal  number  of  employees?  To  achieve  this,  we  are  promoting  OMO  (Online  Merges  
+Offline),  eliminating  the  barriers  between  online  and  offline,  and  offering  a  seamless  purchasing  experience.
+-  For  undecided  cases,  the  details  of  the  business  negotiation  will  be  transferred  to  the  customer's  app,  enabling  a  seamless  transition  to  consideration,  ordering,  and  delivery  
+scheduling  after  returning  home.
+9
+-  Provide  an  environment  where  customers  can  check  the  display  and  inventory  status,  make  appointments  for  customer  service,  and  pre-register  installation  information  from  their  homes  or  other  locations.
+2.  Data  Utilization  (DX):  Improving  and  enhancing  business  efficiency  through  data  analysis
+1.  Realizing  efficient  stores:  Reducing  the  number  of  staff  in  stores
+4.  Business  Continuity:  End-of-Life  (EOL)  measures  for  various  systems  (hardware  and  software)
+introduction
+2.  Enhancing  store  competitiveness:  Sophistication  of  convenience,  product  range,  and  pricing.
+3.5.1  Market  environment
+Customer  experience  image  1:  Digitalization  of  the  pre-visit  process
+1.  Improving  customer  convenience:  OMO:  The  fusion  of  online  and  offline.  Providing  customers  with  a  seamless  experience  without  separating  online  and  offline.
+3.5.2  Medium-term  Initiatives
+3.  Changes  (diversification)  in  purchasing  patterns:  Diversification  of  behaviors,  lifestyles,  and  values
+3.  Expanding  customer  touchpoints  and  1-to-1  marketing:  Addressing  diverse  needs
+4.  The  spread  of  AI:  Improved  accuracy /  Technological  innovation  and  reduced  implementation  costs
+3.5.4  Customer  experience  image  for  improving  customer  convenience
+3.  Modernizing  System  Design:  Improving  and  refreshing  systems  for  greater  flexibility  and  efficiency,  and  smoothly  implementing  the  latest  technologies.
+3.5.3  Value  created  by  medium-term  initiatives
+This  optimizes  the  time  spent  on  business  negotiations  during  customer  visits.
+-  By  allowing  customers  to  manage  their  consideration  lists  on  the  app  and  prepare  necessary  information  in  advance,  the  app  helps  facilitate  smooth  purchasing  decisions.
+Customer  experience  image  2:  Mobile-based  completion  of  in-store  customer  service
+Machine Translated by Google
+--- PAGE 15 ---
+-  Reduction  of  modification/testing  costs
+-  Realizing  a  work  style  that  is  not  restricted  by  location
+-  Shortening  the  transition  period
+10
+-  Reduction  of  operating  costs
+-  Avoiding  black  boxing  (avoiding  limitations)
+-  Microservices:  Dividing  into  functional  units  to  promote  commonality  and  reuse.
+-  Web-based  design:  Design  independent  of  hardware  and  operating  system.
+-  No  evaluation  testing  required  on  new  devices
+Expected  effects
+-  Reduction  of  system  transition  risks
+Minimize  the  workload  and  enable  speedy  settlement.
+-  We  will  develop  a  self-checkout  environment,  primarily  in  large  stores,  where  customers  can  complete  payments  themselves.
+-  Reduce  the  time  required  for  impact  assessment
+Development  policy
+-  Reduce  testing  during  OS  version  upgrades
+-  Unifying  store  and  e-commerce  applications  (OMO)
+-  Customers  can  pre-scan  barcodes  using  their  own  mobile  devices  (self-scan)  at  manned  checkout  counters.
+-  Improved  maintainability
+*The  above  is  an  illustration  at  this  time,  and  the  specific  definition  of  customer  experience  will  be  considered  in  the  future.
+-  Knowledge  utilization  by  using  general  software
+3.5.5  Modernizing  System  Design
+Customer  experience  image  4:  Introduction  of  self-checkout  and  speed  payment
+-  You  can  choose  a  device  that  suits  your  purpose.
+-  Reduce  migration  costs
+-  By  making  the  process  until  receipt  visible,  we  reduce  the  customer's  psychological  waiting  time.
+-  Streamlining:  Reorganizing  bloated  functions  and  creating  a  minimum  necessary  configuration.
+-  Reduction  of  redundant  development
+The  current  system  faces  challenges  such  as  complexity,  opacity,  and  end-of-life  (EOL)  issues.  In  line  with  our  medium-term  plan,  we  will  proceed  with  
+modernization  according  to  the  following  policies.
+Machine Translated by Google
+--- PAGE 16 ---
+3.6  Strategic  Challenges
+-  Development  period:  30%  reduction
+-  Operating  costs:  20%  reduction
+-  Support  for  other  industries  (game-related,  reuse,  books)
+-  Complete  delivery/product  arrangements  at  the  time  of  sale  (including  cancellation,  return,  and  correction  processing).
+-  Determination  of  points  awarded  based  on  the  sales  price  for  our  own/common  point  programs.
+Remake  and  packaging  utilization  policy
+-  Warranty  system  (in-house  and  outboard)
+Add  Nou
+-  Delivery  and  installation  work  (delivery  slots,  qualification  management,  additional  sales)
+-  ELS  compatibility  (from  project  management  to  POS  sales  integration)
+-  Order/accounting  management  on  a  per-transaction  basis
+Based  on  our  e-commerce  growth  vision  and  our  medium-term  system  development  vision,  we  have  prioritized  the  business  challenges  to  be  addressed  and  the  directions  for  
+improvement  in  this  project,  and  have  organized  them  as  follows.  We  request  proposals  for  architectures  and  processes  that  will  resolve  these  challenges.
+1.  Standardizing  the  customer  experience  and  reducing  the  learning  curve.
+-  Family  member  management  for  members
+-  In  areas  with  less  uniqueness,  we  will  utilize  standard  functions  by  introducing  existing  packages,  and  use  custom  tools  as  needed.
+target  indicators
+-  Real-time  inventory  management  and  automation  of  product  procurement  (allocation,  ordering,  transfer)
+-  Service  operations  (bring-in  repair,  on-site  repair,  parts)
+-Challenge :  Compared  to  competitors  (especially  yodobashi.com,  etc.),  there  is  room  for  improvement  in  search  accuracy  and  user  flow  design.
+-  Determining  POS  prices  based  on  various  promotional  activities.
+-  Daily  accounting  collaboration  for  financial  closing
+-  Direction  of  improvement:  By  thoroughly  adhering  to  the  de  facto  standards  (standard  UI/UX  patterns)  in  the  e-commerce  industry,  we  will  create  an  interface  that  customers  
+can  "not  get  lost  in."
+Examples  of  our  unique  features:
+-  Cancellation/return/correction  processing  on  a  per-transaction  basis
+11
+-  Development  costs:  50%  reduction
+The  land  is  vast.
+-  Areas  with  many  proprietary  features  will  be  addressed  by  refining  the  existing  system  and  streamlining  business  processes.
+-  Create  a  voucher-style  data  entry  for  each  transaction  at  the  source  and  process  the  accounting.
+Machine Translated by Google
+--- PAGE 17 ---
+-  Direction  of  Improvement:  Beyond  simple  search  bar  matching,  we  will  transform  the  platform  to  flexibly  respond  to  the  "next  generation  of  
+shopping"  where  AI  understands  customer  intent  and  makes  suggestions.  Two  approaches  are  envisioned  for  responding  to  agentic  commerce.  
+One  is  to  build  a  proprietary  agent  specializing  in  our  own  services.  The  other  is  to  provide  our  own  services  to  external  general-purpose  agents  
+(such  as  ChatGPT  and  Gemini)  that  customers  use  on  a  daily  basis.  However,  as  this  is  still  an  early  stage  of  technology,  we  will  monitor  
+developments  closely  and  consider  responses  within  the  scope  of  what  is  feasible.
+-Challenge :  Due  to  its  highly  proprietary  framework,  AI  adoption  has  not  progressed,  and  securing  engineers  and  training  costs  are  high.
+3.  Adaptation  to  Generative  AI  and  Next-Generation  Commerce  Technologies
+-  Direction  of  improvement:  We  aim  for  "zero  waiting"  even  during  peak  times  through  a  scalable  design.  We  also  strive  to  achieve  industry-leading  
+scores  on  metrics  such  as  PageSpeed  Insights,  pursuing  SEO  and  a  comfortable  user  experience  in  mobile  environments.
+-  Direction  of  improvement:  Whether  standardizing  the  "shopping  cart"  is  the  optimal  option  will  be  clarified  during  the  requirements  definition  phase  
+(this  is  currently  under  internal  consideration  and  will  be  clarified  during  the  requirements  definition  phase,  including  coordination  with  each  business  
+unit).  "Same  price  across  all  channels"  is  possible  with  the  current  system.  The  new  system  will  also  be  designed  to  achieve  the  same.  To  realize  
+a  flexible  pricing  strategy,  existing  pricing  functions  such  as  same  price  and  individual  store  pricing  will  continue  to  be  supported.
+-Challenge :  There  is  a  need  to  unify  the  shopping  cart  between  the  company  website  and  physical  stores  to  create  a  seamless  shopping  experience.  
+Furthermore,  the  existence  of  differences  in  sales  prices  between  stores  and  e-commerce  is  a  barrier  to  promoting  OMO  (Online  Merges  Offline).
+4.  Improved  development  agility  and  a  sustainable  engineering  framework
+12
+This  is  leading  to  an  increase.
+-  Direction  of  improvement:  Modernize  the  technology  stack  to  one  centered  on  mainstream,  or  likely  to  become  mainstream,  general-purpose  OSS  
+(Open  Source  Software).  This  will  make  it  easier  to  secure  talented  personnel  from  the  labor  market,  create  an  environment  that  maximizes  the  
+use  of  coding  agents  such  as  GitHub  Copilot,  and  gain  development  speed  (agility)  that  can  respond  quickly  to  business  changes.
+By  providing  a  user  experience  and  minimizing  the  learning  cost  for  customers,  we  aim  to  reduce  churn  rates  and  improve  conversion  rates  (CVR).
+2.  Deepening  of  OMO  (Online  Merges  with  Online)  and  alignment  of  pricing  strategies
+-Challenge :  The  infrastructure  for  supporting  rapidly  evolving  AI  technologies  such  as  LLMO  (Large-Scale  Language  Model  Optimization),  AIO  (AI  
+Search  Optimization),  and  Agentic  Commerce  (autonomous  purchasing  by  AI  agents)  is  not  yet  in  place.
+5.  Stable  operation  and  thorough  performance  improvement
+-Challenge :  During  traffic  peaks  such  as  large-scale  sales,  email  newsletter  distribution,  push  notifications,  and  popular  product  launches,  we  are  
+forced  to  restrict  traffic  (virtual  waiting  room),  resulting  in  lost  opportunities  and  a  decline  in  customer  experience.
+Machine Translated by Google
+--- PAGE 18 ---
+-  Challenge  2:  Deepening  OMO  (Online  Merges  with  Online)  and  aligning  pricing  strategies.
+-  Challenge  3:  Adaptation  to  Generative  AI  and  Next-Generation  Commerce  Technologies
+Goal  to  reach  in  October  2028
+-  Challenge  3:  Adaptation  to  Generative  AI  and  Next-Generation  Commerce  Technologies  (Not  mandatory,  but  proposed  solutions  will  be  highly  valued)
+-  Challenge  5:  Stable  operation  and  thorough  performance  improvement
+We  aim  to  solve  the  following  strategic  challenges:
+We  aim  to  solve  the  following  strategic  challenges:
+-  Challenge  1:  Standardizing  the  customer  experience  and  reducing  the  learning  cost
+Target  to  be  achieved  in  April  2030
+13
+-  Challenge  4:  Improving  development  agility  and  creating  a  sustainable  engineering  system
+3.7  Target  Schedule
+Machine Translated by Google
+--- PAGE 19 ---
+Batch  EC  side  batch  execution  platform  "JobCenter",  NEC  batch  application  development  environment  "Sys-temDirector  Enterprise  for  C  
+Batch  (formerly  BATOOL)"  (tool  for  generating  C  language),  core  system  "JP1"
+-  [IoT  App]  AWS  Configuration  Diagram.pdf  -  
+E-commerce  System  Function  Layout_202603_Our  Own  EC  Subjective  View.pdf
+-  [Members  Site]  AWS  Configuration  Diagram.pdf  -  [IoT  
+App]  System  Overview  Diagram.pdf
+Frontend/Backend
+-  [EC  (NeoSarf)]  AWS  Configuration  Diagram.pdf  -  
+[edion]  Overall  Image  v1.0_EC  Site.pdf
+-  Compatible  devices:  PC,  smartphone,  tablet
+-  [Edion  Smartphone  App]  System  Overview  Diagram_v2.1.pdf  -  [Edion  
+Smartphone  App]  Infrastructure  Configuration  Diagram.pdf
+-  E-commerce  system  function  layout_202603_Mall  subjective.pdf  -  E-commerce  
+system  function  layout_202603_Scope  added  version.pdf
+The  current  system's  configuration,  data,  and  operational  overview,  as  well  as  any  data  that  may  be  migrated,  are  outlined  below.  Please  use  
+this  information  for  reference.
+4.1.1  System  Configuration  Diagram
+14
+4.2.1  Basic  information
+-  SEO/Markup:  Structured  data  conforming  to  Schema.org  (JSON-LD  format)  has  been  implemented.  Currently,  this  is  only  implemented  in  
+the  breadcrumb  list.
+4.2.2  Technical  configuration
+Please  refer  to  the  attached  document  below.
+-  Edion  Integrated_Function  Data  Placement  Ver7.5_202405.pdf  -  Edion  
+Integrated_Function  Information  Relationship  Diagram  Ver13_202507.pdf
+-  Main  functions:  Product  sales,  member  management,  payment  processing,  shipping  management
+-  Development  platform:  NEC's  EC  package  "NeoSarf"  (generates  the  interpreted  language  "Conductor"  for  Java),  Java,  JavaScript,  HTML,  
+CSS
+4.  Current  System
+-  URL:  https://www.edion.com/
+4.2  E-commerce  site
+4.1  Overall  Structure
+Machine Translated by Google
+--- PAGE 20 ---
+-  EAI/ETL:  DataSpider
+-  Auto  Scaling  (core  frontend  and  backend  functionality):  EC2  (Linux)
+-  Shared  storage  for  static  assets,  logs,  etc.  across  multiple  servers:  Amazon  EFS
+-  Connectivity  between  VPCs  and  with  Edion  locations  (on-premises):  AWS  Transit  Gateway
+-  Release  type:  Long  Term  Release  (Long-term  support  version)
+-  Edition:  Standard  Edition  2  (SE2)
+-  Batch  server:  1  unit  (JobCenter,  Hulft)
+-  API  Layer:  Data  provision  service  platform  (provides  REST  APIs  for  orders,  inventory,  points,  etc.,  to  each  system)
+-  Internal  DNS  management:  Route  53
+-  *EC2  instances  that  do  not  use  Auto  Scaling
+-  Purpose:  Business  database  (holds  transaction  data,  member  data,  etc.)
+-  Image  and  static  content  storage:  Amazon  EFS
+-  API  specifications:  REST  (HTTP/JSON),  Basic  authentication /  Spring  Security,  Communication  timeout  setting  24,000ms
+-  2  SystemManagers:  HaProxy  (J-Rule)  for  load  balancing
+Network,  Distribution,  and  Security
+-  APM  (Application  Performance  Management):  Edion  implemented  DataDog  APM.
+15
+-  Content  delivery  and  edge  security,  outbound  DNS  management:  CloudFlare
+-  PostgreSQL:  PostgreSQL  15.10
+database
+-  Container  execution  environment  (used  for  specific  services  such  as  payment  integration):  AWS  Fargate
+-  Purpose:  A  database  necessary  for  using  NeoSarf  (holds  source  code,  session  information,  etc.)
+Infrastructure  Configuration  (AWS)  Computing
+-  Monitoring:  Iret  has  an  MSP  contract  with  us,  so  Iret  has  implemented  New  Relic.
+-  Oracle:  Oracle  Database  19c  (19.23.0.0.0)
+-  Load  balancing:  ALB  (Application  Load  Balancer)
+Data  integration  and  API  platform  (see  "4.4  Data  Provision  Service  Platform"  for  details)
+-  Under  ALB,  there  are  two  HaProxy  servers  (called  J-Rule),  which  further  distribute  traffic  to  each  EC2  instance.
+storage
+Machine Translated by Google
+--- PAGE 21 ---
+-  Member  data  (approximately  12  million  entries)
+-  [Core]  EC  Management  Functions.pdf
+The  current  system  holds  the  following  data:
+-  Other  master  data
+4.2.4  Management  functions  for  EC
+4.2.9  Data
+-  Favorite  product  data  (approximately  60,000  items)
+4.2.7  [Core]  Batch  function  for  e-commerce
+-Monthly  unique  users:  Approximately  10  million  unique  users
+-  EC  (Oracle):  [EC]  List  of  EC  infrastructure  tables.pdf
+-  Product  data  (approximately  1  million  items)  *Inventory,  warranty
+-  [ECBO]  Function  List.pdf
+16
+4.2.5  Batch  for  EC
+Please  refer  to  the  attached  document  below.
+4.2.3  Front-end  functions  for  EC
+-  Review  data  (approximately  1  million  reviews)
+-  Monthly  page  views:  Approximately  40  million  PV
+-  [EC]  Batch  List.pdf
+4.2.6  [Core]  Management  functions  for  e-commerce
+-  Order  history  data  (past  7  years,  approximately  2  billion  entries)
+-  [Core]  Batch  processing  for  e-commerce.pdf
+-  [Core]  Common  functions  for  store  e-commerce.pdf
+-  Point  data  (800,000  entries  for  Edion  points  only)  *Includes  limited-time  points
+4.2.10  Operational  Data
+Please  refer  to  the  attached  document  below.
+4.2.8  [Core]  Common  functions  for  store  e-commerce
+-  [EC  Frontend]  Feature  List.pdf
+-  Core:  [Core]  Table  List.pdf
+Machine Translated by Google
+--- PAGE 22 ---
+-  Number  of  products  handled:  Approximately  1  million
+We  plan  to  switch  to  this  service,  but  the  alternative  service  is  yet  to  be  determined.
+-  Core  systems:  Utilize  customer  APIs,  points  APIs,  inventory  APIs,  order  registration  APIs,  etc.
+-  Incom  Japan:  Available  for  mobile  payments.  Payment  inquiries  (check  payment  status),  payment  applications  (refunds).
+-Payment  system:  Credit  card  (Orico  Payment),  bank  transfer  (Omakase  Bank  e),  mobile
+-Monthly  order  volume:  Approximately  60,000  (Based  on  2025  figures)
+-  Average  order  value:  Approximately  40,000  yen  (Based  on  2025  data)
+-  Omakase  Bank  e  (Mitsubishi  UFJ  Bank):  Service  will  be  terminated  on  September  30,  2027,  and  other  services  will  be  discontinued.
+4.2.11  Integration  System
+-  Orico  Payment:  Service  will  end  in  March  2028,  requiring  migration  to  Orico  Payment  Plus.  A  switch  to  Omni  Payment  Gateway  
+(NTT  Data)  is  planned  with  the  renewal  (October  2028) .
+-  Maximum  PVs  per  second:  1,200/s
+The  current  system  is  integrated  with  the  following  external  systems.  While  you  may  use  the  same  services  in  the  new  system,  or  you  may  have  
+the  option  to  switch  to  other  services,  please  use  this  information  as  a  reference  for  the  current  system's  integration  status.  For  detailed  API  
+specifications  of  each  integrated  system,  please  refer  to  "[edion]  API  List.pdf"  (see  4.4  Data  Provision  Service  Platform).
+Request),  refund  inquiry  (reconfirmation  of  return  processing  results).
+Incom  payment,  point  payment
+(Note:  Rakuten  Points  can  only  be  earned  and  used  at  stores.  Present  your  membership  barcode  in  the  app.)
+-  Recommendation  engine:  dequwas  (I&Q).  Automatically  updates  product  information  once  a  day.  -  
+Electronic  gift  system:  Electronic  gift  service  (Fujitsu  Japan).  Electronic  gift  balance  inquiry,  usage
+Subtraction  coordination.
+-  Number  of  members:  Approximately  12  million
+-  Catalog  Mall  Integration:  Catalog  Mall
+-  Maximum  simultaneous  connections:  800  *During  peak  times,  the  limit  may  be  reached  and  a  
+"Sorry"  message  will  be  displayed.  -  Access  peaks:  Email  newsletter  distribution,  push  notifications,  launch  of  popular  products,  etc.
+17
+-  MSGW:  The  service  will  be  discontinued  in  March  2027,  and  will  be  switched  to  another  service  (details  TBD).
+-  Search  engine:  goo  Search  Solution  (NTT  docomo)
+-  SMS  delivery  system:  MediaSMS  (Media4u).  Used  for  authentication  during  EC  login.
+-  EDION  Card  Online  Application:  API  integration  for  SMCC  online  application
+-  Downloadable  product  distribution  system:  Pegasus2  (SB  C&S)  -  Off-site  
+delivery  system:  EC  off-site  delivery  API  (Yamato  Transport),  store  search  API  used
+-  Common  points:  d  Point  integration  (MSGW),  V  Point  integration  (TPJ),  Rakuten  Points  (Rakuten  Pay)
+-  Number  of  product  categories:  Approximately  33,000  categories
+Machine Translated by Google
+--- PAGE 23 ---
+The  following  systems  are  linked  from  the  core  system  to  external  systems.  For  jobs  registered  in  
+JP1  on  the  core  system  side,  please  refer  to  "[edion]  External  Linkage  Batch  List.pdf".
+-  On-site  repair  classification  linkage  API:  Retrieves  the  list  of  on-site  repair  classifications.
+-  AppleCare  integration:  API  integration  for  AppleCare  activation  -  Product  information  
+acquisition:  eBASE,  JMD  (acquisition  of  CD,  DVD,  etc.  jacket  images)
+-  On-site  repair  symptom  linkage  API:  Retrieves  the  symptoms  of  on-site  repairs.
+For.
+-  Soden:  Requested  delivery  to  an  area  outside  the  service  area  and  return  pickup.
+-  Group  internal  collaboration  system
+-  Health  Monitoring  API:  Calls  the  API  if  there  is  one  or  more  items  that  qualify  for  guarantee.  If  the  response  is  200,  it  then  calls  the  subsequent  
+repair  feasibility  determination  API.  If  the  API  fails,  it  transitions  to  the  error  screen.
+-  Dropshipping:  Only  available  through  Edion  Group  subsidiary  "Forest  Co.,  Ltd."  Product  information  (stock  status)  is  updated  once  a  day.  Shipment  request  
+records  are  also  updated.
+-  On-site  repair  feasibility  determination  API:  Retrieves  customer  purchase  history  information.  Determines  warranty  type,  warranty  coverage,  
+request  category,  and  customer  request  code.
+-  On-site  repair  request  registration  API:  Performs  the  on-site  repair  request  registration  process.
+-  Price.com  Integration:  After  calling  the  NEO  product  information  acquisition  API,  the  information  is  registered  in  the  Price.com  Integration  Information  
+Workbook.  Then,  additional  information  such  as  inventory  information  is  retrieved  from  the  core  database,  and  the  table  is  updated.  The  Price.com  
+Integration  Information  Workbook  and  the  Price.com  Integration  Processing  Result  History  are  compared,  and  automatic  Price.com  integration  is  performed  
+only  for  items  where  a  difference  exists.  Operates  24  hours  a  day.  Performed  once  every  hour  (unavailable  daily  from  3:00  AM  to  5:00  AM  and  3:00  PM  
+to  3:30  PM  due  to  Price.com  maintenance).
+-  DFO  Service:  DFO  Premium  (Nifty  Lifestyle  Co.,  Ltd.  *formerly  Commerce  Link  Co.,  Ltd.).  Integration  frequency:  9  AM  to  12  PM  (after  price  update),  4  AM  
+to  8  AM  (before  price  update),  every  hour.  Web  advertising  information  is  created  and  integrated  based  on  product  information.
+18
+-  On-site  repair  manufacturer  integration  API:  Retrieves  the  manufacturers  of  products  that  require  on-site  repair.
+-Logistics  system:
+-  Toshiba  Logistics:  Primarily  used  for  arranging  goods  from  large  delivery  centers  to  various  shopping  centers  and  stores.
+-  Discount  common  platform:  Set  discount  policy  (a  policy  offering  discounts  for  purchasing  multiple  specific  products)  Discount  inquiry
+-  Yamato  Transport:  I  requested  delivery  and  return  pickup  for  small  items  only.
+-  Price  research:  Web  scraping  and  web  crawling  service  "ShtockData"  (Keywalker)  is  used  for  price  maintenance  and  listing  on  Kakaku.com.  Product  
+information  is  sent  once  a  day.  After  the  competitor  price  extraction  process  and  the  price  extraction  process,  the  data  is  analyzed  using  RPA.  (Competitor  
+price  extraction  process:  LIS1_036  (preparation),  LIS1_037  (registration),  Price  extraction  process:  LIS1_034  (preparation),  LIS1_035  (registration))
+-Visit  repair
+-  In-house  logistics:  For  large  items  within  the  area
+Machine Translated by Google
+--- PAGE 24 ---
+(Mobile  server)  ÿ  NTT  Resonant)
+-  Development  method:  Native
+4.2.12  Operational  structure
+4.3.2  Technical  configuration
+-  Development  Team:  System  requirements  definition  for  application  domain,  effort  calculation,  estimation,  feature  addition,  testing.
+-  Receiving  product  image  files:  Product  images  are  received  from  Forest  via  HULFT  integration.  (Forest)
+-  Product  catalog  information:  Retrieve  downloadable  product  information  (SB  C&S  ÿ  core  (external  integration  server)  ÿ  neosarf).  Daily  
+processing.
+-  Operations  Team  (Infrastructure):  Provides  24/7/365  system  monitoring,  incident  response,  and  regular  maintenance.  Responsible  for  the  
+infrastructure  layer.
+-  On-site  repair:  Main  line  ÿ  Supplier  (SFTP  communication)
+The  current  system  is  operated  under  the  following  structure:
+-  Supported  OS:  iOS  (version  17.0  or  later),  Android  (version  14  or  later)
+-  Ordering:  Core  system  ÿ  EDI  network  ÿ  Supplier
+-  Delivery  date  confirmation  and  delivery  record:  Supplier  ÿ  EDI  network  ÿ  Core  system
+4.3.1  Basic  information
+ÿCore  (external  integration  server)  ÿneosarf)
+-  Infrastructure  Team:  System  requirements  definition,  effort  calculation,  estimation,  and  construction  in  the  infrastructure/network  domain.
+-  Android:  Java
+19
+-  Product  search  ASP  transmission:  Sends  product  search  ASP  data  via  SFTP  communication.  (neosarf  ÿ  core  (external  linkage)
+Responsible  for  troubleshooting  and  regular  maintenance.  Responsible  for  the  application  layer.
+-  EDI:  Data  exchange  with  suppliers  is  performed  using  relay  networks  such  as  EDIC  and  R-VAN.
+Responsible  for  maintenance,  operation  management,  and  security  measures.
+-  Main  features:  Digital  membership  card,  point  management,  coupons,  flyers,  push  notifications  (coupons,  news,  campaigns)
+-  iOS:  Swift
+Batch  execution  for  member  sites:  "OS  cron",  Batch  execution  for  application  CMS:  "Laravel  Task  Scheduling"
+Responsible  for  improvements  and  bug  fixes.
+-  Planning  Team:  Responsible  for  liaison  with  the  business  side,  defining  business  requirements,  and  prioritizing  tasks.
+-  Operations  Team  (App):  Responsible  for  handling  inquiries  from  business  units,  and  provides  24/7  system  monitoring.
+front  end
+4.3  Smartphone  Apps
+Machine Translated by Google
+--- PAGE 25 ---
+-  Monitoring:  CloudWatch
+-  API  Management:  Amazon  API  Gateway
+API /  Serverless  Layer  (AWS)
+-  Storage:
+-  Computing:
+-  Platform  integration:  APNs  (iOS),  FCM/GCM  (Android)
+-  Content  delivery  and  edge  security:  CloudFlare
+-  others:
+Infrastructure  configuration  (AWS)
+-  Enter  verification  code  (This  screen  requires  you  to  enter  the  verification  code  you  received  to  complete  the  authentication  process.)
+-  Database:
+-  Business  logic:  AWS  Lambda  (T-point  integration,  JWT  token  generation,  user  information  registration,  device  token  
+registration,  etc.)
+-  Distribution  and  security:
+4.3.3  Front  Functions
+-  Log  in  (authentication  using  login  ID  and  password)
+-  Registration  Selection  (Screen  to  select  the  type  of  new  member  registration.  Choose  from  card  member  or  new  user  registration.)
+-  Sending  a  verification  code  (Screen  for  sending  a  verification  code  to  your  phone  number  during  two-factor  authentication  upon  login)
+Home
+20
+-  Rank  details  screen  (This  screen  displays  the  member  rank  by  calling  the  Member  Rank  API.)
+-  Push  notification  platform  (BoltzEngine),  CMS  administration  screen,  jump  server:  EC2
+Membership  card,  points,  and  asset  management
+Authentication  and  Account  Management
+-  Home  screen  (calls  various  APIs  to  obtain  screen  display  information.  Displays  advertisements  (using  arutana,  an  
+advertising  service  provided  by  DearOne,  to  realize  a  retail  media  business  model))
+-  Digital  membership  card  (Displays  a  digital  membership  card  barcode.  Allows  access  to  and  launch  of  services  such  as  d-points,  
+v-points,  and  Rakuten  points.)
+-  New  Member  Registration
+-  Application  control  files  and  various  logs  stored:  Amazon  S3
+-  Push  token  management,  user  attributes,  and  delivery  information  registration:  RDS  for  MySQL
+Machine Translated by Google
+--- PAGE 26 ---
+(You  can  add  items  to  your  favorites,  etc.)
+Information  and  Notifications
+-  Barcode  scanning  (activate  the  camera  and  read  product  information  from  the  barcode)
+-  Scan  history  (Displays  product  history  obtained  from  the  NFC  scan  history  acquisition  API.  Delete  history,  etc.)
+do.)
+-  Splash  screen  (initialization  screen  displayed  when  the  app  starts)
+(Provides  functionality)
+-  NFC  scan  (Activate  the  NFC  reader  and  read  product  information  from  the  NFC)
+-  Coupon  Details  (Displays  coupon  details.  Clicking  the  "Use"  button  will  display  the  coupon  barcode.)
+-  New  Arrivals  Pop-up  Top  Details  (Page  displaying  individual  new  arrival  information)
+-  Point  details  (screen  displaying  current  points,  limited-time  points,  and  point  expiration  dates)
+Scan/Search
+-  Used  Coupons  List  (Displays  a  list  of  used  coupons)
+-  V  Login  ID  Linking  (Displays  the  V  Login  ID  Linking  screen  in  Webview)
+-  New  Messages  Pop-up  Top  (A  screen  that  displays  unread  new  messages  in  a  full-screen  pop-up)
+-  QR  code  scan  (activate  the  camera  and  read  the  information  from  the  QR  code)
+-  V-Point  usage  procedure  (Consent  screen  for  using  the  V-Point  card  with  the  Edion  app)
+-  Coin  Details  (Screen  showing  the  number  of  coins  held.  Allows  you  to  check  your  coin  acquisition  history,  exchange  points,  and  enter  prize  draws.)
+-  Walkthrough  (Informs  the  user  of  the  app's  overview  and  leads  them  to  the  terms  of  service  agreement  screen)
+-  New  Information  (Displays  new  app  information  set  on  the  members  site)
+Sales  promotion  and  coupon  management
+UI  Common  Features  and  Navigation
+-  Mobile  V-Card  display  (Screen  that  displays  the  barcode  of  the  mobile  V-Card  in  WebView)
+-  Coin  exchange  explanation  (Screen  displaying  explanations  and  precautions  for  exchanging  coins  for  points)
+-  Coupon  list  (Calls  the  coupon  search  API  and  retrieves  the  information  displayed  on  the  screen.)
+-  Favorites  List  (Displays  a  list  of  coupons  that  have  been  added  to  your  favorites)
+-  New  membership  card  (displays  digital  membership  card  barcode.  Displays  available  points  and  coins)
+-  Notifications  (Displays  app  notification  information  set  on  the  members  site)
+twenty  one
+-  Coin  exchange  input  (Input  screen  for  exchanging  coins  to  points.  Displays  the  number  of  coins  held  and  the  exchange  rate,  and  allows  
+you  to  select  the  number  of  coins  to  exchange  from  a  dropdown  menu.)
+Machine Translated by Google
+--- PAGE 27 ---
+-  Campaign  Management:  Campaign  List  (Search,  Update,  Delete),  New  Campaign  (New  Registration)
+-  Audit  and  log  management:  Operation  logs  (display  of  operation  logs)
+(Number  of  unread  incoming  messages)
+(New  registration)
+-  App  operation  and  terms  of  service  settings:  Maintenance  settings,  digital  membership  card  settings,  terms  of  service  display  settings
+Members  Site  Content  Management
+-  App  Coin  Management:  App  coin  list,  point  exchange  history  CSV  download,  app  coins  included.
+(Activate  the  corresponding  function  from  there.)
+App  coin  distribution  settings
+App  CMS
+Members  Site  -  Administration  Server
+-  App  banner  management:  App  banner  search  and  list  (search,  update,  delete),  new  app  banner  registration
+-  News  Management:  News  List  (Search,  Update,  Delete  New  Information/Announcements),  New  News
+-  Analytics  and  promotion  management:  Dashboard  (displays  the  number  of  push  notifications  sent,  open  rates,  etc.)
+External  integration,  payment,  and  data  synchronization
+-  External  integration  transition  screen  (various  WebView/external  service  transitions)
+-  Common  header/footer  (displays  login  status.  Each  icon  placed  in  the  navigation  area)
+-  Bottom  tabs  (5  types:  Home  button,  Coupon  button,  Store/Flyer  button,  Repair/Service  button,  Membership  card  button)
+-  User  Security  Management:  Administrator  Information  List  (Search,  Register,  Update,  Delete  CMS  Accounts),  Password  Change
+Promotional  coupon  management
+-  Common  menu  (username,  My  store  name,  membership  type,  last  login  date  and  time,  number  of  unread  notifications,  new
+4.3.5  Batch
+(Display),  Push  notification  list  (search,  register,  update,  delete)
+twenty  two
+4.3.4  Management  functions
+There  are  two  types  of  CMS  (Content  Management  Systems):  one  for  managing  content  displayed  on  pages  (WebView)  within  the  Edion  app  (Members  
+Site)  and  another  for  managing  push  notifications  (App  CMS).  The  Members  Site  is  not  included  in  this  modification,  but  to  maintain  data  consistency  
+with  the  app,  the  main  functions  related  to  the  app  are  listed  below.
+-  Category  Management:  Category  sorting  order  settings  (update  the  display  order  of  categories  shown  in  the  Edion  app)
+-  Coupon  Management:  Coupon  list  (search,  update,  delete),  new  coupon  (new  registration),  customer  code  specified  target  recipient  CSV  upload
+Machine Translated by Google
+--- PAGE 28 ---
+-  Edion  App  Coin  Expiration  Process:  Expiration  information  for  coins  that  have  been  issued  for  365  days  or  more  is  updated  (daily)
+-  Coupon-related:  Coupon  search  request,  coupon  redemption  processing  request
+-  Point  exchange  application:  Core  system  integration  data  import  (daily,  10:00  PM  -  11:50  PM,  every  10  minutes)
+-  Public  control  settings  Purchase  product  import  work  deletion:  Deletes  the  record  of  the  work  used  in  news  registration  (day
+-  Individual  message  deletion  batch:  Deletes  individual  messages  that  have  exceeded  their  retention  period  (30  days)  (daily  at  1:00  AM)
+-  Point  exchange  request  email  sent:  A  point  exchange  result  email  will  be  sent  (daily  at  8:00  AM).
+-  Coin  exchange  data  integration:  The  coin  exchange  request  list  will  be  integrated  into  the  core  system.  (Daily,  5:00  PM)
+Next  3:00  AM,  7:00  AM,  11:00  PM)
+4.3.6  API
+-  Member  information  linkage:  Link  member's  My  Store  information  to  the  core  system  using  Hulft  in  order  to  create  My  Store  performance  data.
+-  Coin  Report  CSV  Output:  Coin  information  is  aggregated  by  month/day  and  output  to  a  file  (daily,  3:33  AM).
+-  Store/Region  related:  Get  list  of  prefectures,  request  store  search
+-  Temporary  file  deletion  batch  process  starts  (daily  at  7:00  AM)
+(Daily  AM8:00-PM9:59  every  10  minutes)
+This  service  displays  content  registered  on  the  members'  website,  returns  content  data  to  the  Edion  app,  and  returns  data  to  the  store  visit  point  
+lottery  app.
+Edion  App  API
+-  Coin  management  features:  Retrieve  owned  coin  information,  coin  distribution,  coin  acquisition  history,  coin  exchange  requests
+-  Push  notification  batch:  After  retrieving  push  notification  information  from  the  database,  it  calls  the  API  to  send  a  push  notification.
+Next  AM2:00)
+(3:03  AM)
+Next  AM0:05ÿ
+-  Membership/Authentication  System:  Membership  information  retrieval  request,  One-time  token  retrieval  request
+-  Coin  history  data  archive:  Output  point  exchange  application  information  to  a  core  system  integration  file  (day
+Members  Site  -  Batch  Server
+-  Local  temporary  file  deletion  batch  (daily,  1:30  AM)
+twenty  three
+Update  (Daily,  8:00  AM  -  9:59  PM,  every  10  minutes)
+-  Point  exchange  application  Core  system  integration  data  output  (daily,  3:05  PM  -  3:55  PM,  4:05  PM  -  4:35  PM,  every  10  minutes)
+App  CMS
+Next  AM2:45)
+-  Push  notification  information  acquisition  batch:  Retrieves  push  notification  open  information  from  BigQuery  and  updates  the  DB  (daily
+Search,  campaign  search,  category  list  retrieval,  unread  information  retrieval
+-  Content  acquisition  systems:  Top  page  content  acquisition,  service  content  acquisition,  news  search,  notifications
+-  Store  Information  Master  Acquisition  Batch:  Calls  the  store  search  API  on  the  members  site  to  acquire  store  information  and  further...
+Machine Translated by Google
+--- PAGE 29 ---
+-  Download  count:  Android:  5  million+,  iOS:  about  the  same  as  Android
+-  CCMP  data  transmission  (members  data)  (Jobnet:  DPY8030)
+-  Other:  Read  receipt  sent  request
+-  App  My  Store  Information  Integration  (Job  Group:  APY8670,  Execution  Frequency:  7:00  AM  -  12:00  AM,  every  10  minutes)
+-  App  banner  data  (approximately  800  items)
+4.3.8  Data
+-  Importing  Members  DB  data  (Jobnet:  DPY8050)
+-  App  CMS:  [App]  App  CMS_Table  List.pdf
+Recent  Selected  Event  Sending  API,  Store  Visit  Point  Lottery  API
+-  AU  indicators:  DAU  approximately  600,000  people,  WAU:  approximately  1.2  million  people,  MAU  approximately  2.4  million  people
+-  Exchange  coins  via  app  (Jobnet:  APB0600)
+-  News  data  (approximately  15,000  items)
+4.3.7  [Core]  Batch  function  for  member  sites
+-  Campaign  data  (approximately  22,000  entries)
+-  Store  acquisition  API,  installation  corner  acquisition  API,  event  list  acquisition  API,  event  details  acquisition  API,  within  the  device
+twenty  four
+-  Area  weather  data  transmission  (Members)  (Jobnet:  DPY8430)
+-  Integrated  DB-related  processing  (Job  group:  DPY8000,  Execution  frequency:  Daily  (AM2:00))
+-  App  My  Store  Information  Integration  (JobNet:  APY8670)
+-  My  Store  Registration  Record  (JobNet:  DPY8300)
+-  Coupon  data  (approximately  6,000  entries)
+4.3.9  Operational  Data
+-  App  store  rating:  iOS  [2.6],  Android  [3.6]
+(Execute)
+-  Members  site:  [App]  Members_TableList.pdf
+Store  visit  point  API  (used  on  store  portable  terminals)
+AM10:00)
+-  Send  and  receive  coin  exchange  information  via  app  (Job  group:  APB0600  Execution  frequency:  As  needed  (absolute  time)
+-  Other  master  data
+-  Coin  data  (approximately  9  million  entries)
+Machine Translated by Google
+--- PAGE 30 ---
+4.3.11  Operational  structure
+The  following  systems  are  integrated  with  the  smartphone  app.  For  information  on  systems  shared  with  the  e-commerce  site,  please  refer  to  section  4.2.12,  
+including  supplementary  information.
+Responsible  for  improvements  and  bug  fixes.
+The  current  system  is  operated  under  the  following  structure:
+-  Retail  media:  Arutana  (DearOne)
+Responsible  for  maintenance,  operation  management,  and  security  measures.
+-  Member  site  (SSO  token  issuance,  member  information  registration,  coupon/app  banner  registration)
+-  Push  notifications:  BoltzEngine,  APNs  (iOS),  FCM/GCM  (Android)
+-  SMS  delivery  system:  MediaSMS  (Media4U)  (See  4.2.12  for  further  details)
+-  Authentication:  JWT  (JSON  Web  Token)  based  session  management,  managed  access  via  SSL  VPN.
+4.3.10  Integration  System
+-  Core  system:  Uses  customer  API,  points  API,  inventory  API,  order  registration  API,  etc.  (See  4.2.12  for  details)
+-  E-commerce  site
+-  Operations  Team  (App):  Responsible  for  handling  inquiries  from  business  units,  and  provides  24/7  system  monitoring.
+(see)
+Responsible  for  troubleshooting  and  regular  maintenance.  Responsible  for  the  application  layer.
+-  Group  internal  collaboration  system
+-  Data  provision  service  platform  (V-Point  integration,  etc.)
+-  [edion]  API  list.pdf
+-  Planning  Team:  Responsible  for  liaison  with  the  business  side,  defining  business  requirements,  and  prioritizing  tasks.
+-  Infrastructure  Team:  System  requirements  definition,  effort  calculation,  estimation,  and  construction  in  the  infrastructure/network  domain.
+-  Operations  Team  (Infrastructure):  Provides  24/7/365  system  monitoring,  incident  response,  and  regular  maintenance.  Responsible  for  the  infrastructure  
+layer.
+twenty  five
+-  Common  points:  d  points,  V  points,  Rakuten  points  (See  4.2.12  for  further  details)
+-  Development  Team:  System  requirements  definition  for  application  domain,  effort  calculation,  estimation,  feature  addition,  testing.
+4.4  Data  Provision  Service  Infrastructure
+Machine Translated by Google
+--- PAGE 31 ---
+5.2  Project  Background
+5.1  Project  Name  (Provisional)
+5.3  Project  Objectives
+5.  Project  Overview
+1.  Contribution  to  the  e-commerce  growth  vision
+To  achieve  the  numerical  targets  of  our  "E-commerce  Growth  Vision,"  we  will  evolve  our  own  e-commerce  site  and  app  into  powerful  growth  engines.
+This  document  outlines  a  preliminary  plan  for  project  implementation,  intended  as  a  means  to  realize  our  e-commerce  growth  vision  and  our  medium-
+term  system  development  vision.  Please  use  this  information  as  a  reference  for  your  estimate.
+2.  Realization  of  the  mid-term  vision  for  system  development
+-  Achievement  of  numerical  targets:  To  generate  50.8  billion  yen  in  sales  and  570  million  yen  in  profit  from  our  own  website  in  fiscal  year  2030.
+We  will  build  a  platform  that  can  contribute.
+26
+-  Operating  costs:  20%  reduction:  We  will  reduce  maintenance  and  operating  costs  by  utilizing  managed  services,  improving  peak  performance,  
+using  open-source  software,  and  automation.
+Please  note  that  this  project  outline  is  a  preliminary  draft.  We  anticipate  that  the  details  will  be  finalized  through  discussions  between  both  parties.
+-  Improved  profitability:  We  aim  to  create  a  system  infrastructure  that  contributes  to  profitability  and  improved  profitability  of  our  own  site,  including  
+achieving  zero  waiting  during  peak  times  and  reducing  running  costs  by  adopting  an  open-source-centric  technology  stack.
+We  aim  to  improve  delivery  speed  to  respond  more  quickly  to  changing  business  needs.
+This  project  aims  to  solve  these  challenges  and  provide  a  comfortable  and  attractive  shopping  experience  that  will  be  supported  by  more  customers  
+in  a  sustainable  manner.
+The  following  three  points  are  our  main  objectives.
+-  Development  costs:  50%  reduction:  By  leveraging  industry-standard  technology  stacks  and  the  OSS  ecosystem,  we  reduce  the  cost  of  hiring  
+and  procuring  engineers,  and  by  actively  utilizing  AI  tools,  we  aim  to  improve  productivity  per  person.
+[Tentative]  E-commerce  site  and  smartphone  app  renewal  project
+To  achieve  the  numerical  targets  of  our  "Mid-Term  System  Development  Vision,"  we  will  achieve  the  following  objectives  through  an  architecture  
+refresh.
+-  Development  period:  30%  reduction:  through  reusable  componentization,  establishment  of  CI/CD  pipelines,  and  utilization  of  AI.
+Since  2017,  our  company  has  been  operating  an  e-commerce  site  and  smartphone  app  with  the  current  system  configuration,  and  we  are  grateful  for  
+the  many  members  who  use  our  services.  However,  in  order  to  realize  our  e-commerce  growth  vision,  we  face  various  challenges,  both  large  and  
+small,  primarily  strategic  challenges.
+Machine Translated by Google
+--- PAGE 32 ---
+-  Increased  positive  customer  feedback  on  UI/UX
+-  E-commerce  site
+3.  Resolving  strategic  challenges
+-  Smartphone  app
+Transforming  to  a  highly  scalable  platform  capable  of  supporting  MaaS.
+27
+-  Achieve  sales  of  50.8  billion  yen  and  profits  of  570  million  yen  from  our  own  website  by  fiscal  year  2030.
+5.5.1  Scope
+-  Achieves  zero  waiting  during  peak  hours
+-  Achieved  target  indicators  of  20%  reduction  in  operating  costs,  50%  reduction  in  development  costs,  and  30%  reduction  in  development  time.
+-  Available  infrastructure
+-  Adaptation  to  Generative  AI  and  Next-Generation  Commerce  Technologies:  Optimization  and  agentic  co-op  in  line  with  the  arrival  of  the  Generative  AI  era.
+We  solve  strategic  challenges,  build  a  foundation  for  establishing  a  competitive  advantage,  and  provide  a  seamless  shopping  experience.
+-  Customer  authentication  and  authorization:  The  currently  operational  integrated  authentication  infrastructure  (Keycloak)  is  available  for  use.
+-  Standardization  of  customer  experience:  Maximizing  usability  by  refreshing  the  UI/UX  to  conform  to  industry  standards  (de  facto  standards).
+-  Stable  operation  and  thorough  performance  improvement:  Scalable  design  and  performance  tuning  achieve  zero  waiting  during  peak  times,  
+pursuing  a  smooth  user  experience  in  SEO  and  mobile  environments.
+-  Deepening  OMO:  Providing  a  unique  Edion  purchasing  experience  through  the  same  pricing  in  stores  and  online,  and  a  seamless  user  experience.
+-  Customer  acceptance  and  positive  feedback  on  new  AI-powered  purchasing  experiences
+5.4.2  Qualitative  success  criteria
+-  Improved  development  agility:  By  migrating  to  a  mainstream  technology  stack,  we  will  create  an  environment  that  maximizes  the  benefits  of  
+securing  top  engineers  and  utilizing  AI-powered  development  support,  thereby  improving  development  agility.
+-  Achieved  industry-leading  scores  on  PageSpeed  Insights.
+5.4.1  Quantitative  success  criteria
+-  Addressing  dissatisfaction  with  price  differences  between  stores  and  online
+-  Improving  engineer  satisfaction
+System  domain
+5.5  Project  Scope
+5.4  Project  Success  Criteria  (Provisional)
+Machine Translated by Google
+--- PAGE 33 ---
+-  Operations  for  store  staff
+-  Renewal  of  the  mall  system
+-  Operations  for  customer  support
+-  EXV  may  perform  tasks  necessary  for  the  execution  of  this  project  based  on  instructions  from  Edion.  Members  assigned  by  Edion  will  be  
+treated  as  the  point  of  contact  for  practical  communication  and  instructions,  and  will  be  responsible  for  ensuring  smooth  communication.
+-  Core  systems  (integrated  systems)  *May  be  included  depending  on  the  content  of  OMO  initiatives
+-  See  attached  documents:  Desired  State  and  Main  Scope.pdf,  E-commerce  System  Function  Deployment_202603_Scope  Addition  
+Version.pdf
+-  New  data  provision  service  platform:  A  data  provision  service  platform  to  be  built  in  a  separate  project.
+Data  migration
+-  The  measures  listed  in  the  E-commerce  Growth  Vision's  Key  Initiatives  are  measures  that  are  planned  to  be  handled  by  the  current  system.
+28
+-  Integration  with  Forest  EC  (Cocodekau,  Forestway)  *Currently,  it  will  continue  to  be  operated  as  a  separate  system.
+-  Official  app  operation  workflow
+-  Existing  e-commerce  specific  data  *as  needed
+5.5.2  Exclusions
+5.6.1  Prerequisites
+-  Stationary  POS  system  *May  be  included  depending  on  the  OMO  (Online  Merges  Offline)  initiative.
+-  Integration  of  the  Edion  Smart  App  *Currently,  it  is  planned  to  continue  operating  this  as  a  separate  system.
+-  Data  specific  to  existing  smartphone  apps  *as  needed
+-  EDION  Cross  Ventures  Co.,  Ltd.  (hereinafter  referred  to  as  EXV)  has  joined  us  as  a  strategic  partner  company.
+Business  Process
+-  After  the  project  is  revamped,  a  transition  period  of  six  months  (approximate)  will  be  established,  and  additions  will  be  made  in  EDION  and  EXV.
+-  Regarding  the  desired  state,  see  "6.1  The  overall  architectural  vision  and  the  scope  of  this  RFP"
+-  EC  operation  workflow
+See  "Pu"
+Continued  assumptions
+-  Tablet  POS  system  *May  be  included  depending  on  the  content  of  the  OMO  (Online  Merges  Offline)  initiative.
+This  is  based  on  the  premise  that  we  will  perform  feature  development  and  modification,  as  well  as  monitoring,  operation,  and  maintenance.
+Therefore,  it  is  also  included  in  the  scope  of  the  renewal  project.
+-  Authentication  and  authorization  of  internal  stakeholders:  An  integrated  authentication  platform  built  in  a  separate  project  can  be  used.
+I  will.
+5.6  Prerequisites/Restrictions
+Machine Translated by Google
+--- PAGE 34 ---
+5.7  Project  Structure  (Provisional)
+support
+1  person,  overall  project  management,  support.
+System  Planning
+1-2  people:  Requirements  definition,  infrastructure  construction
+Regarding  the  chain  of  command
+Role:  Project  Owner,  EDION  Steering  
+Committee
+Overall  management  of  the
+EDION  
+Business  Representative EDION  
+In-house  Team  Leader  EXV
+5.6.2  Constraints
+(development  of  smartphone  apps)
+5.7.1  Our  Company  Structure
+However,  the  current  image  is  as  follows:
+-  In  that  case,  instructions  from  the  contractor  will  be  considered  as  official  instructions  from  our  company,  and  the  request  will  be  made  without  confirmation  from  EDION  itself.
+The  duties  described  may  also  be  performed  by  the  person  contracted  to  carry  them  out.
+EDION
+2  to  4  people
+vinegar.
+mouth
+-  All  matters  related  to  project  operation  and  execution,  excluding  significant  contractual  changes  and  budget-related  issues.
+-  Regarding  the  actual  division  of  roles,  we  would  like  to  discuss  and  finalize  the  details  with  both  parties.
+Requirements  definition,  app  (EC  site)
+i
+-  Releases  during  peak  seasons  (year-end  sales,  closing  sales),  and  on  days  ending  in  0  (10th,  20th,  30th),  and  other  important  sales  periods.
+1  person:  Final  decision-making,  budget  approval
+Number  of  people,  scope  of  responsibility
+-  The  release  date  is  set  to  avoid  weekends,  holidays,  and  the  latter  half  of  the  week,  and  instead  take  place  during  the  first  half  of  the  week  (Monday  to  Wednesday).
+1-2  people:  Requirements  definition,  acceptance  testing  support
+Char  (PM)
+given  name
+EDION,  EXV  (6  members):  Review  and  decision-making  on  key  issues.
+Infrastructure  Engineer  EXV
+Project  Management
+29
+We  may  outsource  the  work  to  another  party.
+-  Initial  development  will  be  led  by  your  company,  while  additional  development,  monitoring,  operation,  and  maintenance  after  release  will  be  led  by  our  in-house  team.
+Avoid
+-  To  ensure  the  smooth  progress  of  the  project,  practical  authority  will  be  delegated  to  EXV  and  other  parties  as  needed.
+1-2  people:  Requirements  definition  support,  acceptance  testing
+5.7.2  Division  of  roles
+-  In  addition  to  delivering  deliverables,  your  company  will  also  provide  skill  transfer  (know-how  transfer)  to  in-house  team  members.
+App  Engineer  EXV
+You  are  required  to  carry  out  the  following  tasks.
+-  Of  the  backend  functionality,  the  APIs  related  to  authentication  and  authorization  will  utilize  APIs  built  in  a  separate  project.
+We  would  also  like  to  request  your  assistance  with  management  and  ongoing  support.
+1  person  Requirements  definition,  application  to  infrastructure
+Machine Translated by Google
+--- PAGE 35 ---
+-  Task  management  sheet  (updated  as  needed)
+Project  Management:  EDION/EXV  overall  management,  your  company  handles  execution  
+management.  
+Requirements  Definition  &  Business  Design:  EDION  is  the  primary  person  in  charge,  your  
+company  provides  support  from  a  feasibility  
+perspective  (including  cost  estimation).
+Disaster  response  and  operational  
+maintenance  (application)
+-
+Initial  development
+Reporting
+EXV  is  the  main  person  in  charge;  your  company  will  provide  
+ongoing  support.
+EXV  is  the  primary  contact  person;  your  
+company  will  provide  ongoing  support.  Your  
+company  will  handle  the  initial  response,  and  
+the  matter  will  be  escalated  to  EDION/EXV.
+EDION/EXV  is  the  primary  project  manager;  your  company  
+provides  ongoing  support;  
+and  your  company  handles  inquiries  from  the  in-house  
+development  team  regarding  unclear  points.
+Communication  tools
+-  Video  conferencing:  Google  Meet
+region
+-  Chat:  Google  Chat
+30
+Architecture  Design  -  Your  company  is  primarily  responsible,  EXV  will  review  and  make  
+decisions.  Technology  Selection  Frontend/Backend  Development  -  
+Your  company  is  primarily  responsible,  EXV  will  participate  as  a  developer.  Infrastructure  
+Construction  and  Operation  Setup  -  Your  company  is  primarily  responsible  
+for  the  design,  EXV  will  build  it.  Testing  (Planning  and  Execution)  -  Your  company  is  
+primarily  responsible,  EXV  will  conduct  and  participate  in  the  review.
+5.7.3  Communication
+-
+-  Other  MTG  as  needed
+EDION  will  be  the  primary  contact  person,  EXV  will  
+provide  support  from  a  feasibility  perspective  (including  
+estimate  creation),  and  your  company  will  provide  
+ongoing  support.
+Regular  meeting
+EDION/EXV  Overall  Management  ~  Execution  
+Management
+Disaster  Response  and  Operational  
+Maintenance  
+(Infrastructure)  Documentation  Preparation  -  Your  Company's  Main  Contact  Person
+EXV  is  the  main  person  in  charge;  your  company  will  provide  
+ongoing  support.
+EXV  is  the  main  person  in  charge;  your  company  will  provide  
+ongoing  support.
+-  Risk  management  table  (updated  as  needed)
+-  Weekly  regular  meeting:  progress  report  and  sharing  of  issues
+-  Document  Sharing:  As  a  general  rule,  documents  are  created  in  Markdown  format  and  shared  via  GitHub  Pages  (MkDocs)  on  GitHub  (Enterprise  Cloud).  Google  
+Workspace  (Google  Drive,  Google  Docs,  Google  Sheets)  and  Backlog  are  used  as  supplementary  tools.
+Post-release  handover  period  
+(approximately  6  months)
+-  Weekly  progress  report
+EXV  is  the  main  person  in  charge;  your  company  will  provide  
+ongoing  support.
+Human  resource  development  and  technology  transfer:  Your  company  handles  inquiries  from  in-
+house  teams  regarding  unclear  points.
+Machine Translated by Google
+--- PAGE 36 ---
+-  IaC  Scanning:  Requesting  suggestions  for  recommended  tools.
+-  CNAPP  (Cloud  Protection):  Integrated  management  of  infrastructure  configuration  defects  (CSPM)  and  workload  protection  
+(CWPP)  using  Wiz
+-  *All  analysis  results  will  be  integrated  into  GitHub's  Code  Scanning  alerts,  and  the  system  is  designed  to  complete  the  check  
+automatically  when  a  pull  request  is  submitted.
+-  *We  require  a  system  that  allows  for  real-time  monitoring  and  visualization  of  progress  against  the  plan.
+-  Source  code  management:  GitHub  (Enterprise  Cloud)
+-  2.  EDION  terminal  provided  (Windows  PC)
+-  Secret  Scanning:  Authentication  information  (API  key,  password)  provided  by  GitHub  Advanced  Security
+-  3.  Use  of  a  cloud  development  environment  (GitHub  Codespaces)
+-  AI  development  support  tools  (AI  coding  agent/assistant):  GitHub  Copilot,  Devin,  Claude
+-  1.  Use  of  your  company's  terminals
+-  SCA  (Configuration  Analysis):  Vulnerability  detection  of  dependent  libraries  using  Dependabot
+-  SAST  (Static  Analysis):  Based  on  vulnerability  and  quality  detection  of  source  code  using  GitHub  Advanced  Security  (CodeQL),  
+it  seeks  to  propose  the  optimal  combination  of  third-party  tools  according  to  the  characteristics  of  the  target  language  and  
+framework.
+Vulnerability  assessment  in  a  state
+To  improve  development  agility  and  achieve  shift-left  (early  security  measures),  we  envision  utilizing  the  following  set  of  tools.  Regarding  
+security  in  particular,  we  request  proposals  for  integrating  automated  guardrails  into  the  CI/CD  pipeline.
+5.7.5  Work  terminal
+-  Code  quality  control  and  security:
+-  Document  management:  GitHub  Pages  (MkDocs),  Google  Drive  (used  supplementarily)
+-  Communication:  Google  Chat,  Google  Meet
+-  Work  performed  at  our  office  as  requested  by  the  company,  such  as  when  setting  up  a  development  team  or  when  problems  occur.
+Conducting  a  meeting
+-  Decide  from  one  of  the  following  options  after  consultation.
+-  CI/CD  infrastructure:  Pull  Request,  Dependency  Review,  GitHub  Actions,  AWS  CodePipeline
+5.7.6  Tools  Used
+5.7.4  Workplace
+-  Project  management:  GitHub  Projects,  Backlog,  OBPM  Neo,  or  a  project  management  tool  decided  by  mutual  agreement.
+-  DAST  (Dynamic  Analysis):  Burp  Suite  and  application  operational  status  from  external  vendors
+31
+Code  etc.
+Prevention  of  contamination  (e.g.)
+Machine Translated by Google
+--- PAGE 37 ---
+Realization  of  OMO  (Online  Merges  Offline)  Initiatives
+-  Step  1  Release:  October  2028
+5.8.3  Phased  Release
+*We  do  not  recommend  delivering  documents  in  traditional  Office-based  formats.  We  recommend  delivering  documents  in  an  AI-readable  
+document  format.
+5.8.2  Major  Milestones
+Examples  of  anticipated  phased  releases
+32
+-  Step  3:  Release  iOS  app /  Android  app
+-  Project  plan
+*GitHub  (features  available  in  Enterprise  Cloud  and  Advanced  Security),  Backlog,  OBPM  Neo,  Wiz,  Google  Workspace  accounts,  and  AI  
+development  support  tools  are  available  at  our  expense  as  needed.  Other  tools  will  be  decided  upon  through  mutual  consultation.
+-  Step  4:  Implementing  OMO  (Online  Merges  Offline)  strategies
+-  Step  2  Release:  April  2030
+Step  1  Release:  October  2028
+-  Step  1:  Release  of  the  backend  infrastructure  (sales  management)
+5.9.2  Requirements  Definition  Document
+-  Requirements  Definition  Plan
+-  Step  2:  E-commerce  site  renewal
+5.8.1  Overall  Schedule
+Main  
+deliverables:  Redesigned  e-commerce  site,  
+smartphone  app
+*The  above  is  a  target  schedule.  Please  provide  a  detailed  schedule  based  on  your  company's  perspective  in  your  proposal.
+We  would  also  appreciate  any  suggestions  regarding  the  feasibility  or  proposals  for  a  phased  release.
+Step  2  Release:  April  2030
+-Other :  Suggest  and  encourage  the  proactive  adoption  of  tools  to  improve  efficiency  as  needed.
+-  Requirements  definition  document
+5.9.1  Project  Management
+Phase  Duration  (Goal)
+5.8  Schedule  (tentative)
+5.9  Deliverables  (tentative)
+Machine Translated by Google
+--- PAGE 38 ---
+-  Troubleshooting  Manual
+-  Style  Guide
+-  Data  migration  procedure  manual
+-  Maintenance  Manual
+-  Original  data  for  design  tools
+-  Operational  design  document
+-  Component  Library
+-  Functional  design  document
+-  Operation  Manual
+-  Test  results  report
+-  Design  Guidelines
+5.9.7  Operational  Related
+5.9.4  Design  deliverables
+-  Vulnerability  assessment  report
+-  Material  data  (icons,  illustrations,  etc.)
+5.9.3  Design  Documents
+-  API  specification
+-  Complete  source  code
+-  Design  mockup  (full  screen)
+-  Screen  design  document  and  screen  transition  diagram
+-  Security  design  document
+-  Performance  load  test  results  report
+-  Test  specification
+5.9.5  Program
+5.9.6  Test-related
+-  Backup  and  Restore  Procedure  Manual
+33
+-  Infrastructure  design  document
+-  Test  plan
+-  Database  design  document
+Machine Translated by Google
+--- PAGE 39 ---
+-  Materials  and  information  for  app  store  submission
+-  User  Manual
+5.9.8  User  Documentation
+-  Administrator  Operation  Manual
+-  Documentation:  Deliver  as  Markdown  files  to  GitHub  (Enterprise  Cloud)  as  GitHub  Pages  (Mk-Docs).  
+Convert  to  PDF  as  needed.  For  visualizations,  Mermaid  or  draw.io  is  recommended.  Delivery  in  Word/
+Excel  format  is  not  recommended.  For  deliverables  that  are  difficult  to  store  in  the  repository  (such  as  
+design  data),  the  delivery  format  will  be  decided  through  discussion.
+-  Handover  documents
+-  Design  data:  Original  data  from  each  design  tool  +  image  export
+34
+-  FAQ
+-  Source  code:  Delivered  to  a  GitHub  (Enterprise  Cloud)  repository.
+5.9.9  Other
+-  Project  Completion  Report
+5.9.10  Delivery  format
+Machine Translated by Google
+--- PAGE 40 ---
+6.2  Functional  Requirements
+6.1  The  envisioned  overall  architecture  and  the  scope  of  this  RFP
+6.  Requirements
+-  However,  the  EDION-exclusive  features  currently  offered  on  the  e-commerce  site  will,  in  principle,  be  retained  after  the  renewal.
+-  Our  Vision  and  Main  Scope.pdf
+-  Order  modification  function:  A  function  that  allows  users  to  change  the  contents  of  their  order  after  it  has  been  placed.
+This  is  the  assumption.
+The  following  functions  will  be  considered  for  removal  as  part  of  the  renewal .
+-  Multiple  Order  Function:  A  function  that  allows  specifying  multiple  delivery  addresses  in  a  single  order.  Removed  from  a  cost-effectiveness  perspective.
+-  The  following  features  are  expected  to  need  to  be  added,  reviewed,  or  removed  as  part  of  the  renewal.
+-  However,  this  overall  picture  is  a  projection  at  this  point,  and  we  anticipate  that  the  details  will  be  finalized  based  on  various  opinions  and  
+suggestions  received  during  the  proposal  stage.
+We  envision  that  the  details  of  each  requirement  will  be  finalized  through  discussions  during  the  requirements  definition  phase  after  the  selection  
+process.
+We  will  outline  the  specific  requirements  for  the  new  system.  During  the  proposal  stage,  we  would  appreciate  it  if  you  could  also  propose  
+approaches  necessary  to  achieve  the  customer  experience  and  system  that  our  company  aims  for,  based  on  these  requirements.
+-  Product  Request  Function:  A  function  that  allows  users  to  request  products  that  cannot  be  found  through  product  searches.
+-  Guest  purchase  function:  A  function  that  allows  you  to  make  purchases  without  registering  as  a  member.
+-  The  main  policy  is  to  use  the  same  UI/UX  as  yodobashi.com.
+The  following  features  are  currently  available  on  yodobashi.com  and  will  be  implemented  as  part  of  the  renewal.
+We  will  consider  this.
+think  about.
+6.2.1  EC  Front  Function
+-  Agent  Commerce  Support:  Features  to  provide  your  services  to  external  general-purpose  agents  (such  as  ChatGPT  and  Gemini),  and  
+features  to  provide  a  new  purchasing  experience  using  agents  within  the  site  (such  as  Amazon  Rufus  and  Rakuten  AI).
+-  Our  company  aims  to  transform  the  overall  system  architecture  from  the  traditional  "vertically  integrated  system  optimized  for  each  channel  
+(stores,  headquarters,  e-commerce,  etc.)"  to  a  "horizontally  separated  system  that  consolidates  common  business  logic  as  a  backend  
+platform  and  allows  for  flexible  switching  of  the  frontend."
+-  Catalog  Mall  Integration  Function:  Punch-out  integration  function  with  catalog  mall  (JR  Tokai  Shoji).  Delete
+35
+-  The  main  scope  of  this  RFP  is  also  indicated  in  the  diagram;  please  refer  to  the  attached  document  below  for  further  details.
+Machine Translated by Google
+--- PAGE 41 ---
+6.3  Non-functional  requirements
+-  Management  system  that  supports  the  functions  added  to  the  front-end,  in  addition  to  the  management  functions  currently  provided  on  the  e-commerce  site.
+6.2.4  Smartphone  App  Frontend  Functionality
+We  aim  to  position  ourselves  in  that  way.
+The  plan  is  to  implement  the  Noh  performance  as  a  web  application  on  the  core  system.
+-  In  addition  to  the  management  functions  currently  provided  in  the  smartphone  app,  we  envision  implementing  management  functions  that  support  the  newly  
+added  features  on  the  front-end  as  a  web  application  on  the  core  system  side.
+-  We  intend  to  implement,  in  principle,  the  features  currently  offered  in  the  smartphone  app  after  the  renewal.
+-  Various  backend  functions  are  expected  to  utilize  a  new  platform  built  in  a  separate  project,  as  well  as  existing  platforms.
+36
+6.2.2  EC  management  functions
+Features  that  need  review
+-  Functions  other  than  those  mentioned  above  will  be  reviewed  to  match  the  format  provided  on  yodobashi.com  as  much  as  possible.  However,  functions  
+that  are  deemed  unsuitable  for  our  customer  experience,  such  as  repair  requests  (Yodobashi  displays  the  PC  version  even  on  smartphones),  will  be  
+implemented  after  being  revised  to  provide  the  optimal  customer  experience.
+-  In  addition  to  streamlining  existing  features,  the  renewal  will  allow  users  to  complete  product  purchases  within  the  app.
+6.2.3  EC  Batch  Function
+Fixed.
+-  System  uptime:  99.99%  or  higher  (approximately  52  minutes  of  downtime  per  year)
+6.2.5  Smartphone  App  Management  Function
+6.2.6  Smartphone  App  Batch  Function
+6.3.1  Availability  Requirements
+-  Recovery  Time  Objective  (RTO):  Severe  failure  within  2  hours,  minor  failure  within  24  hours
+-  Implement  only  the  batch  functionality  that  is  necessary.
+6.2.7  Common  Backend  Functions
+-  Planned  maintenance:  Implemented  during  times  that  minimize  business  disruption,  such  as  late  at  night.
+-  As  a  hub  that  allows  seamless  access  to  our  various  services,  including  retail  stores,  e-commerce,  and  marketing.
+-  Implement  only  the  batch  functionality  that  is  necessary.
+-  Agent  Commerce  Support:  Features  to  provide  your  services  to  external  general-purpose  agents  (such  as  ChatGPT  and  Gemini),  and  features  to  provide  a  
+new  purchasing  experience  using  agents  within  the  site  (such  as  Amazon  Rufus  and  Rakuten  AI).
+Machine Translated by Google
+--- PAGE 42 ---
+Stability/quality  indicators
+-  Cold  start  (app  launch):  within  2  seconds
+-  Layout  Stability  (CLS):  0.1  or  less
+-  Push  notification  delivery:  Supports  simultaneous  delivery  to  a  user  base  of  approximately  2.4  million  monthly  active  users  (MAU).
+-  Search  performance  and  batch  processing  performance  are  linear  with  increasing  data  volume  (number  of  products,  number  of  members,  order  history,  etc.)
+-  Warm  start  (returning  from  background):  within  1  second
+-  Simultaneous  connections:  Achieves  zero  waiting,  preventing  inflow  restrictions  (Sorry  screen)  even  during  peak  times.
+-  The  system  must  be  able  to  handle  the  expected  traffic  (approximately  three  times  the  current  level)  when  the  sales  target  for  fiscal  
+year  2030  (50.8  billion  yen)  is  reached,  without  any  changes  to  the  architecture  or  switching  to  expensive  product  licenses.
+-  Initial  drawing  (FCP):  within  1  second
+-  Image/asset  loading:  Initial  display  within  1  second  (when  cache  is  not  used)
+Push  notification  performance
+Smartphone  app  startup,  screen  transition  performance,  and  perceived  speed  of  in-app  operations.
+-  Request  processing  rate  per  second:  Over  500  rps  under  normal  conditions,  over  5,000  rps  during  peak  times.
+-  Product  search:  within  1  second  (P95)
+-  Interaction  response  time  (INP):  within  100ms
+-  Design  the  system  to  allow  for  horizontal  scaling  to  accommodate  increased  traffic.
+E-commerce  site  page  display  performance
+-  PageSpeed  Insights  score:  Mobile /  Desktop  80  or  higher
+-  Auto-scaling:  Supports  automatic  scaling  out/scaling  in  response  to  increased  traffic.
+6.3.3  Scalability  Requirements
+to
+Complies  with  the  standards
+-  Page  display  completion  time  (LCP):  In  principle,  within  1.5  seconds
+to  do
+-  Screen  transition  time:  within  0.5  seconds  (between  native  screens),  within  1  second  (screens  including  WebView)
+-  Crash-free  user  rate:  99.5%  or  higher  (=  crash  rate  of  0.5%  or  less)
+37
+-  No  degradation  in  app  responsiveness  when  launching  an  app  due  to  notifications.
+-  ANR  (Application  Not  Responding)  occurrence  rate:  0.47%  or  less  (Android)  *Google  Play  Console
+6.3.2  Performance  requirements
+Throughput  and  simultaneous  connections
+The  design  should  not  deteriorate  beyond  the  specified  limits.
+Machine Translated by Google
+--- PAGE 43 ---
+-  Backup  data  retention  period
+-  Ensuring  resilience  to  single-AZ  failures  through  a  multi-AZ  configuration  (mandatory)
+(Point-in-time  recovery  supported)
+38
+-  Applying  security  headers  (Content-Security-Policy,  X-Content-Type-Options,  X-Frame-
+-  SSRF  (Server-Side  Request  Forgery)  countermeasures
+Consider  the  possibility  of  transitioning  to  the  configuration.
+-  DR  (Disaster  Recovery)  measures
+-  SQL  injection  countermeasures
+-  Automated  certificate  renewal  process  (utilizing  managed  services  such  as  ACM)
+-  Applying  HSTS  (HTTP  Strict  Transport  Security)
+(The  appropriate  level  of  countermeasures  will  be  determined  by  considering  specific  costs  from  among  configurations  corresponding  
+to  levels  such  as  Active,  Warm  Standby,  or  Pilot  Light.)
+-  Transaction  log:  7  days  (approximate)
+Implementation
+-  Implement  secure  coding  in  compliance  with  OWASP  Top  10  and  OWASP  ASVS  (Application  Security  Verification  
+Standard).
+-  Daily  backup:  30  days  (approximate)
+-  Minimize  vendor  lock-in  to  specific  cloud  vendors  and  enable  future  multi-cloud  hybrid  environments.
+-  Request  proposals  for  DR  configurations  that  anticipate  regional  failures  (Active-  in  multi-region  configurations)
+-  Database:  Daily  full  backup  +  continuous  backup  using  transaction  logs
+-  Within  1  hour  (point-in-time  recovery  via  transaction  log)
+-  SSL/TLS  communication  will  be  made  mandatory  (TLS  1.3  is  recommended,  TLS  1.2  will  be  the  minimum  acceptable  standard).
+Options,  etc.)
+-  File  verification,  size  limits,  and  separation  of  storage  locations  in  the  file  upload  function.
+Communication  security
+-  XSS  (Cross-Site  Scripting)  countermeasures
+-  CSRF  (Cross-Site  Request  Forgery)  countermeasures
+-  RPO  (Recovery  Point  Objective)
+6.3.5  Security  Requirements
+Application  Security
+6.3.4  Backup  and  Disaster  Recovery
+-  API  security:  Authentication  (OAuth  2.0 /  OpenID  Connect),  rate  limiting,  input  validation
+Machine Translated by Google
+--- PAGE 44 ---
+-  Prohibition  of  storing  confidential  data  on  local  storage  (use  of  Keychain/Keystore)
+-  Encryption  and  storage  of  personal  information
+-  App  obfuscation  (ProGuard /  R8,  etc.)  and  tampering  detection
+-  Bot  countermeasures  and  scraping  prevention  (Cloudflare,  etc.)
+WAF  (Web  Application  Firewall) /  Network  Defense
+Logs  and  monitoring
+-  Implementation  of  rooting  (Android)  and  jailbreaking  (iOS)  detection  functions.
+-  Integration  with  SIEM  (Security  Information  and  Event  Management),  or  implementation  of  equivalent  functionality.
+-  PCI  DSS  v4.0  compliant  (no  retention  of  credit  card  information)
+-  Password  policy  settings  (number  of  characters,  complexity,  mandatory  password  change  upon  leak  detection)
+-  IP  address-based  access  control  (for  the  administration  panel)
+-  Session  management  (setting  expiration  dates,  simultaneous  login  control,  session  hijacking  prevention)
+Data  Protection
+-  Cryptographic  key  management:  Key  rotation  operation  using  cloud  KMS  (AWS  KMS,  etc.)
+Authentication  and  authorization
+-  Implement  a  WAF  (Web  Application  Firewall)  (e.g.,  Cloudflare)
+-  Screen  masking  during  background  transitions  (preventing  screenshots)
+-  Applying  database  encryption
+-  Masking  of  personal  information  (when  outputting  logs,  when  used  in  non-production  environments)
+*Complies  with  PCI  DSS  v4.0  requirements
+-  Real-time  monitoring  and  alert  notifications  for  security  events
+-  DDoS  protection  (Cloudflare,  etc.)
+-  Implementation  of  security  measures  compliant  with  OWASP  Mobile  Top  10.
+-  Tampering  detection  (ensuring  log  integrity)
+-  Support  for  multi-factor  authentication  (MFA)  (considering  making  it  mandatory  for  the  admin  panel,  while  allowing  users  to  choose  their  own  method  of  authentication)
+-  Unauthorized  access  detection  and  blocking  function  (equivalent  to  IDS/IPS  functionality)
+39
+-  Single  sign-on  using  an  integrated  authentication  platform  (Keycloak)
+Smartphone  app  security
+-  Account  lockout  feature  (in  case  of  repeated  authentication  failures)
+-  Deep  link  verification  and  prevention  of  malicious  transitions
+-  Access  logs  will  be  saved  (for  12  months  or  more,  with  online  access  available  for  the  most  recent  3  months).
+Machine Translated by Google
+--- PAGE 45 ---
+(So-called  cookie  restrictions)
+(As  a  general  rule)
+-  Compliance  with  our  Privacy  Policy
+-  High:  Action  will  be  taken  within  72  hours.
+-  Telecommunications  Business  Act  (External  Transmission  Regulations):  Notification  and  Consent  Acquisition  When  Using  Cookies  and  Tracking  Technologies  (i
+-  Specified  Electronic  Mail  Act:  Opt-in/Opt-out  Management  for  Push  Notifications  and  Email  Distribution
+-  Low:  Manage  with  a  backlog  and  respond  systematically.
+-  Medium:  Will  be  addressed  by  the  next  scheduled  maintenance.
+-  Disability  Discrimination  Elimination  Act:  Reasonable  accommodations  for  web  accessibility
+6.3.6  Compliance  Requirements
+Security  Operations
+-  Development  of  incident  response  procedures  (detection  ÿ  initial  response  ÿ  escalation  ÿ  recovery  ÿ  reporting  ÿ  prevention  of  recurrence)
+-  Unauthorized  Access  Prohibition  Act:  Technical  measures  to  prevent  unauthorized  access
+Vulnerability  management
+-  Premiums  and  Representations  Act:  Prevention  of  misleading  representations  and  excessive  premiums  in  coupons,  campaigns,  and  point  programs.
+Compliance  regarding  the  use  of  AI
+Handling  of  personal  information
+Compliance  with  Laws  and  Regulations :  In  building  and  operating  this  system,  the  following  laws  and  regulations  must  be  complied  with.
+-  Conduct  regular  vulnerability  assessments  (at  least  once  a  year,  and  whenever  a  critical  feature  is  added).
+-  Implementation  of  appropriate  display  of  privacy  policy  and  consent  acquisition  flow
+-  Security  patch  application  policy  (e.g.,  applying  critical  vulnerabilities  within  72  hours)
+-  Setting  up  response  SLAs  based  on  the  severity  of  the  vulnerability.
+-  Specified  Commercial  Transactions  Law:  Compliance  with  disclosure  obligations  regarding  mail-order  sales  (return  policy,  business  information,  etc.)
+-  Compliance  with  our  AI  usage  guidelines
+-  Critical:  Action  will  be  taken  within  24  hours.
+-  Personal  Information  Protection  Act:  Compliance  with  obligations  regarding  the  acquisition,  use,  provision,  storage,  and  deletion  of  personal  data
+40
+-  Completion  of  security  testing  before  release  is  mandatory  (zero  critical  or  high-risk  vulnerabilities  as  the  release  standard).
+-  Consumer  Contract  Act:  Elimination  of  unfair  clauses  in  terms  of  service  and  order  flow
+Machine Translated by Google
+--- PAGE 46 ---
+information  management
+6.3.7  Audit  Requirements
+-  08  Infrastructure  Change  Management
+41
+-  01  Program  Change  Management...  It  is  necessary  to  enable  differential  comparison  of  updated  modules.
+-  Rules  for  handling  project  information  (definitions  of  information  categories  and  management  measures  according  to  categories)
+-  Responding  to  IT  controls
+-  Adopt  a  mobile-first  design  approach.
+Basic  policy
+-  07  Infrastructure  Access  Control
+-  09Outsourced  management
+Search  and  product  discovery  UX
+-  Suggestion  function  (input  completion,  search  suggestion  display)
+-  Ensuring  and  managing  information  management  systems  at  subcontractors  (cooperating  companies)
+6.3.8  Usability  Requirements
+-  Information  management  of  deliverables
+-  Clearly  displaying  the  current  location  (ensuring  the  user  always  knows  "where  they  are  right  now")
+-  Always  display  the  search  bar  (fixed  header).
+-  03  Direct  Data  Modification  Management
+-  Proper  design  of  global  navigation,  breadcrumbs,  and  sitemaps
+-  06  Incident  Management
+Navigation  and  Information  Design
+-  04  Job  Execution  Management
+-  Signing  a  Non-Disclosure  Agreement  (NDA)
+-  Intuitive  category  structure  and  hierarchical  design
+-  Design  and  develop  based  on  a  user-centered  design  process.
+-  02  Access  Rights  Management
+Design  it  so  that  the  objective  can  be  achieved  through  a  number  of  taps.
+-  The  following  application  is  required  through  our  WF  system.
+-  Minimizing  the  number  of  steps  in  the  main  user  journey  (product  search  ÿ  product  details  ÿ  cart  ÿ  purchase  completion)
+-  05  Backup  Management
+Machine Translated by Google
+--- PAGE 47 ---
+-  Temporarily  save  data  being  entered  (cart  contents,  form  entries)
+Form  and  input  usability
+-  Providing  appropriate  guidance  to  users  when  an  error  occurs  (explaining  the  cause  and  suggesting  solutions).
+-  Compliant  with  WCAG  2.2  Level  AA  (Applies  to  all  public  pages)
+Feedback  and  status  display
+-  Support  for  gesture  controls  such  as  swiping  and  pinch-to-zoom  (for  viewing  product  images,  etc.)
+-  Minimizing  the  number  of  steps  in  the  purchase  flow
+Mobile  touch  operation
+-  Ensuring  touch  target  size
+-  Ensuring  a  high  contrast  ratio
+-  Display  of  input  step  progress  (step  progress  bar,  etc.)
+-  Proposal  for  UX  measures  to  prevent  cart  abandonment  (e.g.,  abandonment  prevention  dialogue,  cart  retention  period).
+Accessibility
+-  Clear  indication  of  loading  status  (skeleton  screen,  progress  indicator,  etc.)
+-  Screen  reader  compatible  (appropriate  ARIA  labels,  semantic  HTML)
+-  The  proposal  should  also  include  methods  for  verifying  compliance  and  reporting  on  compliance  status.
+-  UI  design  for  faceted  search  (filtering  by  category,  price  range,  manufacturer,  specifications,  etc.)
+-  Display  alternative  suggestions  when  no  search  results  are  found  (similar  products,  spelling  correction  suggestions,  product  requests,  etc.)
+-  All  functions  are  available  using  only  the  keyboard.
+-  Real-time  information  display  such  as  stock  status  and  estimated  delivery  date.
+-  Clearly  display  the  focus  indicator
+-  Immediate  feedback  on  the  results  of  actions  (toast  notifications  for  adding  items  to  cart,  adding  items  to  favorites,  etc.)
+-  Guest  purchase  support
+-  Autofill  support  (proper  setting  of  the  browser's  standard  autocomplete  attribute)
+-  UI  layout  designed  for  one-handed  operation  (placement  of  main  action  buttons)
+-  Smartphone  app-specific  UX  (push  notification  settings,  barcode  scanning,  etc.)
+42
+-  Visibility  of  shopping  cart  contents  (clear  display  of  product  images,  quantities,  subtotals,  and  totals)
+-  Real-time  validation  of  input  fields  and  clear  error  message  display.
+-  Automatic  address  entry  (automatic  completion  from  postal  code)
+UX  of  the  purchase  flow  (cart  to  checkout)
+Machine Translated by Google
+--- PAGE 48 ---
+-  Display  of  recently  viewed  items
+draft)
+-  Internationalization  (i18n)  design  with  future  multilingual  support  in  mind.
+Option  B:  Design  proposal  ÿ  that  leverages  EDION's  
+unique  characteristics.
+For  the  design  comparison  and  selection  process,  please  create  three  versions  of  the  following  five  main  screens  for  both  the  e-commerce  site  and  the  
+smartphone  app.
+E-commerce  site  (PC  version/Smartphone  version):  5  screens  x  3  design  proposals
+-  Proposal  of  testing  methods  (task-based  testing,  heuristic  evaluation,  etc.)
+Overview:  The  design  follows  the  screen  composition,  layout,  and  
+UI  patterns  of  yodobashi.com.
+#  Screen  1:  
+Homepage  2:  Product  List  
+Page  (Search  Results)
+-  Conduct  usability  testing  during  the  prototype  stage.
+-  Designed  to  support  locale  for  dates,  currencies,  units,  etc.
+This  design  takes  a  different  approach  from  Plan  B,  incorporating  
+cutting-edge  trends  while  expressing  the  unique  style  of  EDION.
+Multilingual  support
+-  Development  of  a  user  behavior  analysis  platform  after  release  (including  the  introduction  of  heatmaps,  session  replays,  etc.)
+Personalization  and  UX  improvement
+-  Designing  a  recommendation  UI  based  on  browsing  and  purchase  history
+Proposal  Direction  
+A:  Design  equivalent  to  yodobashi.com
+Main  screen  for  comparison  and  selection
+-  How  to  implement  an  improvement  cycle  based  on  test  results
+-  Externalizing  text  resources
+The  design  emphasizes  EDION's  brand  colors  and  the  continuity  
+between  the  in-store  experience  and  the  online  experience,  
+balancing  the  expertise  of  a  consumer  electronics  retailer  with  a  
+friendly  atmosphere.
+Usability  testing  and  evaluation
+Selection  
+Criteria:  Brand  appeal,  information  design,  user  flow,  UI  
+for  filtering  and  sorting,  overview,  ease  of  comparison.
+43
+Option  C:  A  design  proposal  that  leverages  EDION's  
+unique  characteristics  (Option  2)
+6.3.9  Design  Requirements
+-  UX  design  for  the  Favorites/Wishlist  feature
+Please  submit  and  select  three  design  proposals.  The  direction  of  each  proposal  should  be  as  follows:
+-  Support  for  RTL  (right-to-left)  layout
+Machine Translated by Google
+--- PAGE 49 ---
+(Previous  2  versions)
+UI  that  increases  the  purchase  completion  rate  on  mobile  devices
+3.  Our  company  will  narrow  down  the  options  to  one  and  decide  on  the  design  to  be  adopted.
+-  Design  comp  (Figma  source  data)
+Organization  of  member  information,  order  history,  and  other  information,  and  usability.
+44
+-  Interaction  specifications  (specifying  behaviors  such  as  animations,  transitions,  and  hover  effects)
+Touch-based  filtering  and  scrolling  UX
+UI  including  app-specific  settings  and  notification  management
+App-exclusive  experience,  personalized  display
+Fari  (including  the  latest  version  and  the  previous  two  versions),  Edge  (including  the  latest  version  and  the  previous  two  versions)
+Design  deliverables
+#  Screen  3  
+Product  Details  Page  4  Cart  
+Page  5  My  Page
+-  Image  asset  list  (exported  images,  icon  materials,  etc.)
+Product  information  display  and  operability  optimized  for  smartphones
+2.  We  will  conduct  a  design  review,  evaluation,  and  selection  process.
+Clarity  of  the  purchasing  process,  and  guidance  to  make  additional  purchases.
+-  Smartphones:  iOS  Safari  (including  the  latest  version  and  the  previous  two  versions),  Android  Chrome  (including  the  latest  version)
+1.  Submit  three  design  mockups  for  the  main  screens  mentioned  above.
+-  Responsive  design  instructions  (specifying  breakpoints  and  layout  changes)
+Selection  Criteria
+-  PC:  Chrome  (including  the  latest  version  and  the  previous  two  versions),  Firefox  (including  the  latest  version  and  the  previous  two  versions),  Sa-
+Smartphone  app:  5  screens  x  3  designs
+fruit)
+3.  Product  details  screen  4.  
+Cart  screen  5.  My  page
+-  UI  component  list
+(Previous  2  versions)
+-  Design  mockup  creation:  Figma  will  be  the  primary  tool  used  (prior  consultation  required  if  other  tools  are  to  be  used).
+Product  information  presentation,  purchase  process,  and  review  display.
+#  Screen  1  
+Home  screen  2  Product  
+list  screen  (search  results)
+-  Tablets:  iPad  Safari  (including  the  latest  version  and  the  previous  two  versions),  Android  Chrome  (including  the  latest  version  and  the  previous  two  versions)
+-  Design  guidelines  (color  palette,  typography,  margin  regulations,  icon  regulations,  etc.)
+E-commerce  site  (browser)
+Tools  used
+Selection  Criteria
+6.3.10  Supported  Environments
+Selection  process
+4.  Once  the  selected  design  is  finalized,  production  of  the  entire  screen  will  begin.
+Machine Translated by Google
+--- PAGE 50 ---
+-  Implement  structured  log  output  (a  machine-parsable  format  such  as  JSON  is  recommended)
+-  Parallel  operation  during  the  handover  period  (a  phased  transition  plan  for  the  division  of  roles  between  your  company  and  EDION/EXV)
+A  six-month  handover  period  will  be  established  after  the  operational  release.  The  following  items  should  be  included  in  the  proposal  regarding  the  maintenance  and  
+operation  system  during  the  handover  period.
+-  Access  log  monitoring
+-  Android:  Android  12  (API  Level  31)  or  later  (*Includes  the  latest  version  at  the  time  of  release  and  the  last  four  major  versions)
+-  System  monitoring  (24  hours  a  day,  365  days  a  year  or  during  business  hours)
+Scope  of  maintenance  and  operation:  Monitoring  tasks  (to  be  handled  by  EXV)
+-  Documentation  maintenance  (keeping  design  specifications,  operation  procedures,  runbooks,  etc.  up-to-date)
+-  Batch  job  execution  monitoring  (confirmation  of  successful  completion,  detection  of  delays)
+(Use  John  as  a  guideline,  and  finalize  during  requirements  definition.)
+measurement)
+-  Development  and  adherence  to  coding  standards.
+The  maintenance  and  operation  period  is  assumed  to  be  a  six-month  maintenance  and  operation  contract  after  release.
+-  Handling  inquiries  after  the  handover  period  ends  (duration  and  scope)
+45
+Maintainability  Requirements  (Considerations  during  Development):  To  ensure  efficiency  and  quality  during  the  maintenance  and  operation  phase,  the  following  
+should  be  considered  during  development.
+Smartphone  app  (app)
+-  Debugging  and  troubleshooting  features  (dynamic  changes  to  log  levels,  etc.)
+(Separation  of  message)
+-  Resource  monitoring  (CPU,  memory,  disk,  network  bandwidth,  etc.)
+-  Criteria  for  determining  completion  of  handover
+Troubleshooting
+-  Fault  detection  and  initial  troubleshooting
+-  iOS:  iOS  17  or  later  (*Requirements  are  based  on  the  last  three  major  versions,  including  the  latest  version  at  the  time  of  release.)
+6.3.11  Maintenance/Operation
+-  Application  Performance  Monitoring  (APM):  Continuous  monitoring  of  response  time,  throughput,  and  error  rate.
+-  Designing  a  unified  error  handling  system  (definition  of  error  code  system,  user-facing/operator-facing  messages)
+-  How  to  implement  knowledge  transfer
+(Confirmed  by  Yoshitoki)
+-  Business  KPI  monitoring  (detection  of  anomalies  in  order  count,  cart  count,  etc.)  *Include  in  proposal
+-  Health  monitoring  (including  external  monitoring:  service  response  confirmation  from  the  end-user's  perspective)
+Machine Translated by Google
+--- PAGE 51 ---
+-  (The  scope  will  be  discussed,  such  as  up  to  40  hours  per  month)
+-  Creation  and  review  of  release  procedure  manuals
+-  Responding  to  inquiries  from  administrators
+-  Visualization  of  response  status  through  ticket  management  (tracking  from  ticket  creation  to  closing)
+-  SSL/TLS  certificate  renewal  management
+-  During  the  handover  period:  Your  company  will  handle  the  initial  response,  and  the  issue  will  be  escalated  to  EDION/EXV.
+-  Holding  of  a  release  decision  meeting
+-  Middleware  library  updates  (including  EOL  management)
+-  Establishment  of  escalation  rules  (definition  of  notification  recipients  and  decision-makers  according  to  the  level  of  the  problem)
+-  Database  maintenance  (index  rebuilding,  statistics  updates,  archiving  of  unnecessary  data)
+Change  management  (release  management)
+-  Support  hours:  Weekdays  9:00  AM  to  6:00  PM  or  24  hours  a  day,  365  days  a  year
+46
+Minor  renovations
+etc.)
+Regular  maintenance  *Scheduled  to  be  handled  by  EXV
+-  Maintain  and  regularly  update  a  list  of  contact  methods  and  contact  information.
+-  Post-release  health  check  procedure
+-  Implementation  and  verification  of  the  effectiveness  of  measures  to  prevent  recurrence
+-  Prepare  a  pre-release  checklist
+-  Preparation  and  verification  of  the  rollback  procedure
+-  Security  patch  application
+-  How  to  contact  us:  Email,  phone,  chat
+-  Disaster  recovery  work  (including  the  development  of  rollback  procedures)
+-  Image  replacement
+Escalation  Flow
+-  Backup  acquisition  and  verification
+-  Preparation  of  incident  reports  (including  cause  analysis,  scope  of  impact,  and  measures  to  prevent  recurrence)
+The  following  processes  must  be  followed  when  making  changes  to  the  production  environment.
+-  Change  settings
+-  Text  correction
+Inquiry  response
+-  Various  application  and  approval  flows  in  our  WF  system
+Machine Translated by Google
+--- PAGE 52 ---
+-  RDBMS:  Exadata  Cloud
+-  Support  policy  for  new  iOS/Android  OS  and  versions  (pre-release  testing,  implementation  of  necessary  modifications)
+47
+-  Responding  to  changes  in  app  store  (App  Store /  Google  Play)  policies
+6.3.12  Technical  requirements
+-  NoSQL:  Please  suggest  solutions  such  as  Redis  (caching),  Elasticsearch  (search),  etc.
+E-commerce  site  -  Frontend
+-  Submission  of  monthly  operational  reports  (uptime  performance,  number  of  incidents  and  response  status,  number  of  inquiries  and  response  
+status,  trends  in  performance  indicators,  resource  utilization  status,  security  event  summary)
+maintenance  cost
+-  Incident  management  tools  (alert  notifications,  on-call  management,  response  history  management)
+-  Monitoring  tools  (infrastructure  monitoring,  APM,  external  monitoring,  log  aggregation  and  analysis)
+-  Basis  for  calculating  monthly  maintenance  fees
+Maintenance  and  operation  specific  to  smartphone  applications
+The  following  is  our  recommended  technology  stack,  but  it  is  subject  to  change  based  on  your  suggestions.  If  you  have  a  more  appropriate  technology,  
+please  suggest  it  along  with  your  reasons.
+Regular  report
+-  Certificate  and  token  management  for  the  push  notification  infrastructure  (APNs /  FCM)
+-  Operational  policy  for  mandatory  and  recommended  app  updates
+-  Included  scope  of  work
+-  Submitting  and  reviewing  new  versions  of  apps  on  app  stores
+-  Scope  of  work  that  will  incur  additional  costs
+Regarding  the  set  of  tools  to  be  used  in  maintenance  and  operation  tasks,  please  propose  the  following  points:
+-  Runbook  and  procedure  manual  management  (including  automation  support)
+-  Framework:  React
+-  CSS:  Tailwind  CSS
+database
+Machine Translated by Google
+--- PAGE 53 ---
+-  Complies  with  the  design  guidelines  for  RESTful  APIs.
+-  Use  of  technologies  that  have  reached  their  End  of  Life  (EOL)
+-  Conduct  code  reviews
+-  Adherence  to  common  coding  conventions  for  each  language
+-  Containers:  Docker,  AWS  Fargate
+-  Details  will  be  discussed  after  the  contract  is  signed.
+-  Cross-platform:  Based  on  proposals  from  either  React  Native  or  Flutter,  internal  discussions  will  be  held.
+Transition  method
+Selected
+-  Cloud:  AWS
+Coding  Conventions
+-  Batch  migration  or  phased  migration
+infrastructure
+-  Version  control:  Git  (GitHub  Enterprise  Cloud)
+API  design
+Prohibitions
+-  Creating  API  documentation  (OpenAPI/Swagger,  etc.)
+-  Issue  management:  GitHub  Issues,  Backlog,  OBPM  Neo  -  
+Communication:  Google  Workspace  (Gmail,  Google  Meet,  Google  Chat)
+-  Development  of  migration  tools
+48
+-  Versioning  Strategy
+6.3.13  Data  Migration
+Development  environment
+-  Use  of  libraries  with  known  vulnerabilities  that  pose  a  high  security  risk
+-  Introduction  of  Linter  and  Formatter
+-  Code  review:  pull  request  based
+-  Data  cleansing  and  consistency  checks
+-  CI/CD:  GitHub  Actions,  AWS  CodePipeline
+Smartphone  app  (recommended  technology  stack)
+Machine Translated by Google
+--- PAGE 54 ---
+-  Migration  work  is  expected  to  be  carried  out  during  the  late-night  hours.
+Migration  Schedule
+-  Target:  Inter-module  integration,  API  integration,  external  system  integration
+Test  automation  requirements
+-  Propose  an  overall  picture  of  the  test  strategy  (relationship  between  test  levels  and  test  types,  execution  order,  dependencies).
+-  Design  tests  based  on  the  test  pyramid  (unit  tests  >  integration  tests  >  E2E  tests),
+-  Number  of  test  cases:  The  number  of  expected  test  cases  should  be  indicated  in  the  proposal.
+-  Coverage  target:  The  proposal  should  include  the  coverage  target  value  and  its  rationale  (targeting  100%).
+Test  Strategy  and  Policy
+-  Unit  tests  and  integration  tests  should  be  automated  as  a  general  rule.
+49
+-  Production  migration  implemented
+-  Automation:  Required  (Automated  execution  in  the  CI/CD  pipeline)
+-  Allowable  downtime:  Approximately  6  hours  or  less  (to  be  determined  during  requirements  definition)
+-  Adopting  an  approach  that  incorporates  testing  from  the  early  stages  of  development,  based  on  the  shift-left  concept,  to  build  quality  into  the  product.
+-  Automation:  Required  (Automated  execution  in  the  CI/CD  pipeline)
+-  Post-migration  verification
+-  Transition  rehearsal  conducted
+-  Implemented  by:  Your  company
+-  Integrate  automated  test  execution  into  the  CI/CD  pipeline,  creating  a  system  where  automated  tests  are  executed  on  a  per-pull  request  basis.
+To  ensure  a  balance  between  execution  speed  and  coverage.
+Downtime  during  the  transition
+-  Include  a  proposal  for  automating  E2E  testing  and  regression  testing.
+6.3.14  Test  Requirements
+to  include
+Test  types  and  scope:  Unit  testing
+-  Target:  All  functions  and  methods
+Integration  testing
+-  Implemented  by:  Your  company
+-  We  are  seeking  suggestions  for  tools  and  frameworks  to  use  for  test  automation.
+Machine Translated by Google
+--- PAGE 55 ---
+-  We  propose  the  scope  and  strategy  of  regression  testing  to  be  performed  at  each  release,  assuming  a  phased  release.
+System  testing
+-  Target:  Main  business  workflow  (product  search  ÿ  product  details  ÿ  add  to  cart  ÿ  purchase  completion,  member  registration,  My  Page)
+-  Automation:  Key  scenarios  will  be  prepared  as  automated  test  suites  and  automatically  executed  before  release.
+UAT  (User  Acceptance  Testing)
+Verification  and  calculation  of  estimated  costs
+Verify  achievement
+-  Implemented  by:  Your  company
+-  Target:  Functional  and  non-functional  requirements  of  the  entire  system
+Regression  testing
+-  Your  company  will  be  responsible  for  fixing  the  bugs  discovered  in  UAT.
+-  Target:  Major  business  scenarios
+-  Target:  Confirm  that  adding  or  modifying  features  does  not  affect  existing  features.
+-  Request  for  suggestions  for  load  testing  tools.
+-  Implemented  by:  Your  company
+E2E  testing  (end-to-end  testing)
+-  Implemented  by:  Your  company
+-  Load  testing:  Applying  a  load  more  than  twice  the  expected  peak  load  to  ensure  zero  waiting  can  be  achieved.
+End-to-end  verification  of  operations  (such  as  manual  operation).
+-  Scenario:  Real-world  operational  scenarios  such  as  a  surge  in  access  at  the  start  of  a  sale  and  peak  access  on  days  ending  in  0.
+Security  Test
+Load  testing  and  performance  testing
+-  Vulnerability  assessment  will  be  conducted  (a  vulnerability  assessment  will  be  carried  out  by  a  third-party  organization  at  our  expense).
+-  Duration:  Please  specify  a  recommended  duration  in  your  proposal  (approximately  2-4  weeks).
+50
+Include
+-  Automation:  Automation  of  key  scenarios  is  recommended  (suggestions  for  tools  and  frameworks  are  welcome).
+-  Implementer:  Our  company  (Your  company  will  provide  support  for  test  plan  development,  environment  preparation,  and  test  execution)
+-  Performance  testing:  Verifying  the  achievement  of  each  metric  defined  in  the  performance  requirements  (LCP,  INP,  CLS,  FCP,  etc.)
+-  Number  of  test  cases:  The  number  of  expected  test  cases  should  be  indicated  in  the  proposal.
+-  Implemented  by:  Your  company
+Assumption
+-  Target  channels:  E-commerce  sites  (PC/smartphone),  smartphone  apps  (iOS/Android)
+-  Smartphone  apps:  Performance  indicators  such  as  cold  start,  warm  start,  and  screen  transition  time.
+Machine Translated by Google
+--- PAGE 56 ---
+App  Store  Testing
+-  Implemented  by:  Your  company
+to
+E2E  Testing  
+System  Testing
+-  Operation  confirmed  on  target  browsers  and  operating  systems  (all  targets  defined  as  supported  environments)
+-  TestFlight,  internal  test  track  operation  verification
+-  Implemented  by:  Our  company
+-  In  addition  to  verification  using  automated  checking  tools  (axe,  Lighthouse,  etc.),  the  main  screens  are  screen-based.
+Perform  manual  verification  using  the  reader.
+51
+Compatibility  Test
+-  Target:  Verification  of  the  integrity  and  completeness  of  the  data  to  be  migrated.
+-  Verify  the  number  of  data  records  before  and  after  the  migration,  and  verify  the  content  of  the  sample  data.
+-  We  request  a  report  of  the  verification  results  and  any  unaddressed  items.
+-  Creating  a  build  for  Google  Play  review  and  verifying  policy  compliance.
+Completion  
+criteria  coverage  target  achieved,  all  test  cases  passed.  
+All  test  cases  passed,  zero  critical/high-level  unresolved  defects.  All  
+scenarios  in  the  main  business  flow  passed.  
+All  test  cases  passed,  zero  critical/high-level  unresolved  defects,  non-
+functional  requirements  confirmed  to  
+be  met.  Regression  testing:  All  automated  test  suites  passed,  no  impact  on  existing  functions.  Acceptance  
+decision  completed  by  our  company.
+Test  Completion  Criteria  (Exit  Criteria):  The  completion  criteria  for  each  test  phase  are  defined  below.  Details  will  be  discussed  and  
+finalized  during  the  requirements  definition  phase.
+Accessibility  testing
+-  Take  into  account  the  lead  time  from  app  store  submission  to  approval  in  your  schedule.
+-  Verification  criteria:  Compliant  with  WCAG  2.2  Level  AA
+-  Verification  of  display  issues  in  responsive  design
+-  Display  verification  on  various  devices  (verification  at  major  screen  resolutions  and  aspect  ratios)
+Data  migration  test
+UAT  
+load  testing:  All  performance  requirements  met.  Security  
+testing:  Zero  critical  or  high-risk  vulnerabilities.
+-  Confirmation  that  the  release  criteria  defined  in  the  security  requirements  (zero  critical/high-risk  vulnerabilities)  are  met.
+-  Creating  builds  for  App  Store  review  and  verifying  compliance  with  review  guidelines
+-  Conduct  migration  rehearsals  at  least  twice  before  the  actual  migration  to  verify  the  migration  procedure,  required  time,  and  data  integrity.
+Testing  Phase:  Unit  
+Testing,  
+Integration  Testing
+-  Target:  All  public  pages
+Machine Translated by Google
+--- PAGE 57 ---
+6.4  Response  to  the  Transition  Period
+-  When  defining  requirements,  take  into  account  the  schedule  for  the  new  platform  and  decide  whether  to  utilize  the  new  platform  or  the  current  platform.
+High
+Test  terminal
+Critical:  Service  outage,  data  loss,  security  breach,  etc.  Major  
+functions  unavailable,  
+significant  business  impact.
+Minor  display  issues,  improvement  requests,  etc.  Backlog  management
+-  The  new  infrastructure  that  will  make  up  the  backend  will  be  built  in  parallel  as  a  separate  project.
+Bug  Management
+Medium:  Some  features  are  malfunctioning;  alternative  solutions  are  available.
+Completion  
+Criteria:  WCAG  2.2  Level  AA  Compliance  Confirmation
+-  Use  of  a  bug  tracking  tool  (selected  from  GitHub  Issues,  Backlog,  etc.)
+We  plan  to  assess  the  situation  and  proceed  with  the  renewal  in  stages.
+Test  Data  Management
+-  Test  devices  (iOS,  Android)  will,  in  principle,  be  provided  by  our  company.
+Until  the  next  release
+-  Development  environment:  Used  by  the  development  team  for  daily  test  execution.
+Severity  Definition
+Test  environment
+-  Include  a  plan  for  preparing  test  data  (e.g.,  automatic  generation,  masking  of  production  data)  in  your  proposal.
+-  Definition  of  the  severity  and  priority  of  the  bug
+Within  3  business  days
+52
+-  Staging  environment:  For  comprehensive  testing  and  UAT  with  a  configuration  equivalent  to  the  production  environment.
+Estimated  deadline  for  
+corrections:  Same-day  response
+Low
+-  When  using  production  data  for  testing,  masking  of  personal  information  is  mandatory.
+-  Minimize  configuration  differences  between  the  test  and  production  environments  and  eliminate  defects  caused  by  these  environmental  differences.
+-  Production  environment:  For  verifying  proper  functioning  after  release.
+-  Clearly  define  how  test  data  is  managed  and  updated.
+Testing  Phase  
+Accessibility  Test
+-  Release  criteria:  Zero  unresolved  Critical  or  High-level  bugs.
+Machine Translated by Google
+--- PAGE 58 ---
+6.6  Contract  Type  and  Development  Methodology
+6.5  About  Costs
+-  Product  usage  fee
+-  Therefore,  the  development  and  testing  phases  are  conducted  using  a  waterfall  model.
+-  The  current  annual  operating  costs  for  the  e-commerce  site  are  around  40  million  yen,  and  this  is  significantly  higher.
+-  The  breakdown  of  annual  operating  costs  is  as  follows:
+-  MSP  usage  fee
+-  Operation  support  costs
+-  AWS  usage  fees
+It  is.
+For  tests  other  than  those  we  anticipate  conducting  (such  as  UAT  (User  Acceptance  Testing)),  we  prefer  a  contract-
+based  approach.  However,  if  you  have  a  process  proposal  that  takes  our  limited  resources  into  consideration,  we  
+would  appreciate  it  if  you  could  submit  it.
+We  want  to  avoid  an  increase  in  strikes.
+53
+-  Originally,  development  was  planned  to  be  led  in-house,  but  due  to  a  lack  of  human  resources,  this  request  for  proposals  was  made.
+-  Product  maintenance  costs
+-  We  need  to  carefully  consider  the  adoption  of  commercial  SaaS,  which  is  expected  to  be  expensive,  and  we  believe  
+that  full  adoption  is  unlikely  or  improbable.  If  we  can  secure  the  necessary  funds,  we  may  consider  it.
+Machine Translated by Google
+--- PAGE 59 ---
+7.1  Proposal  details
+7.  Request  for  Proposals
+-  system  configuration  diagram
+-  Proposal  for  infrastructure  configuration
+-  Scope  included  in  the  proposal
+-  Proposal  for  addressing  next-generation  commerce  technologies
+5.  Design  Proposal
+-  Understanding  the  challenges  and  objectives  of  this  project
+3.  System  Proposal
+-  Your  company's  proposed  concept
+-  List  of  End-of-Life  (EOL)  dates
+We  have  listed  the  items  we  believe  are  necessary  to  fully  understand  your  proposal.  We  expect  a  concrete  proposal  that  reflects  your  perspective  as  a  partner  
+supporting  our  business  growth  and  takes  future  scalability  into  account.  Regarding  costs,  we  request  a  highly  transparent  presentation  that  covers  everything  
+from  initial  construction  to  the  operational  phase.
+The  following  are  guidelines  for  items  that  we  would  like  you  to  include  in  your  proposal.  These  are  merely  guidelines,  and  you  are  welcome  to  add  or  change  items  
+as  needed,  based  on  your  company's  understanding.
+-  Architecture  design  policy
+-  Proposal  for  a  phased  release
+-  Proposal  for  a  common  platform
+-  Implementation  strategy  for  requirements
+-  Reference  design  image  (if  any)
+1.  Understanding  the  Project
+54
+-  Proposed  technology  stack  and  reasons  for  selection
+4.  Functional  proposals
+-  Design  Concept
+-  Additional  suggestion  function  (if  available)
+-  Suggestions  for  improving  UI/UX
+2.  Scope  of  Proposal
+-  Scope  not  included  in  the  proposal
+Machine Translated by Google
+--- PAGE 60 ---
+-  SLA  proposal
+-  Project  management  methods
+-  Anticipated  risks  and  countermeasures
+-  Assumptions/Exclusions
+-  Test  automation
+-  Skills  and  experience  of  each  member
+-  Utilization  of  partner  companies  (if  applicable)
+-  Content  and  method  of  each  test
+-  milestone
+7.  Implementation  Structure
+12.  Contract  type  (contract  work/quasi-mandate)
+-  Utilization  of  AI
+10.  Risk  Management  and  Prerequisites
+-  Risk  management  process
+-  schedule
+8.  Schedule
+-  Test  Strategy
+We  request  proposals  for  a  contract  structure  that  takes  into  account  the  specific  characteristics  of  this  project.
+-  Critical  Path
+6.  Development  Methods  and  Processes
+9.  Test  Plan
+55
+11.  Maintenance  operation  proposal
+-  CI/CD  enables  frequent  releases
+-  Quality  control  methods
+-  Development  methodologies  (waterfall/agile,  etc.)
+-  Project  Organization  Chart
+-  Example  proposal:  A  hybrid  proposal  where  the  development  phase  is  a  "contract  for  work"  and  the  technology  transfer  and  support  phase  is  a  
+"quasi-mandate  contract".
+-  Maintenance  and  operation  structure  and  content
+Machine Translated by Google
+--- PAGE 61 ---
+7.2  Quotation  and  Cost  Conditions
+-  Scope  of  damages
+-Limit  of  compensation
+13.  Intellectual  Property  Rights
+-  While  it  is  assumed  that  the  copyright  will  belong  to  our  company  (Edion),  please  clearly  state  the  ownership  of  the  copyright  of  the  deliverables  (including  the  source  
+code)  and  the  policy  regarding  the  handling  of  third-party  licenses.
+-  Details  of  each  achievement  (scale,  duration,  technology,  results)
+-  Definition  of  non-conformity  with  contract
+-  Responsibility  period:  12  months  from  the  date  of  completion  of  acceptance  testing  for  each  step,  covering  the  scope  of  that  step.  *Provided  separately  for  Step  1  and  Step  2.
+-  Conditions  for  early  termination
+17.  Introduction  of  Achievements
+14.  Liability  for  non-conformity  to  contract  (former  defect  warranty  liability)
+15.  Contract  Termination  Conditions
+-  Settlement  method  upon  contract  termination
+-  Track  record  of  similar  cases
+18.  Other  special  notes
+7.2.1  Quotation
+-  Cost  estimate  (initial  costs  and  running  costs  such  as  AWS  usage  fees,  broken  down  by  item)
+-  Your  company's  strengths  and  differentiating  factors
+-  Validity  period  (I  would  like  it  to  be  valid  for  60  days  from  the  date  of  proposal  submission)
+-  Effort  estimation  (by  scope  and  step)
+56
+If  proceeding
+-  Optional  fees  (if  any)
+-  Assumptions/Exclusions
+-  *Please  share  any  achievements  other  than  those  you  provided  in  your  response  to  the  RFI.
+Details  regarding  estimates  and  costs  are  listed  below.
+16.  Compensation  for  damages
+-  Additional  proposals
+-  How  to  respond
+Machine Translated by Google
+--- PAGE 62 ---
+-  Included  scope  of  work
+-  Scope  of  work  that  will  incur  additional  costs
+7.2.2  Payment  Terms
+Please  provide  a  proposed  payment  schedule.
+7.2.4  TCO  Simulation
+-  Basis  for  calculation
+-  TCO  (license  fees,  infrastructure  maintenance  costs,  operational  maintenance  costs,  future)  for  5  and  7  years  after  release.
+57
+Simulation  (including  expansion  costs)
+7.2.3  Maintenance  and  operation  costs
+-  period
+-  Monthly  maintenance  fee
+Machine Translated by Google
+--- PAGE 63 ---
+-  2.  Submission  via  your  company's  secure  cloud  storage.
+That's  lame.
+The  selection  process  will  proceed  according  to  the  following  process  and  schedule.  Please  strictly  adhere  to  the  deadlines  for  each  milestone,  
+and  if  you  have  any  questions,  please  contact  us  according  to  the  question  submission  procedure  described  below.
+How  to  submit
+RFP  issuance  and  
+question  submission  deadline
+-  1.  Submission  via  Cmosy's  contracted  collection  service.
+Dates:  
+March  27,  2026  (Fri)  March  
+27,  2026  (Fri)  -  April  22,  2026  (Wed)  April  3,  2026  
+(Fri)  -  April  30,  
+2026  (Thu)  May  11,  2026  (Mon)  12:00  May  12,  
+2026  (Tue)  -  May  
+15,  2026  (Fri)  May  18,  2026  (Mon)  -  May  
+21,  2026  (Thu)
+-  You  can  also  submit  your  work  by  sending  the  download  link  via  email.
+-  We  will  issue  and  send  you  a  URL  for  the  pickup  service,  and  you  will  need  to  upload  it.
+-File  format:  PDF  format  is  recommended.  MS  Word  format,  MS  PowerPoint  format,  GWS  document  format,  and  GWS  slide  format  are  also  
+acceptable.
+Content
+Proposal  submission  deadline:  
+Document  review
+-others :
+Deadline:  Monday,  May  11,  2026,  12:00  PM
+question  answer
+58
+-  Email  (maximum  receiving  size:  50MB):  [Sato]:  s.satou.kv@edion.co.jp  [Tanaka]:  h.tanaka.tf@
+-  File  name:  "RFP  Proposal_[Your  Company  Name]_YYYYMMDD.pdf"
+Please  submit  your  entry  using  one  of  the  following  methods.
+-  Due  to  our  security  measures,  there  may  be  some  services  that  we  cannot  access,  so  please  contact  us  in  advance  (we  have  
+experience  receiving  files  via  Box).
+Submission  format
+Presentation
+-  If  you  are  unable  to  use  Cmosy  due  to  your  company's  security  policy,  etc.,  please  use  this  instead.
+8.  Selection  Process
+edion.co.jp
+8.1  Submission  deadline/submission  method
+8.2  Selection  Schedule
+Machine Translated by Google
+--- PAGE 64 ---
+-  Restrictions:  Depending  on  the  nature  of  your  question,  it  may  take  some  time  to  answer,  or  we  may  refrain  from  answering.
+8.3.4  Conducting  Individual  QA  Meetings
+-  Sharing  scope:  Received  questions  and  answers  will  be  shared  via  email  to  all  candidate  companies  to  which  the  RFP  has  been  distributed,  after  
+disclosing  any  information  that  could  identify  the  source  of  the  questions  (such  as  company  name  or  contact  person's  name).
+-  Information  Sharing:  If  we  determine  that  any  questions  raised  during  the  meeting  should  be  shared  with  all  candidate  companies,  we  will  include  
+them  in  the  answer  key  submitted  via  the  question  submission  form  and  share  it  with  all  candidate  companies.  However,  information  directly  
+related  to  your  company's  unique  technical  know-how  or  business  model  will  be  excluded  from  general  sharing  for  confidentiality  reasons.
+59
+Wednesday,  April  22,  2026,  12:00
+Implementation  Overview
+-  Purpose  of  the  event:  The  purpose  is  to  resolve  any  differences  in  interpretation  regarding  the  contents  of  the  RFP.
+vinegar.
+Please  submit  your  questions  using  the  form  below.
+8.3.3  How  to  answer
+8.3.2  How  to  ask  questions
+Notification  of  selection  results  
+and  contract  signing.
+To  ensure  fairness,  the  question-and-answer  session  regarding  this  RFP  will  be  conducted  as  follows.
+8.3.1  Deadline  for  Questions
+*Please  note  that  we  generally  do  not  accept  questions  via  telephone,  email,  or  in  person,  in  order  to  ensure  the  accuracy  of  our  records.
+Project  Start
+-  Response  deadline:  As  a  general  rule,  we  will  respond  to  each  question  individually,  within  approximately  5  business  days  of  receiving  it.
+Dates:  
+May  22  (Fri)  -  May  29  (Fri),  2026;  May  29  (Fri),  
+2026;  
+June  1  (Mon)  -  June  30  (Tue),  
+2026;  July  1  (Wed),  2026
+Final  
+selection  of  content
+-  Question  submission  form:  https://forms.gle/xFQK7sBFySvhAnZF6
+-  For  companies  that  request  it,  we  will  conduct  individual  Q&A  meetings  up  to  twice  during  the  question  submission  period,  each  lasting  
+approximately  1  to  2  hours.  Companies  that  wish  to  participate  should  contact  the  inquiry  desk.  The  date  and  time  of  the  meeting  will  be  
+arranged  individually.
+After  passing  the  initial  document  screening,  you  will  be  required  to  give  a  presentation.
+8.3  How  to  submit  and  answer  questions
+8.4  Presentation
+Machine Translated by Google
+--- PAGE 65 ---
+-  Number  of  participants:  Approximately  7  people  from  our  company  are  expected.
+-  Deputy  General  Manager  Matsufuji
+-  Implementation  date  and  time:  To  be  determined  between  Monday,  May  18,  2026  and  Thursday,  May  21,  2026.
+-Duration :  Presentation  90  minutes,  Q&A  30  minutes
+-  EDION
+-  Explanation  of  the  proposal
+Scoring:  40  points  -  Does  it  
+include  proposals  for  early  implementation,  such  as  
+proposals  for  accelerating  implementation?  
+-  Are  there  specific  methods  or  proposals  to  
+shorten  development  lead  time?  -  Is  
+there  a  proposal  for  a  flexible  architecture  and  
+process  that  can  quickly  respond  to  changes  in  
+business  requirements?  -  Is  there  
+a  specific  technical  and  organizational  approach  
+to  achieve  frequent  releases?
+-  Q&A
+-  President  Murakami
+-Other :  We  request  the  attendance  of  the  person  in  charge  who  will  actually  lead  the  project  after  the  contract  is  signed.  To  ensure  
+that  there  are  no  discrepancies  between  the  proposed  structure  and  the  structure  during  actual  operation,  we  assume  that  the  
+proposed  structure  will  be  implemented  as  is.
+-  IT  Design  Division  Manager  Nagao
+-  Demonstration  (if  possible)
+No.  Evaluation  
+Item  1:  Implementation  Speed  and  
+Development  Agility
+60
+The  proposals  will  be  evaluated  based  on  the  following  criteria,  and  a  comprehensive  decision  will  be  made.  The  speed  at  which  the  2030  
+vision  will  be  achieved,  and  the  development  agility  to  respond  immediately  to  changes  in  the  business  will  be  given  top  priority  in  the  
+evaluation.
+Presentation  content
+-  Director  and  General  Manager  of  Retail  Solutions  Division,  Akiyama
+-  IT  Design  Department,  EC  Team:  Sato,  Tanaka
+-  Head  of  IT  Planning  Department,  Konishi
+-Location :  Our  company  meeting  room  (recommended)  or  online  meeting
+-  Head  of  IT  Strategy  Division,  Yamamoto
+-  EXV
+8.5  Evaluation  Criteria
+Machine Translated by Google
+--- PAGE 66 ---
+Proposal  structure
+3.  Non-functional  requirements/stability  10  points  -  No  restrictions  even  during  peak  times
+-  Include  a  table  of  contents
+Scoring:  30  points  -  Is  the  
+proposal  for  the  e-commerce  growth  vision  specific  and  
+feasible?  -  Is  the  proposal  for  the  
+medium-term  system  development  vision  specific  
+and  feasible?  -  Is  the  proposal  for  resolving  
+strategic  issues  specific  and  feasible?  -  Is  the  
+architecture  in  line  with  the  
+objective?
+-  Add  page  numbers
+2.  Quotation
+1.  Proposal  (Main  Document)
+4.  System  and  Skill  Transfer
+3.  TCO  Simulation
+No.  Evaluation  Item  
+2:  Understanding  of  Vision  and  Challenges  
+and  Solutions
+61
+total
+5.  Price  Appropriateness  and  Cost-
+Effectiveness
+Feasibility  of  Low-Waiting    Is  the  
+architecture  flexible  enough  to  expand  or  
+contract?  (10  points)    
+Will  experienced  engineers  be  assigned?    Is  the  proposal  
+designed  with  
+the  self-sufficiency  of  the  in-house  team  (EXV)  
+in  mind?  (10  points)    Does  the  
+proposal  contribute  to  reducing  not  only  initial  development  
+costs  but  also  operating  costs?    Is  the  basis  
+for  calculating  man-hours  clear,  and  is  the  
+pricing  reasonable,  including  risks?
+4.  Other  reference  materials
+100  points
+8.6  Submissions
+Machine Translated by Google
+--- PAGE 67 ---
+1.  Contact  with  or  collusion  with  other  companies,  or  any  actions  suspected  of  being  so.
+Please  impose  a  confidentiality  obligation.
+1.  While  we  have  taken  every  precaution  to  ensure  the  accuracy  of  the  information  contained  in  this  RFP  (including  current  system  figures,  data,  
+specifications,  etc.),  we  do  not  guarantee  its  completeness.  If  you  have  any  doubts  about  the  contents,  please  confirm  them  during  the  
+question  and  answer  period.
+62
+2.  After  notification  of  the  selection  results,  we  will  proceed  with  the  approval  process,  but  there  is  a  possibility  that  the  order  may  not  be  placed.
+3.  The  proposed  content  will  not  be  used  for  any  purpose  other  than  the  objectives  of  this  project.
+1.  The  contents  of  this  RFP  must  be  managed  appropriately  in  accordance  with  a  Non-Disclosure  Agreement  (NDA).
+4.  We  reserve  the  right  to  cancel  or  modify  this  RFP  without  prior  notice.
+3.  We  cannot  respond  to  inquiries  regarding  the  reasons  for  selection.
+Sai.
+The  following  are  the  rules  that  you  must  adhere  to  when  participating  in  and  submitting  a  proposal  for  this  RFP.  Because  this  project  involves  
+confidential  and  strategic  information  of  our  company,  we  ask  that  you  handle  this  information  with  the  utmost  care.  Please  be  aware  that  any  actions  
+found  to  be  in  violation  of  these  rules  may  result  in  your  application  being  disqualified.
+2.  Submitted  proposals  will  not  be  returned.
+It  may  be  used.
+Thank  you.
+2.  Inappropriate  solicitation  of  or  entertainment/gifts  to  our  company's  personnel.
+3.  Disclosure  of  the  contents  of  this  RFP  and  the  proposed  content  to  third  parties
+1.  Proposals  for  this  RFP  should  be  prepared  at  the  responsibility  and  expense  of  the  proposing  company.
+5.  If  we  determine  that  the  proposed  content  does  not  meet  our  required  standards,  we  reserve  the  right  not  to  select  any  of  the  companies.
+1.  Submitting  a  proposal  to  this  RFP  does  not  guarantee  a  contract.
+4.  The  copyright  of  the  proposed  content  belongs  to  the  proposing  company,  but  we  will  use  the  proposed  content  to  the  extent  necessary  for  the  selection  process.
+2.  If  disclosure  is  made  to  your  group  companies  or  partner  companies  to  the  extent  necessary  for  responding  to  this  RFP,  the  same  information  will  be  provided.
+3.  Please  do  not  use  any  information  regarding  this  project  for  public  relations,  sales  activities,  etc.,  without  our  prior  consent.
+9.  Precautions
+9.4  Confidentiality
+9.3  Prohibitions
+9.1  Handling  of  Proposals
+9.2  Selection  Process
+9.5  Accuracy  of  Information  Provided  and  Disclaimer
+Machine Translated by Google
+--- PAGE 68 ---
+9.6  Other
+vinegar.
+2.  After  the  contract  is  signed,  changes  to  the  estimate  or  schedule  delays  due  to  discrepancies  with  the  information  specified  in  the  RFP
+2.  If,  after  selection,  the  terms  presented  during  contract  negotiations  differ  significantly  from  the  proposed  terms,  the  selection  may  be  revoked.
+Therefore,  both  parties  will  evaluate  the  situation  through  discussions  and  consider  a  course  of  action.
+3.  Any  matters  not  covered  in  this  RFP,  or  any  matters  where  there  is  doubt  regarding  interpretation,  shall  be  decided  in  consultation  with  our  company.
+1.  We  may  request  detailed  explanations  of  the  proposed  content  during  the  presentation  or  contract  negotiations.
+63
+There  is  a  match.
+We  will  assume  that  this  applies.
+Machine Translated by Google
+--- PAGE 69 ---
+10.  Contact  Information
+[Sato]
+EDION  Corporation,  IT  Strategy  Headquarters,  IT  Planning  Department,  IT  Design  Section
+That's  all.
+Tel:  090-9849-9530  Mail:  
+s.satou.kv@edion.co.jp  Address:  JP  Tower  
+Osaka  13F,  3-2-2  Umeda,  Kita-ku,  Osaka  City,  Osaka  Prefecture  530-0001,  Japan
+For  inquiries  regarding  this  RFP,  please  contact  us  at  the  following  address.
+[Tanaka]
+Tel:  090-8340-3184  Mail:  
+h.tanaka.tf@edion.co.jp  Address:  5th  
+Floor,  Edion  JR  Amagasaki  Station  Store,  1-1-50  Shioe,  Amagasaki  City,  Hyogo  Prefecture  661-0976
+64
+Machine Translated by Google

@@ -4,60 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f3a409a-3d42-4005-b16d-b761bd957a4c/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/239bacda-666e-4e33-93db-6b54640bf032.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/239bacda-666e-4e33-93db-6b54640bf032/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/239bacda-666e-4e33-93db-6b54640bf032/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/239bacda-666e-4e33-93db-6b54640bf032/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/239bacda-666e-4e33-93db-6b54640bf032/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/26614fbe-e6a8-4b7c-8110-490c04a2405b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/26614fbe-e6a8-4b7c-8110-490c04a2405b.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/26614fbe-e6a8-4b7c-8110-490c04a2405b/storage_v2/_src_/database/gnc_store.Pjf6Zw/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/26614fbe-e6a8-4b7c-8110-490c04a2405b/storage_v2/_src_/database/gnc_store.Pjf6Zw/schema/public.abK9xQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/css/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/css/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/AdminCurrencyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/AdminCurrencyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/AdminStoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/products-service/src/main/java/com/tcs/commerce/products/service/AdminStoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search-service/src/main/java/com/tcs/commerce/search/service/AdminSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/search-service/src/main/java/com/tcs/commerce/search/service/AdminSearchService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/dist/assets/index-BrUyB8A3.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/dist/assets/index-CpdEA-qV.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/dist/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/dist/logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/tsconfig.node.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/tsconfig.node.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-backoffice/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/.eslintrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/.eslintrc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/account/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/account/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/account/reset-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/account/reset-password/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/careers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/careers/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/categories/[...category]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/categories/[...category]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/collections/[handle]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/collections/[handle]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/contact/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/app/[countryCode]/(main)/contact/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/data/collections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/data/collections.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/util/fetch-with-connection-context.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/util/fetch-with-connection-context.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/account/components/account-slot-content/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/account/components/account-slot-content/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/account/components/register/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/account/components/register/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/account/templates/login-template.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/account/templates/login-template.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/cart/components/delivery-flow-modal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/cart/components/delivery-flow-modal/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/checkout/components/address-select/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/checkout/components/address-select/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/checkout/components/shop-for-delivery-section/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/checkout/components/shop-for-delivery-section/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/common/components/input/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/common/components/input/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/common/components/line-item-price/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/common/components/line-item-price/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/common/components/line-item-unit-price/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/common/components/line-item-unit-price/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/layout/components/country-select/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/layout/components/country-select/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/recipes/recipes-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/recipes/recipes-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/search/components/algolia-search/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/modules/search/components/algolia-search/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/tsconfig.json" afterDir="false" />
-    </list>
+    <list default="true" id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
