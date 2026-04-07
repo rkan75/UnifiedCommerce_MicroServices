@@ -15,7 +15,7 @@ import DeliveringTo from "@modules/layout/components/delivery-location"
 import HeaderSearch from "@modules/layout/components/header-search"
 import LanguageSwitcher from "@modules/layout/components/language-switcher"
 import { getLocale } from "@lib/data/locale-actions"
-import { getTranslation } from "@lib/i18n/translations"
+import { getTranslation, resolveTranslationLocale } from "@lib/i18n/translations"
 import {
   getCustomerFullName,
   getLoyaltyPoints,
@@ -40,8 +40,8 @@ export default async function Nav({ countryCode, cart, customer }: NavProps) {
     collectionsResult.collections ?? []
   )
   const localeCookie = await getLocale()
-  const locale = localeCookie?.split("-")[0] || "en"
-  const t = (key: string) => getTranslation(locale as "en" | "es", key)
+  const t = (key: string) =>
+    getTranslation(resolveTranslationLocale(localeCookie), key)
   const deliveryZipCookie = await getDeliveryZip()
   const initialZip =
     cart?.shipping_address?.postal_code || deliveryZipCookie || null

@@ -7,6 +7,10 @@ import { ChevronUpDown } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { Fragment } from "react"
 import { updateLocale } from "@lib/data/locale-actions"
+import {
+  type Locale,
+  resolveTranslationLocale,
+} from "@lib/i18n/translations"
 
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null
@@ -24,7 +28,7 @@ function setCookie(name: string, value: string, days: number = 365) {
 }
 
 type LanguageOption = {
-  value: "en" | "es" | ""
+  value: Locale | ""
   label: string
 }
 
@@ -32,6 +36,7 @@ const languageOptions: LanguageOption[] = [
   { value: "", label: "Select Language" },
   { value: "en", label: "English" },
   { value: "es", label: "Español" },
+  { value: "ja", label: "日本語" },
 ]
 
 export default function LanguageSwitcher() {
@@ -48,9 +53,7 @@ export default function LanguageSwitcher() {
     // Then read cookie and update locale
     const cookieLocale = getCookie("_medusa_locale")
     if (cookieLocale) {
-      const lang = cookieLocale.split("-")[0].toLowerCase()
-      const newLocale = lang === "es" ? "es" : "en"
-      setCurrentLocale(newLocale)
+      setCurrentLocale(resolveTranslationLocale(cookieLocale))
     } else {
       setCurrentLocale("")
     }
@@ -59,17 +62,17 @@ export default function LanguageSwitcher() {
   const handleLanguageChange = (value: string) => {
     if (value === "" || value === currentLocale) return
 
-    const locale = value as "en" | "es"
-    // Set cookie immediately on client side
-    const localeCode = locale === "en" ? "en-US" : "es-ES"
+    const locale = value as Locale
+    const localeCode =
+      locale === "en" ? "en-US" : locale === "es" ? "es-ES" : "ja-JP"
     setCookie("_medusa_locale", localeCode)
     setCurrentLocale(locale)
 
     // Dispatch custom event immediately for instant UI update
     if (typeof window !== "undefined") {
-      const event = new CustomEvent("localechange", { 
+      const event = new CustomEvent<{ locale: Locale }>("localechange", {
         detail: { locale },
-        bubbles: true 
+        bubbles: true,
       })
       window.dispatchEvent(event)
     }

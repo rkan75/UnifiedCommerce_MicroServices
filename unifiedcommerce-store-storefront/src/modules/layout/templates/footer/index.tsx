@@ -6,7 +6,7 @@ import {
   type FooterLink,
   type FooterSocialLink,
 } from "@lib/data/contentful-footer"
-import { getTranslation } from "@lib/i18n/translations"
+import { getTranslation, resolveTranslationLocale } from "@lib/i18n/translations"
 
 export default async function Footer() {
   const localeCookie = await getLocale()

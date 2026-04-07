@@ -300,6 +300,158 @@ export const translations = {
       sortPriceHighLow: "Precio: mayor a menor",
     },
   },
+  ja: {
+    nav: {
+      account: "アカウント",
+      myAccount: "マイアカウント",
+      loyaltyPointsShort: "{{count}} pt",
+      loyaltyPointsLabel: "ポイント {{count}} pt",
+      cart: "カート",
+      shoppingList: "買い物リスト",
+      search: "検索",
+      wishlist: "お気に入り",
+      headerMenuShop: "ショップ",
+      headerMenuBlog: "ブログ",
+      headerMenuLiveWellSale: "ライブウェルセール",
+      headerMenuBestSellers: "ベストセラー",
+      headerMenuNewOnTheDrop: "新着",
+      headerMenuCreatine: "クレアチン",
+      headerMenuGhostPromo: "Ghost：2個目50%オフ — 今週限定",
+      headerMenuAria: "クイックリンクとキャンペーン",
+    },
+    home: {
+      shopByCategory: "カテゴリから探す",
+      farmFreshProduce: "定期おトク便でさらに25%OFF",
+      farmFreshDescription:
+        "定期おトク便なら追加25%OFF。お届けは自動で、スキップ・解約もいつでも可能です。",
+      orderHistory: "注文履歴",
+      orderHistoryDescription: "最近の注文を確認・追跡",
+      viewOrder: "注文を見る",
+      pastPurchases: "過去の購入",
+      pastPurchasesDescription: "購入履歴からもう一度購入",
+      buyItAgain: "もう一度買う",
+      favoriteItems: "お気に入り商品",
+      favoriteItemsDescription: "過去の注文からお気に入りにした商品",
+      favourite: "お気に入り",
+      signInRequired: "ログインが必要です",
+      signInToViewOrders: "注文履歴を表示するにはログインしてください。",
+      signInToViewPurchases: "過去の購入を見る・再購入するにはログインしてください。",
+      signInToViewFavorites: "お気に入りを表示するにはログインしてください。",
+      cancel: "キャンセル",
+      signIn: "ログイン",
+      close: "閉じる",
+      viewAllOrders: "すべての注文を見る",
+      noOrders: "まだ注文がありません。初めての注文をするとここに表示されます。",
+      noPastPurchases: "表示できる過去の購入はありません。",
+      noFavorites:
+        "お気に入りはまだありません。「過去の購入」から商品をお気に入りに追加してください。",
+      addToCart: "カートに追加",
+      addToList: "リストに追加",
+      adding: "追加中...",
+      addingToList: "追加中...",
+      inFavourites: "お気に入り済み",
+      couldNotAddFavourite: "お気に入りに追加できませんでした。もう一度お試しください。",
+      remove: "削除",
+      freshAndOrganic: "フレッシュ＆オーガニック",
+      freeDelivery: "送料無料",
+      freshGroceries: "生鮮食品",
+      deliveredDaily: "毎日お届け",
+      heroDescription:
+        "新鮮な青果、厳選食品、オーガニック商品をご自宅まで。安心・便利にお届けします。",
+      shopNow: "今すぐ買う",
+      featuredCarouselTitle: "新着・注目",
+      featuredMoreStock: "在庫あり",
+      featuredInStock: "在庫あり",
+      featuredOutOfStock: "在庫切れ",
+      featuredCategoryFallback: "サプリメント",
+      browseCategories: "カテゴリを見る",
+      freeDeliveryOver50: "$50以上で送料無料",
+      freshGuarantee: "100%フレッシュ保証",
+      sameDayDelivery: "当日配送",
+      freshVegetables: "新鮮野菜",
+      organicAndLocal: "オーガニック＆ローカル",
+      freshFruits: "新鮮果物",
+      seasonalSelection: "旬のセレクション",
+      dairyAndMore: "乳製品など",
+      premiumQuality: "プレミアム品質",
+      vegetables: "野菜",
+      fruits: "果物",
+      dairy: "乳製品",
+      bakery: "ベーカリー",
+      meat: "肉類",
+      organic: "オーガニック",
+      shopByBrand: "ブランドから探す",
+      shopByBrandNoCollections:
+        "コレクションがまだありません。Medusa 管理画面でコレクション（例：gnc、ghost などのハンドル）を作成し、タイル画像用にコレクションのメタデータへ brand_image を追加してください。",
+      shopByBrandInvalidImageUrl:
+        "brand_image は .jpg / .png / .webp などの画像URLを直接指定してください。ブランドページのURLは使えません。",
+      shopByBrandPlaceholder: "コレクションのメタデータにブランド画像を追加",
+    },
+    footer: {
+      services: "サービス",
+      waysToSave: "お得情報",
+      customerService: "カスタマーサービス",
+      about: "会社情報",
+      followUs: "フォローする",
+      downloadOurApps: "アプリをダウンロード",
+      myAccount: "マイアカウント",
+      orderHistory: "注文履歴",
+      shoppingCart: "ショッピングカート",
+      deliveryAddresses: "お届け先",
+      weeklyDeals: "週替わりセール",
+      digitalCoupons: "デジタルクーポン",
+      specialOffers: "特別オファー",
+      helpCenter: "ヘルプセンター",
+      trackOrder: "注文の追跡",
+      contactUs: "お問い合わせ",
+      faqs: "よくある質問",
+      ourStory: "ストーリー",
+      careers: "採用情報",
+      storeLocator: "店舗検索",
+      allRightsReserved: "無断転載を禁じます。",
+      privacyPolicy: "プライバシーポリシー",
+      termsOfService: "利用規約",
+      cookiePolicy: "クッキーポリシー",
+      preFooter: {
+        ariaLabel: "キャンペーン・特典",
+        bogoTitle: "1点購入で2点目50%オフ*",
+        bogoSubtext: "さらに$59以上のご注文で送料無料（飲料ケース除く）",
+        subscriptionTitle: "定期便を始める",
+        subscriptionSubtext:
+          "送料無料、ボーナスキャッシュバック、定期便なら10%オフ！",
+        subscriptionPromoLinkAria:
+          "定期便対象商品はショップページでご確認ください",
+      },
+    },
+    store: {
+      filters: "絞り込み",
+      clearAll: "すべてクリア",
+      price: "価格",
+      department: "部門",
+      allPrices: "すべての価格",
+      allDepartments: "すべての部門",
+      priceUnder5: "$5未満",
+      price5to10: "$5 – $10",
+      price10to25: "$10 – $25",
+      price25AndAbove: "$25以上",
+      departmentLabel: "部門",
+      collection: "コレクション",
+      allCollections: "すべてのコレクション",
+      removePriceFilter: "価格フィルターを解除",
+      removeDepartmentFilter: "部門フィルターを解除",
+      removeCollectionFilter: "コレクションフィルターを解除",
+      brand: "ブランド",
+      allBrands: "すべてのブランド",
+      removeBrandFilter: "ブランドフィルターを解除",
+      hwCategories: "HWカテゴリ",
+      allHwCategories: "すべてのHWカテゴリ",
+      removeHwCategoryFilter: "HWカテゴリフィルターを解除",
+      sortBy: "並び替え",
+      sortLatestArrivals: "新着順",
+      sortPriceLowHigh: "価格：安い順",
+      sortPriceHighLow: "価格：高い順",
+    },
+  },
 } as const
 
 export type Locale = keyof typeof translations
@@ -317,4 +469,17 @@ export const getTranslation = (
   }
 
   return value ?? key
+}
+
+/**
+ * Maps Medusa locale cookie values (e.g. en-US, es-ES, ja-JP) to storefront UI keys.
+ */
+export function resolveTranslationLocale(
+  medusaLocale: string | null | undefined
+): Locale {
+  const lang =
+    medusaLocale?.trim().split(/[-_]/)[0]?.toLowerCase() ?? "en"
+  if (lang === "es") return "es"
+  if (lang === "ja") return "ja"
+  return "en"
 }
