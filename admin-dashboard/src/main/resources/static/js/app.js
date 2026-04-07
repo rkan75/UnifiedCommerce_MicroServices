@@ -15,6 +15,15 @@
   var SHORTCUT_SEQ_MS = 900;
   var PALETTE_PREVIEW_PER_TYPE = 3;
 
+  var ucDrawer =
+    typeof window !== 'undefined' && window.ucDrawer
+      ? window.ucDrawer
+      : { bindEscape: function() {}, unbindEscape: function() {} };
+  var ucSettingsUi =
+    typeof window !== 'undefined' && window.ucSettingsUi
+      ? window.ucSettingsUi
+      : { externalLinkIcon20: '' };
+
   var SEARCH_TYPE_TO_PATH = {
     products: '/app/products',
     campaigns: '/app/promotions',
@@ -2360,19 +2369,13 @@
     content.innerHTML = '<div class="card"><p class="empty">Orders list will be available when order service is connected.</p></div>';
   }
 
-  var storeEditEscHandler = null;
-  var storeMetaEscHandler = null;
-
   function closeStoreEditDrawer() {
     var bd = document.getElementById('storeEditBackdrop');
     var dr = document.getElementById('storeEditDrawer');
     if (bd) bd.classList.add('hidden');
     if (dr) dr.classList.add('hidden');
     document.body.classList.remove('store-edit-open');
-    if (storeEditEscHandler) {
-      document.removeEventListener('keydown', storeEditEscHandler);
-      storeEditEscHandler = null;
-    }
+    ucDrawer.unbindEscape();
     var saveBtn = document.getElementById('seSave');
     if (saveBtn) {
       saveBtn.disabled = false;
@@ -2384,7 +2387,7 @@
     if (document.getElementById('storeEditBackdrop')) return;
     document.body.insertAdjacentHTML(
       'beforeend',
-      '<div id="storeEditBackdrop" class="store-edit-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="storeEditBackdrop" class="uc-drawer-backdrop store-edit-backdrop hidden" aria-hidden="true"></div>' +
         '<div id="storeEditDrawer" class="store-edit-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="storeEditTitle">' +
         '<div class="store-edit-inner">' +
         '<div class="store-edit-head">' +
@@ -2593,17 +2596,17 @@
         '<h2 class="settings-card-title">Metadata <span class="settings-key-badge" id="stMetaCount">0 keys</span></h2>' +
         '<span class="settings-meta-bar-spacer"></span>' +
         '<button type="button" class="settings-meta-drawer-trigger" id="stMetaDrawerBtn" title="Edit metadata" aria-label="Edit metadata">' +
-        '<svg class="settings-meta-external-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-        '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '<path d="M15 3h6v6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '<path d="m10 14 11-11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg></button></div></section>' +
+        ucSettingsUi.externalLinkIcon20 +
+        '</button></div></section>' +
         '<pre class="settings-pre" id="stMetaPre" hidden aria-hidden="true">{}</pre>' +
-        '<section class="settings-card settings-fold-card">' +
-        '<div class="settings-card-head">' +
+        '<section class="settings-card settings-meta-collapsed" aria-label="Store JSON">' +
+        '<div class="settings-card-head settings-meta-bar-head">' +
         '<h2 class="settings-card-title">JSON <span class="settings-key-badge" id="stJsonCount">0 keys</span></h2>' +
-        '<button type="button" class="settings-icon-btn" id="stJsonPop" title="Open" aria-label="Open JSON">↗</button></div>' +
-        '<div class="settings-card-body"><pre class="settings-pre settings-pre-tall" id="stJsonPre">{}</pre></div></section>' +
+        '<span class="settings-meta-bar-spacer"></span>' +
+        '<button type="button" class="settings-meta-drawer-trigger" id="stJsonDrawerBtn" title="View JSON" aria-label="View JSON">' +
+        ucSettingsUi.externalLinkIcon20 +
+        '</button></div></section>' +
+        '<pre class="settings-pre" id="stJsonPre" hidden aria-hidden="true">{}</pre>' +
         '</div>'
     );
 
@@ -2786,6 +2789,89 @@
       renderCurRows(storeCurrencyRows, filtEl ? filtEl.value : '');
       wireStoreCardMenu();
       wireStoreMetaBarOnce();
+      wireStoreJsonBarOnce();
+    }
+
+    function closeStoreJsonDrawer() {
+      var bd = document.getElementById('storeJsonBackdrop');
+      var dr = document.getElementById('storeJsonDrawer');
+      if (bd) bd.classList.add('hidden');
+      if (dr) dr.classList.add('hidden');
+      document.body.classList.remove('store-json-drawer-open');
+      ucDrawer.unbindEscape();
+    }
+
+    function ensureStoreJsonDrawerShell() {
+      if (document.getElementById('storeJsonBackdrop')) return;
+      document.body.insertAdjacentHTML(
+        'beforeend',
+        '<div id="storeJsonBackdrop" class="uc-drawer-backdrop store-edit-backdrop store-json-drawer-backdrop hidden" aria-hidden="true"></div>' +
+          '<div id="storeJsonDrawer" class="store-edit-drawer store-json-drawer-panel hidden" role="dialog" aria-modal="true" aria-labelledby="storeJsonDrawerTitle">' +
+          '<div class="store-edit-inner store-json-drawer-inner">' +
+          '<div class="store-edit-head store-json-drawer-head">' +
+          '<h2 id="storeJsonDrawerTitle" class="store-edit-title store-json-drawer-title">JSON</h2>' +
+          '<div class="store-edit-head-actions">' +
+          '<span class="store-edit-kbd store-json-drawer-kbd">Esc</span>' +
+          '<button type="button" class="store-edit-x store-json-drawer-x" id="storeJsonClose" aria-label="Close">×</button></div></div>' +
+          '<div class="store-edit-body store-json-view-body">' +
+          '<div id="stJsonViewerTree" class="store-json-viewer-tree" role="tree"></div></div></div></div>'
+      );
+      document.getElementById('storeJsonBackdrop').addEventListener('click', closeStoreJsonDrawer);
+      document.getElementById('storeJsonClose').addEventListener('click', closeStoreJsonDrawer);
+    }
+
+    function openStoreJsonViewerDrawer() {
+      var jp = document.getElementById('stJsonPre');
+      var raw = jp && jp.textContent != null ? jp.textContent.trim() : '';
+      if (!raw) raw = '{}';
+      var obj;
+      try {
+        obj = JSON.parse(raw);
+      } catch (err) {
+        obj = {
+          _error: 'Invalid JSON',
+          _message: err && err.message ? String(err.message) : 'parse error',
+          _raw: raw
+        };
+      }
+      ensureStoreJsonDrawerShell();
+      var tree = document.getElementById('stJsonViewerTree');
+      var titleEl = document.getElementById('storeJsonDrawerTitle');
+      var bd = document.getElementById('storeJsonBackdrop');
+      var dr = document.getElementById('storeJsonDrawer');
+      if (!tree || !bd || !dr) return;
+      var topKeys = 0;
+      if (obj != null && typeof obj === 'object' && !Array.isArray(obj)) {
+        try {
+          topKeys = Object.keys(obj).length;
+        } catch (e) {
+          topKeys = 0;
+        }
+      }
+      if (titleEl) {
+        titleEl.textContent = 'JSON · ' + topKeys + ' key' + (topKeys === 1 ? '' : 's');
+      }
+      tree.innerHTML = '';
+      pdpJsonTreeAppendNode(tree, null, obj, 0);
+      bd.classList.remove('hidden');
+      bd.setAttribute('aria-hidden', 'false');
+      dr.classList.remove('hidden');
+      dr.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('store-json-drawer-open');
+      ucDrawer.bindEscape(function(ev) {
+        if (ev.key === 'Escape') closeStoreJsonDrawer();
+      });
+    }
+
+    function wireStoreJsonBarOnce() {
+      var btn = document.getElementById('stJsonDrawerBtn');
+      if (!btn || btn.dataset.jsonBarWired === '1') return;
+      btn.dataset.jsonBarWired = '1';
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openStoreJsonViewerDrawer();
+      });
     }
 
     function mirrorStoreMetaRowToDataset(row) {
@@ -2957,7 +3043,7 @@
       if (document.getElementById('storeMetaBackdrop')) return;
       document.body.insertAdjacentHTML(
         'beforeend',
-        '<div id="storeMetaBackdrop" class="store-edit-backdrop store-meta-drawer-backdrop hidden" aria-hidden="true"></div>' +
+        '<div id="storeMetaBackdrop" class="uc-drawer-backdrop store-edit-backdrop store-meta-drawer-backdrop hidden" aria-hidden="true"></div>' +
           '<div id="storeMetaDrawer" class="store-edit-drawer store-meta-drawer-panel hidden" role="dialog" aria-modal="true" aria-labelledby="storeMetaTitle">' +
           '<div class="store-edit-inner">' +
           '<div class="store-edit-head">' +
@@ -3015,10 +3101,7 @@
       if (bd) bd.classList.add('hidden');
       if (dr) dr.classList.add('hidden');
       document.body.classList.remove('store-meta-drawer-open');
-      if (storeMetaEscHandler) {
-        document.removeEventListener('keydown', storeMetaEscHandler);
-        storeMetaEscHandler = null;
-      }
+      ucDrawer.unbindEscape();
       var saveBtn = document.getElementById('smSave');
       if (saveBtn) saveBtn.disabled = false;
     }
@@ -3066,10 +3149,9 @@
       document.getElementById('storeMetaBackdrop').classList.remove('hidden');
       document.getElementById('storeMetaDrawer').classList.remove('hidden');
       document.body.classList.add('store-meta-drawer-open');
-      storeMetaEscHandler = function(ev) {
+      ucDrawer.bindEscape(function(ev) {
         if (ev.key === 'Escape') closeStoreMetaDrawer();
-      };
-      document.addEventListener('keydown', storeMetaEscHandler);
+      });
     }
 
     function wireStoreMetaBarOnce() {
@@ -3494,10 +3576,9 @@
       document.getElementById('storeEditBackdrop').classList.remove('hidden');
       document.getElementById('storeEditDrawer').classList.remove('hidden');
       document.body.classList.add('store-edit-open');
-      storeEditEscHandler = function(ev) {
+      ucDrawer.bindEscape(function(ev) {
         if (ev.key === 'Escape') closeStoreEditDrawer();
-      };
-      document.addEventListener('keydown', storeEditEscHandler);
+      });
       document.getElementById('seSave').onclick = function() {
         var body = {
           name: seName ? seName.value.trim() : '',
@@ -3636,6 +3717,7 @@
           wireCurrencyChromeOnce();
           wireStoreCardMenu();
           wireStoreMetaBarOnce();
+          wireStoreJsonBarOnce();
         });
       })
       .catch(function() {
@@ -3647,22 +3729,8 @@
         wireCurrencyChromeOnce();
         wireStoreCardMenu();
         wireStoreMetaBarOnce();
+        wireStoreJsonBarOnce();
       });
-
-    function openTabJson(txt) {
-      try {
-        var w = window.open('', '_blank');
-        if (w) {
-          w.document.write('<pre style="font:12px/1.4 monospace;padding:1rem">' + escapeHtml(txt) + '</pre>');
-        }
-      } catch (e) {}
-    }
-    var jp = document.getElementById('stJsonPop');
-    if (jp) {
-      jp.addEventListener('click', function() {
-        openTabJson(jsonPre ? jsonPre.textContent : '{}');
-      });
-    }
   }
 
   function renderPlaceholder(title, help) {
@@ -3672,20 +3740,16 @@
 
   var pdpOutsideClose = null;
   var pdpEditProductRef = null;
-  var pdpEditEscapeHandler = null;
   var pdpEditDrawerWired = false;
   var pdpMediaGalleryState = [];
   var pdpMediaSelectedIdx = 0;
   var pdpMediaMode = 'edit';
-  var pdpMediaEscapeHandler = null;
   var pdpMediaOverlayWired = false;
-  var pdpCreateOptionEscapeHandler = null;
   var pdpCreateOptionDrawerWired = false;
   /** Tag strings for Create Option drawer (variations). */
   var pdpCreateOptionVariations = [];
   /** Set when drawer edits an existing option (stable id from catalog / metadata). */
   var pdpCoEditOptionId = null;
-  var pdpVoEscapeHandler = null;
   var pdpVoDrawerWired = false;
   var pdpVoProductRef = null;
   var pdpVoVariantRef = null;
@@ -3695,18 +3759,14 @@
   var pdpMediaCardUrlsRef = [];
   var pdpMediaCardProductRef = null;
   var pdpMetadataProductRef = null;
-  var pdpMetadataEscapeHandler = null;
   var pdpMetadataDrawerWired = false;
   /** Editable metadata keys when the drawer was opened (for PATCH null removals). */
   var pdpMetadataOrigEditableKeys = [];
   var pdpJsonProductRef = null;
-  var pdpJsonEscapeHandler = null;
   var pdpJsonDrawerWired = false;
   var pdpJsonViewerProductRef = null;
-  var pdpJsonViewerEscapeHandler = null;
   var pdpJsonViewerWired = false;
   var pdpCvProductRef = null;
-  var pdpCvEscapeHandler = null;
   var pdpCvWired = false;
   var pdpCvStep = 1;
   var pdpCvCurrencies = [];
@@ -4006,16 +4066,9 @@
     document.body.classList.remove('pdp-co-drawer-open');
   }
 
-  function pdpTeardownCreateOptionDrawerKeys() {
-    if (pdpCreateOptionEscapeHandler) {
-      document.removeEventListener('keydown', pdpCreateOptionEscapeHandler, true);
-      pdpCreateOptionEscapeHandler = null;
-    }
-  }
-
   function closePdpCreateOptionDrawer() {
     pdpHideCreateOptionDrawerUi();
-    pdpTeardownCreateOptionDrawerKeys();
+    ucDrawer.unbindEscape();
     pdpCoEditOptionId = null;
     if (!isPdpOptionsDrawerPath()) return;
     var pid = getProductDetailId();
@@ -4028,7 +4081,7 @@
     if (document.getElementById('pdpCoDrawer')) return;
     var wrap = document.createElement('div');
     wrap.innerHTML =
-      '<div id="pdpCoBackdrop" class="pdp-co-backdrop pdp-edit-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="pdpCoBackdrop" class="uc-drawer-backdrop pdp-co-backdrop pdp-edit-backdrop hidden" aria-hidden="true"></div>' +
       '<div id="pdpCoDrawer" class="pdp-co-drawer pdp-edit-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="pdpCoTitleHeading">' +
       '<header class="pdp-edit-head">' +
       '<h2 id="pdpCoTitleHeading" class="pdp-edit-title">Create Option</h2>' +
@@ -4100,15 +4153,14 @@
     } else if (!opts.skipUrl && !pdpCoEditOptionId && !isPdpOptionsCreatePath()) {
       history.pushState({ pdpCreateOption: true }, '', '/app/products/' + encodeURIComponent(product.id) + '/options/create');
     }
-    pdpTeardownCreateOptionDrawerKeys();
-    pdpCreateOptionEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpCreateOptionDrawer();
       }
-    };
-    document.addEventListener('keydown', pdpCreateOptionEscapeHandler, true);
+    }, true);
     if (ti) ti.focus();
 
     if (!pdpCreateOptionDrawerWired) {
@@ -4269,16 +4321,9 @@
     document.body.classList.remove('pdp-vo-drawer-open');
   }
 
-  function pdpTeardownVariantOptDrawerKeys() {
-    if (pdpVoEscapeHandler) {
-      document.removeEventListener('keydown', pdpVoEscapeHandler, true);
-      pdpVoEscapeHandler = null;
-    }
-  }
-
   function closePdpVariantOptDrawer() {
     pdpHideVariantOptDrawerUi();
-    pdpTeardownVariantOptDrawerKeys();
+    ucDrawer.unbindEscape();
     pdpVoProductRef = null;
     pdpVoVariantRef = null;
   }
@@ -4287,7 +4332,7 @@
     if (document.getElementById('pdpVoDrawer')) return;
     var wrap = document.createElement('div');
     wrap.innerHTML =
-      '<div id="pdpVoBackdrop" class="pdp-vo-backdrop pdp-edit-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="pdpVoBackdrop" class="uc-drawer-backdrop pdp-vo-backdrop pdp-edit-backdrop hidden" aria-hidden="true"></div>' +
       '<div id="pdpVoDrawer" class="pdp-vo-drawer pdp-edit-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="pdpVoHeading">' +
       '<header class="pdp-edit-head">' +
       '<h2 id="pdpVoHeading" class="pdp-edit-title">Variant options</h2>' +
@@ -4369,15 +4414,14 @@
       bd.setAttribute('aria-hidden', 'false');
     }
     document.body.classList.add('pdp-vo-drawer-open');
-    pdpTeardownVariantOptDrawerKeys();
-    pdpVoEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpVariantOptDrawer();
       }
-    };
-    document.addEventListener('keydown', pdpVoEscapeHandler, true);
+    }, true);
 
     if (!pdpVoDrawerWired) {
       pdpVoDrawerWired = true;
@@ -4628,16 +4672,9 @@
     }
   }
 
-  function pdpTeardownJsonViewerKeys() {
-    if (pdpJsonViewerEscapeHandler) {
-      document.removeEventListener('keydown', pdpJsonViewerEscapeHandler, true);
-      pdpJsonViewerEscapeHandler = null;
-    }
-  }
-
   function closePdpJsonViewer() {
     pdpHideJsonViewerUi();
-    pdpTeardownJsonViewerKeys();
+    ucDrawer.unbindEscape();
     pdpJsonViewerProductRef = null;
   }
 
@@ -4645,7 +4682,7 @@
     if (document.getElementById('pdpJsonViewerModal')) return;
     var wrap = document.createElement('div');
     wrap.innerHTML =
-      '<div id="pdpJsonViewerBackdrop" class="pdp-edit-backdrop pdp-meta-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="pdpJsonViewerBackdrop" class="uc-drawer-backdrop pdp-edit-backdrop pdp-meta-backdrop hidden" aria-hidden="true"></div>' +
       '<div id="pdpJsonViewerModal" class="pdp-edit-drawer pdp-meta-drawer pdp-json-view-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="pdpJsonViewerTitle">' +
       '<header class="pdp-edit-head">' +
       '<div class="pdp-json-view-drawer-head">' +
@@ -4682,15 +4719,14 @@
     modal.setAttribute('aria-hidden', 'false');
     bd.classList.remove('hidden');
     bd.setAttribute('aria-hidden', 'false');
-    pdpTeardownJsonViewerKeys();
-    pdpJsonViewerEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (modal && !modal.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpJsonViewer();
       }
-    };
-    document.addEventListener('keydown', pdpJsonViewerEscapeHandler, true);
+    }, true);
 
     if (!pdpJsonViewerWired) {
       pdpJsonViewerWired = true;
@@ -4721,24 +4757,10 @@
     }
   }
 
-  function pdpTeardownJsonDrawerKeys() {
-    if (pdpJsonEscapeHandler) {
-      document.removeEventListener('keydown', pdpJsonEscapeHandler, true);
-      pdpJsonEscapeHandler = null;
-    }
-  }
-
   function closePdpJsonDrawer() {
     pdpHideJsonDrawerUi();
-    pdpTeardownJsonDrawerKeys();
+    ucDrawer.unbindEscape();
     pdpJsonProductRef = null;
-  }
-
-  function pdpCvTeardownKeys() {
-    if (pdpCvEscapeHandler) {
-      document.removeEventListener('keydown', pdpCvEscapeHandler, true);
-      pdpCvEscapeHandler = null;
-    }
   }
 
   function pdpCvHideUi() {
@@ -4757,7 +4779,7 @@
 
   function closePdpCreateVariantWizard() {
     pdpCvHideUi();
-    pdpCvTeardownKeys();
+    ucDrawer.unbindEscape();
     pdpCvProductRef = null;
     pdpCvStep = 1;
     pdpCvKitComponents = [];
@@ -5214,15 +5236,14 @@
       root.setAttribute('aria-hidden', 'false');
     }
     document.body.classList.add('pdp-cv-open');
-    pdpCvTeardownKeys();
-    pdpCvEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpCreateVariantWizard();
       }
-    };
-    document.addEventListener('keydown', pdpCvEscapeHandler, true);
+    }, true);
 
     Promise.all([pdpCvLoadCurrencies(), pdpCvLoadInventoryItems(), pdpCvLoadKitComponents(p.id)]).then(function() {
       pdpCvBuildPriceGrid();
@@ -5392,7 +5413,7 @@
     if (document.getElementById('pdpJsonDrawer')) return;
     var wrap = document.createElement('div');
     wrap.innerHTML =
-      '<div id="pdpJsonBackdrop" class="pdp-edit-backdrop pdp-meta-backdrop pdp-json-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="pdpJsonBackdrop" class="uc-drawer-backdrop pdp-edit-backdrop pdp-meta-backdrop pdp-json-backdrop hidden" aria-hidden="true"></div>' +
       '<div id="pdpJsonDrawer" class="pdp-edit-drawer pdp-meta-drawer pdp-json-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="pdpJsonDrawerTitle">' +
       '<header class="pdp-edit-head">' +
       '<h2 id="pdpJsonDrawerTitle" class="pdp-edit-title">Edit raw JSON</h2>' +
@@ -5430,15 +5451,14 @@
     root.setAttribute('aria-hidden', 'false');
     bd.classList.remove('hidden');
     bd.setAttribute('aria-hidden', 'false');
-    pdpTeardownJsonDrawerKeys();
-    pdpJsonEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpJsonDrawer();
       }
-    };
-    document.addEventListener('keydown', pdpJsonEscapeHandler, true);
+    }, true);
     ta.focus();
 
     if (!pdpJsonDrawerWired) {
@@ -5519,16 +5539,9 @@
     }
   }
 
-  function pdpTeardownEditDrawerKeys() {
-    if (pdpEditEscapeHandler) {
-      document.removeEventListener('keydown', pdpEditEscapeHandler, true);
-      pdpEditEscapeHandler = null;
-    }
-  }
-
   function closePdpEditDrawer() {
     pdpHideEditDrawerUi();
-    pdpTeardownEditDrawerKeys();
+    ucDrawer.unbindEscape();
     if (!isPdpEditPath()) return;
     if (history.state && history.state.pdpEdit) {
       history.back();
@@ -5544,7 +5557,7 @@
     if (document.getElementById('pdpEditDrawer')) return;
     var wrap = document.createElement('div');
     wrap.innerHTML =
-      '<div id="pdpEditBackdrop" class="pdp-edit-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="pdpEditBackdrop" class="uc-drawer-backdrop pdp-edit-backdrop hidden" aria-hidden="true"></div>' +
       '<div id="pdpEditDrawer" class="pdp-edit-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="pdpEditDrawerTitle">' +
       '<header class="pdp-edit-head">' +
       '<h2 id="pdpEditDrawerTitle" class="pdp-edit-title">Edit Product</h2>' +
@@ -5595,16 +5608,9 @@
     }
   }
 
-  function pdpTeardownMetadataDrawerKeys() {
-    if (pdpMetadataEscapeHandler) {
-      document.removeEventListener('keydown', pdpMetadataEscapeHandler, true);
-      pdpMetadataEscapeHandler = null;
-    }
-  }
-
   function closePdpMetadataDrawer() {
     pdpHideMetadataDrawerUi();
-    pdpTeardownMetadataDrawerKeys();
+    ucDrawer.unbindEscape();
     pdpMetadataProductRef = null;
     pdpMetadataOrigEditableKeys = [];
   }
@@ -5661,7 +5667,7 @@
     if (document.getElementById('pdpMetadataDrawer')) return;
     var wrap = document.createElement('div');
     wrap.innerHTML =
-      '<div id="pdpMetadataBackdrop" class="pdp-edit-backdrop pdp-meta-backdrop hidden" aria-hidden="true"></div>' +
+      '<div id="pdpMetadataBackdrop" class="uc-drawer-backdrop pdp-edit-backdrop pdp-meta-backdrop hidden" aria-hidden="true"></div>' +
       '<div id="pdpMetadataDrawer" class="pdp-edit-drawer pdp-meta-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="pdpMetadataDrawerTitle">' +
       '<header class="pdp-edit-head">' +
       '<h2 id="pdpMetadataDrawerTitle" class="pdp-edit-title">Edit Metadata</h2>' +
@@ -5735,15 +5741,14 @@
     root.setAttribute('aria-hidden', 'false');
     bd.classList.remove('hidden');
     bd.setAttribute('aria-hidden', 'false');
-    pdpTeardownMetadataDrawerKeys();
-    pdpMetadataEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpMetadataDrawer();
       }
-    };
-    document.addEventListener('keydown', pdpMetadataEscapeHandler, true);
+    }, true);
     var firstIn = tbody && tbody.querySelector('.pdp-meta-k');
     if (firstIn) firstIn.focus();
 
@@ -6517,16 +6522,9 @@
     document.body.classList.remove('pdp-media-overlay-open');
   }
 
-  function pdpTeardownMediaOverlayKeys() {
-    if (pdpMediaEscapeHandler) {
-      document.removeEventListener('keydown', pdpMediaEscapeHandler, true);
-      pdpMediaEscapeHandler = null;
-    }
-  }
-
   function closePdpMediaOverlay() {
     pdpHideMediaOverlayUi();
-    pdpTeardownMediaOverlayKeys();
+    ucDrawer.unbindEscape();
   }
 
   function openPdpMediaOverlay(p) {
@@ -6550,15 +6548,14 @@
     }
     document.body.classList.add('pdp-media-overlay-open');
 
-    pdpTeardownMediaOverlayKeys();
-    pdpMediaEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpMediaOverlay();
       }
-    };
-    document.addEventListener('keydown', pdpMediaEscapeHandler, true);
+    }, true);
 
     if (!pdpMediaOverlayWired) {
       pdpMediaOverlayWired = true;
@@ -6673,15 +6670,14 @@
     if (!opts.skipUrl && !isPdpEditPath()) {
       history.pushState({ pdpEdit: true }, '', '/app/products/' + encodeURIComponent(product.id) + '/edit');
     }
-    pdpTeardownEditDrawerKeys();
-    pdpEditEscapeHandler = function(ke) {
+    ucDrawer.unbindEscape();
+    ucDrawer.bindEscape(function(ke) {
       if (ke.key !== 'Escape') return;
       if (root && !root.classList.contains('hidden')) {
         ke.preventDefault();
         closePdpEditDrawer();
       }
-    };
-    document.addEventListener('keydown', pdpEditEscapeHandler, true);
+    }, true);
     var ti = document.getElementById('pdpEditTitle');
     if (ti) ti.focus();
 
@@ -6756,7 +6752,7 @@
           throw new Error(msg);
         }
         pdpHideEditDrawerUi();
-        pdpTeardownEditDrawerKeys();
+        ucDrawer.unbindEscape();
         if (isPdpEditPath()) {
           history.replaceState({}, '', '/app/products/' + encodeURIComponent(p.id));
         }
@@ -6892,23 +6888,18 @@
     clearPageActions();
     detachProductListKeys();
     pdpHideMetadataDrawerUi();
-    pdpTeardownMetadataDrawerKeys();
     pdpMetadataProductRef = null;
     pdpMetadataOrigEditableKeys = [];
     pdpHideJsonDrawerUi();
-    pdpTeardownJsonDrawerKeys();
     pdpJsonProductRef = null;
     pdpHideJsonViewerUi();
-    pdpTeardownJsonViewerKeys();
     pdpJsonViewerProductRef = null;
     pdpHideEditDrawerUi();
-    pdpTeardownEditDrawerKeys();
-    pdpTeardownCreateOptionDrawerKeys();
-    pdpTeardownVariantOptDrawerKeys();
     pdpHideVariantOptDrawerUi();
     if (!isPdpOptionsDrawerPath()) {
       pdpHideCreateOptionDrawerUi();
     }
+    ucDrawer.unbindEscape();
     if (pdpOutsideClose) {
       document.removeEventListener('click', pdpOutsideClose, true);
       pdpOutsideClose = null;
@@ -7980,9 +7971,7 @@
       document.removeEventListener('click', pdpOutsideClose, true);
       pdpOutsideClose = null;
     }
-    pdpTeardownEditDrawerKeys();
-    pdpTeardownCreateOptionDrawerKeys();
-    pdpTeardownVariantOptDrawerKeys();
+    ucDrawer.unbindEscape();
     var pathNorm = window.location.pathname.replace(/\/$/, '') || '/app/products';
     if (pathNorm === '/app/settings') {
       try {
