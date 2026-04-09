@@ -4,7 +4,9 @@ server:
 
 spring:
   config:
-    import: optional:file:./application-local.yml
+    import:
+      - optional:file:./application-local.yml
+      - optional:file:admin-rbac-service/application-local.yml
   application:
     name: admin-rbac-service
   datasource:
@@ -36,7 +38,7 @@ app:
   email:
     enabled: ${EMAIL_ENABLED:true}
     provider: ${EMAIL_PROVIDER:sendgrid}
-    from-address: ${EMAIL_FROM_ADDRESS:commerceunified@gmail.com}
+    from-address: ${EMAIL_FROM_ADDRESS:tcsteggroup@gmail.com}
     from-name: ${EMAIL_FROM_NAME:Unified Commerce Site}
     sendgrid:
       api-key: ${SENDGRID_API_KEY:}

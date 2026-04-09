@@ -2,19 +2,39 @@ package com.tcs.commerce.rbac.config;
 
 import com.tcs.commerce.email.EmailNotificationSender;
 import com.tcs.commerce.email.EmailSenderFactory;
+import com.tcs.commerce.email.NoOpEmailNotificationSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class EmailConfiguration {
 
+    private static final Logger log = LoggerFactory.getLogger(EmailConfiguration.class);
+
     @Bean
     public EmailNotificationSender emailNotificationSender(EmailProperties emailProperties) {
-        return EmailSenderFactory.create(
+        EmailNotificationSender sender = EmailSenderFactory.create(
                 emailProperties.isEnabled(),
                 emailProperties.getProvider(),
                 emailProperties.getSendgrid().getApiKey(),
                 emailProperties.getFromAddress(),
                 emailProperties.getFromName());
+        if (emailProperties.isEnabled()
+                && "sendgrid".equalsIgnoreCase(String.valueOf(emailProperties.getProvider()).trim())) {
+            if (sender instanceof NoOpEmailNotificationSender) {
+                log.warn(
+                        "Email: provider is sendgrid but API key or from-address is empty — no mail will be sent. "
+                                + "Set SENDGRID_API_KEY or place application-local.yml (with app.email.sendgrid.api-key) in the process working directory, "
+                                + "or run spring-boot from the admin-rbac-service folder so optional:file:./application-local.yml loads.");
+            } else {
+                log.info(
+                        "Email: SendGrid active (from: \"{}\" <{}>)",
+                        emailProperties.getFromName(),
+                        emailProperties.getFromAddress());
+            }
+        }
+        return sender;
     }
 }
