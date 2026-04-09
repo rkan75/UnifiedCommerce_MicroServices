@@ -4,7 +4,11 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import HomeBadges from "@modules/home/components/home-badges"
 import type { PastPurchaseItem } from "@modules/home/types/past-purchase"
 import { HttpTypes } from "@medusajs/types"
-import { getTranslation } from "@lib/i18n/translations"
+import {
+  type Locale,
+  getTranslation,
+  resolveTranslationLocale,
+} from "@lib/i18n/translations"
 import { useEffect, useState } from "react"
 
 function getCookie(name: string): string | null {
@@ -69,13 +73,9 @@ export default function Hero({
   categories = null,
   carouselProducts = null,
 }: HeroProps) {
-  const [locale, setLocale] = useState<"en" | "es">(() => {
+  const [locale, setLocale] = useState<Locale>(() => {
     if (typeof window !== "undefined") {
-      const cookieLocale = getCookie("_medusa_locale")
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        return lang === "es" ? "es" : "en"
-      }
+      return resolveTranslationLocale(getCookie("_medusa_locale"))
     }
     return "en"
   })
@@ -84,19 +84,13 @@ export default function Hero({
     if (typeof window === "undefined") return
 
     const updateLocale = () => {
-      const cookieLocale = getCookie("_medusa_locale")
-      let newLocale: "en" | "es" = "en"
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        newLocale = lang === "es" ? "es" : "en"
-      }
-      setLocale(newLocale)
+      setLocale(resolveTranslationLocale(getCookie("_medusa_locale")))
     }
 
     updateLocale()
 
     const handleLocaleChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ locale: "en" | "es" }>
+      const customEvent = e as CustomEvent<{ locale: Locale }>
       if (customEvent.detail?.locale) {
         setLocale(customEvent.detail.locale)
       } else {

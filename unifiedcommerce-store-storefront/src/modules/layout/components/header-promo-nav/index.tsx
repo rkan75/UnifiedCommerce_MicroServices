@@ -1,7 +1,7 @@
 import type { HeaderPromoDestinations } from "@lib/util/header-promo-destinations"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { getLocale } from "@lib/data/locale-actions"
-import { getTranslation } from "@lib/i18n/translations"
+import { getTranslation, resolveTranslationLocale } from "@lib/i18n/translations"
 
 const GNC_BLOG_URL = "https://www.gnc.com/blog"
 
@@ -11,8 +11,8 @@ export default async function HeaderPromoNav({
   promo: HeaderPromoDestinations
 }) {
   const localeCookie = await getLocale()
-  const locale = (localeCookie?.split("-")[0] || "en") as "en" | "es"
-  const t = (key: string) => getTranslation(locale, key)
+  const t = (key: string) =>
+    getTranslation(resolveTranslationLocale(localeCookie), key)
 
   const linkBase =
     "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap py-1 text-[11px] font-bold uppercase tracking-wide text-grey-90 transition-colors hover:text-header-red small:text-xs"

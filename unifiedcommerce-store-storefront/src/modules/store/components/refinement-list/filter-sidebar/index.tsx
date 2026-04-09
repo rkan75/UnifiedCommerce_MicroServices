@@ -5,7 +5,11 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
-import { getTranslation } from "@lib/i18n/translations"
+import {
+  type Locale,
+  getTranslation,
+  resolveTranslationLocale,
+} from "@lib/i18n/translations"
 import {
   departmentFacetEntries,
   findCategoryInTree,
@@ -69,13 +73,9 @@ export default function FilterSidebar({
   const params = useParams()
   const countryCode = (params?.countryCode as string) || "us"
 
-  const [locale, setLocale] = useState<"en" | "es">(() => {
+  const [locale, setLocale] = useState<Locale>(() => {
     if (typeof window !== "undefined") {
-      const cookieLocale = getCookie("_medusa_locale")
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        return lang === "es" ? "es" : "en"
-      }
+      return resolveTranslationLocale(getCookie("_medusa_locale"))
     }
     return "en"
   })
@@ -83,13 +83,7 @@ export default function FilterSidebar({
   useEffect(() => {
     const updateLocale = () => {
       if (typeof window === "undefined") return
-      const cookieLocale = getCookie("_medusa_locale")
-      let newLocale: "en" | "es" = "en"
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        newLocale = lang === "es" ? "es" : "en"
-      }
-      setLocale(newLocale)
+      setLocale(resolveTranslationLocale(getCookie("_medusa_locale")))
     }
     updateLocale()
     const handleLocaleChange = () => updateLocale()

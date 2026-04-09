@@ -4,7 +4,11 @@ import { Listbox, Transition } from "@headlessui/react"
 import { ChevronUpDown } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { Fragment, useCallback, useEffect, useState } from "react"
-import { getTranslation } from "@lib/i18n/translations"
+import {
+  type Locale,
+  getTranslation,
+  resolveTranslationLocale,
+} from "@lib/i18n/translations"
 import { SortOptions } from "../sort-products"
 
 function getCookie(name: string): string | null {
@@ -32,13 +36,9 @@ export default function SortProductsDropdown({
   setQueryParams,
   "data-testid": dataTestId,
 }: SortProductsDropdownProps) {
-  const [locale, setLocale] = useState<"en" | "es">(() => {
+  const [locale, setLocale] = useState<Locale>(() => {
     if (typeof window !== "undefined") {
-      const cookieLocale = getCookie("_medusa_locale")
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        return lang === "es" ? "es" : "en"
-      }
+      return resolveTranslationLocale(getCookie("_medusa_locale"))
     }
     return "en"
   })
@@ -46,13 +46,7 @@ export default function SortProductsDropdown({
   useEffect(() => {
     const updateLocale = () => {
       if (typeof window === "undefined") return
-      const cookieLocale = getCookie("_medusa_locale")
-      let newLocale: "en" | "es" = "en"
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        newLocale = lang === "es" ? "es" : "en"
-      }
-      setLocale(newLocale)
+      setLocale(resolveTranslationLocale(getCookie("_medusa_locale")))
     }
     updateLocale()
     const handleLocaleChange = () => updateLocale()

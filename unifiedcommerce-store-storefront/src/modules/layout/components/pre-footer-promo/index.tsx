@@ -1,5 +1,5 @@
 import { getLocale } from "@lib/data/locale-actions"
-import { getTranslation } from "@lib/i18n/translations"
+import { getTranslation, resolveTranslationLocale } from "@lib/i18n/translations"
 import Link from "next/link"
 
 type PreFooterPromoProps = {
@@ -11,8 +11,8 @@ type PreFooterPromoProps = {
  */
 export default async function PreFooterPromo({ countryCode }: PreFooterPromoProps) {
   const localeCookie = await getLocale()
-  const locale = (localeCookie?.split("-")[0] || "en") as "en" | "es"
-  const t = (key: string) => getTranslation(locale, key)
+  const t = (key: string) =>
+    getTranslation(resolveTranslationLocale(localeCookie), key)
   const plpHref = `/${countryCode}/store`
 
   return (

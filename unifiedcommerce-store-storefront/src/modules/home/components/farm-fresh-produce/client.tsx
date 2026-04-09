@@ -15,7 +15,11 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import { ShoppingCart } from "@medusajs/icons"
 import { useShopInStoreListActive } from "@lib/hooks/use-shop-in-store-list-mode"
 import { PRIMARY_ADD_TO_CART_BUTTON_CLASS } from "@lib/ui/primary-add-to-cart-button"
-import { getTranslation } from "@lib/i18n/translations"
+import {
+  type Locale,
+  getTranslation,
+  resolveTranslationLocale,
+} from "@lib/i18n/translations"
 
 function productImageUrl(product: HttpTypes.StoreProduct): string | null {
   const thumb = product.thumbnail
@@ -49,13 +53,9 @@ export default function FarmFreshProduceClient({
   const router = useRouter()
   const isShopInStoreList = useShopInStoreListActive()
   const [addingToCart, setAddingToCart] = useState<Record<string, boolean>>({})
-  const [locale, setLocale] = useState<"en" | "es">(() => {
+  const [locale, setLocale] = useState<Locale>(() => {
     if (typeof window !== "undefined") {
-      const cookieLocale = getCookie("_medusa_locale")
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        return lang === "es" ? "es" : "en"
-      }
+      return resolveTranslationLocale(getCookie("_medusa_locale"))
     }
     return "en"
   })
@@ -63,20 +63,14 @@ export default function FarmFreshProduceClient({
   useEffect(() => {
     const updateLocale = () => {
       if (typeof window === "undefined") return
-      const cookieLocale = getCookie("_medusa_locale")
-      let newLocale: "en" | "es" = "en"
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        newLocale = lang === "es" ? "es" : "en"
-      }
-      setLocale(newLocale)
+      setLocale(resolveTranslationLocale(getCookie("_medusa_locale")))
     }
 
     updateLocale()
 
     // Listen for locale change events
     const handleLocaleChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ locale: "en" | "es" }>
+      const customEvent = e as CustomEvent<{ locale: Locale }>
       if (customEvent.detail?.locale) {
         setLocale(customEvent.detail.locale)
       } else {

@@ -10,10 +10,12 @@ import { getTranslation, resolveTranslationLocale } from "@lib/i18n/translations
 
 export default async function Footer() {
   const localeCookie = await getLocale()
-  const locale = localeCookie?.split("-")[0] || "en"
-  const t = (key: string) => getTranslation(locale as "en" | "es", key)
+  const localeForCms =
+    localeCookie?.split(/[-_]/)[0]?.toLowerCase() || "en"
+  const t = (key: string) =>
+    getTranslation(resolveTranslationLocale(localeCookie), key)
 
-  const contentfulFooter = await getWebsiteFooter(locale)
+  const contentfulFooter = await getWebsiteFooter(localeForCms)
 
   // Debug: Log Contentful footer data (remove in production)
   if (process.env.NODE_ENV === "development") {
@@ -22,7 +24,7 @@ export default async function Footer() {
       copyrightText: contentfulFooter?.copyrightText,
       hasSections: !!contentfulFooter?.sections?.length,
       hasBottomLinks: !!contentfulFooter?.bottomLinks?.length,
-      locale,
+      locale: localeForCms,
     })
   }
 

@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { Heading, Text } from "@medusajs/ui"
 import { getLocale } from "@lib/data/locale-actions"
-import { getTranslation } from "@lib/i18n/translations"
+import { getTranslation, resolveTranslationLocale } from "@lib/i18n/translations"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { Buildings, Users, MapPin, CheckCircleSolid } from "@medusajs/icons"
 
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 
 export default async function OurStoryPage() {
   const localeCookie = await getLocale()
-  const locale = localeCookie?.split("-")[0] || "en"
-  const t = (key: string) => getTranslation(locale as "en" | "es", key)
+  const t = (key: string) =>
+    getTranslation(resolveTranslationLocale(localeCookie), key)
 
   return (
     <div className="content-container py-6 small:py-12">

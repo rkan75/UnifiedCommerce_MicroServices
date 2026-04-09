@@ -20,7 +20,11 @@ import {
 import { formatMinorCurrency } from "@lib/util/money"
 import Thumbnail from "@modules/products/components/thumbnail"
 import useToggleState from "@lib/hooks/use-toggle-state"
-import { getTranslation } from "@lib/i18n/translations"
+import {
+  type Locale,
+  getTranslation,
+  resolveTranslationLocale,
+} from "@lib/i18n/translations"
 import HomeProductCarousel from "@modules/home/components/home-product-carousel"
 import type { PastPurchaseItem } from "@modules/home/types/past-purchase"
 import { useShopInStoreListActive } from "@lib/hooks/use-shop-in-store-list-mode"
@@ -70,13 +74,9 @@ export default function HomeBadges({
   >(null)
   const [addingVariantId, setAddingVariantId] = useState<string | null>(null)
   const [favoriteItems, setFavoriteItems] = useState<FavoriteItem[]>([])
-  const [locale, setLocale] = useState<"en" | "es">(() => {
+  const [locale, setLocale] = useState<Locale>(() => {
     if (typeof window !== "undefined") {
-      const cookieLocale = getCookie("_medusa_locale")
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        return lang === "es" ? "es" : "en"
-      }
+      return resolveTranslationLocale(getCookie("_medusa_locale"))
     }
     return "en"
   })
@@ -84,20 +84,14 @@ export default function HomeBadges({
   useEffect(() => {
     const updateLocale = () => {
       if (typeof window === "undefined") return
-      const cookieLocale = getCookie("_medusa_locale")
-      let newLocale: "en" | "es" = "en"
-      if (cookieLocale) {
-        const lang = cookieLocale.split("-")[0].toLowerCase()
-        newLocale = lang === "es" ? "es" : "en"
-      }
-      setLocale(newLocale)
+      setLocale(resolveTranslationLocale(getCookie("_medusa_locale")))
     }
 
     updateLocale()
 
     // Listen for locale change events
     const handleLocaleChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ locale: "en" | "es" }>
+      const customEvent = e as CustomEvent<{ locale: Locale }>
       if (customEvent.detail?.locale) {
         setLocale(customEvent.detail.locale)
       } else {
