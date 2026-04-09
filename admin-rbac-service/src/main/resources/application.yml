@@ -3,6 +3,8 @@ server:
   port: ${SERVER_PORT:8088}
 
 spring:
+  config:
+    import: optional:file:./application-local.yml
   application:
     name: admin-rbac-service
   datasource:
@@ -30,6 +32,14 @@ app:
   backoffice:
     super-admin-role-name: ${BACKOFFICE_SUPER_ADMIN_ROLE_NAME:Super Admin}
     store-admin-user-role-name: ${BACKOFFICE_STORE_ADMIN_USER_ROLE_NAME:Store Admin User}
+  # Transactional email (SendGrid or noop). Override secrets in gitignored application-local.yml or SENDGRID_API_KEY.
+  email:
+    enabled: ${EMAIL_ENABLED:true}
+    provider: ${EMAIL_PROVIDER:sendgrid}
+    from-address: ${EMAIL_FROM_ADDRESS:commerceunified@gmail.com}
+    from-name: ${EMAIL_FROM_NAME:Unified Commerce Site}
+    sendgrid:
+      api-key: ${SENDGRID_API_KEY:}
   rbac:
     table-schema: ${RBAC_TABLE_SCHEMA:public}
     user-table: ${RBAC_USER_TABLE:user}

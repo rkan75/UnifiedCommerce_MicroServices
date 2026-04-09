@@ -5,6 +5,8 @@ server:
   port: ${SERVER_PORT:8087}
 
 spring:
+  config:
+    import: optional:file:./application-local.yml
   application:
     name: customer-service
   datasource:
@@ -19,6 +21,13 @@ spring:
 
 # JWT secret for signing and validating tokens (auth is in this service; no Medusa)
 app:
+  email:
+    enabled: ${EMAIL_ENABLED:true}
+    provider: ${EMAIL_PROVIDER:sendgrid}
+    from-address: ${EMAIL_FROM_ADDRESS:commerceunified@gmail.com}
+    from-name: ${EMAIL_FROM_NAME:Unified Commerce Site}
+    sendgrid:
+      api-key: ${SENDGRID_API_KEY:}
   customer:
     jwt-secret: ${JWT_SECRET:}
     jwt-expires-seconds: ${JWT_EXPIRES_SECONDS:604800}
@@ -27,3 +36,6 @@ app:
     auth-table: ${AUTH_TABLE:customer_auth}
     table-schema: ${CUSTOMER_TABLE_SCHEMA:public}
     reset-token-valid-seconds: ${RESET_TOKEN_VALID_SECONDS:3600}
+    # Required for password-reset emails: one %s for the raw token (path/query must match storefront)
+    password-reset-url-template: ${CUSTOMER_PASSWORD_RESET_URL_TEMPLATE:}
+    welcome-email-enabled: ${CUSTOMER_WELCOME_EMAIL_ENABLED:false}

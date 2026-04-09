@@ -4645,6 +4645,174 @@ body.pdp-cv-open {
   line-height: 1.5;
   max-width: 48rem;
 }
+
+/* Users list (Settings > Users) — matches Store / Currencies toolbar + table pattern */
+.settings-users-split-head {
+  align-items: center;
+  flex-wrap: wrap;
+}
+.settings-users-head-right {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+.settings-users-hero-tools {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.settings-users-hero-tools .settings-cur-search {
+  flex: 1 1 0;
+  min-width: 120px;
+  max-width: 280px;
+}
+.settings-users-hero-tools .settings-cur-filter-btn,
+.settings-users-hero-tools .settings-cur-sort-open,
+.settings-users-hero-tools #uadmInviteBtn {
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .settings-users-hero-tools {
+    flex-wrap: wrap;
+  }
+}
+.settings-users-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 1.5rem 0.65rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+.settings-users-subbar-spacer {
+  flex: 1;
+}
+.settings-users-col-menu .settings-store-dropdown-item {
+  font-size: 0.82rem;
+}
+.settings-users-col-menu label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  margin: 0;
+  border-radius: 6px;
+}
+.settings-users-col-menu label:hover {
+  background: #f9fafb;
+}
+.settings-users-card-body {
+  padding-top: 0.85rem;
+}
+.settings-table-users {
+  table-layout: auto;
+}
+.settings-table-users th:nth-child(1),
+.settings-table-users td:nth-child(1) {
+  min-width: 12rem;
+}
+.settings-table-users .settings-th-actions,
+.settings-table-users .settings-td-actions {
+  width: 2.85rem;
+  text-align: right;
+}
+.settings-users-filter-dropdown {
+  min-width: 12rem;
+}
+.settings-store-dropdown.settings-users-filter-dropdown {
+  z-index: 200;
+}
+
+/* Users sort menu: column list + separator + A→Z / Z→A (matches Settings Users design) */
+.settings-store-dropdown.uadm-sort-menu {
+  min-width: 12rem;
+  padding: 0.4rem 0;
+}
+.uadm-sort-fields,
+.uadm-sort-order {
+  display: flex;
+  flex-direction: column;
+}
+.uadm-sort-separator {
+  height: 1px;
+  margin: 0.35rem 0.65rem;
+  background: #e5e7eb;
+  border: none;
+  padding: 0;
+}
+.uadm-sort-field,
+.uadm-sort-dir {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #374151;
+  padding: 0.48rem 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.35;
+  box-sizing: border-box;
+}
+.uadm-sort-field:hover,
+.uadm-sort-dir:hover {
+  background: #f3f4f6;
+}
+.uadm-sort-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
+}
+.uadm-sort-field.is-active .uadm-sort-bullet,
+.uadm-sort-dir.is-active .uadm-sort-bullet {
+  background: #111827;
+  border-color: #111827;
+}
+.uadm-sort-dir-ico {
+  display: inline-flex;
+  width: 1rem;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 600;
+  line-height: 1;
+}
+.uadm-sort-dir.is-active .uadm-sort-dir-ico {
+  color: #111827;
+}
+.settings-users-filter-dropdown .settings-cur-sort-heading {
+  padding-top: 0.5rem;
+}
+.users-page-standalone {
+  max-width: none;
+}
+.users-page-standalone .settings-main-stack {
+  width: 100%;
+}
+.settings-users-role-panel.hidden {
+  display: none !important;
+}
+#uadmRoleSaveMsg.hidden {
+  display: none !important;
+}
+
 @media (max-width: 900px) {
   .settings-layout {
     flex-direction: column;

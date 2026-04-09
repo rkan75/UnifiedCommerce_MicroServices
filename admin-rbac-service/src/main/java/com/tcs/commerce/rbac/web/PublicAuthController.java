@@ -3,6 +3,7 @@ package com.tcs.commerce.rbac.web;
 import com.tcs.commerce.rbac.config.AuthFlowProperties;
 import com.tcs.commerce.rbac.security.AdminJwtHelper;
 import com.tcs.commerce.rbac.service.AdminAuthService;
+import com.tcs.commerce.rbac.service.AuthEmailNotificationService;
 import com.tcs.commerce.rbac.service.InviteRegistrationService;
 import com.tcs.commerce.rbac.service.RbacService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,18 +26,21 @@ public class PublicAuthController {
     private final InviteRegistrationService inviteRegistrationService;
     private final AuthFlowProperties authFlowProps;
     private final AdminJwtHelper jwtHelper;
+    private final AuthEmailNotificationService authEmailNotificationService;
 
     public PublicAuthController(
             RbacService rbacService,
             AdminAuthService adminAuthService,
             InviteRegistrationService inviteRegistrationService,
             AuthFlowProperties authFlowProps,
-            AdminJwtHelper jwtHelper) {
+            AdminJwtHelper jwtHelper,
+            AuthEmailNotificationService authEmailNotificationService) {
         this.rbacService = rbacService;
         this.adminAuthService = adminAuthService;
         this.inviteRegistrationService = inviteRegistrationService;
         this.authFlowProps = authFlowProps;
         this.jwtHelper = jwtHelper;
+        this.authEmailNotificationService = authEmailNotificationService;
     }
 
     /**
@@ -96,8 +100,8 @@ public class PublicAuthController {
             String url = authFlowProps.passwordResetPageUrl(resetJwt.get());
             if (!url.isEmpty()) {
                 res.put("reset_url", url);
+                authEmailNotificationService.sendPasswordResetEmail(email, url);
             }
-            // In production, send email here using reset_url or reset_token
         }
         return ResponseEntity.ok(res);
     }

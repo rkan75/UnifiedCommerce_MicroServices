@@ -14,6 +14,12 @@ public class CustomerProperties {
     private String authTable = "customer_auth";
     private String tableSchema = "public";
     private int resetTokenValidSeconds = 3600;
+    /**
+     * Must contain exactly one {@code %s} for the raw reset token, e.g.
+     * {@code https://shop.example.com/us/account/reset-password?token=%s}
+     */
+    private String passwordResetUrlTemplate = "";
+    private boolean welcomeEmailEnabled = false;
 
     public String getJwtSecret() {
         return jwtSecret;
@@ -69,5 +75,21 @@ public class CustomerProperties {
 
     public void setResetTokenValidSeconds(int resetTokenValidSeconds) {
         this.resetTokenValidSeconds = resetTokenValidSeconds;
+    }
+
+    public String getPasswordResetUrlTemplate() {
+        return passwordResetUrlTemplate != null ? passwordResetUrlTemplate : "";
+    }
+
+    public void setPasswordResetUrlTemplate(String passwordResetUrlTemplate) {
+        this.passwordResetUrlTemplate = passwordResetUrlTemplate;
+    }
+
+    public boolean isWelcomeEmailEnabled() {
+        return welcomeEmailEnabled;
+    }
+
+    public void setWelcomeEmailEnabled(boolean welcomeEmailEnabled) {
+        this.welcomeEmailEnabled = welcomeEmailEnabled;
     }
 }

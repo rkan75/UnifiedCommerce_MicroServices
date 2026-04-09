@@ -1,6 +1,7 @@
 package com.tcs.commerce.rbac.web;
 
 import com.tcs.commerce.rbac.config.AuthFlowProperties;
+import com.tcs.commerce.rbac.service.AuthEmailNotificationService;
 import com.tcs.commerce.rbac.service.RbacService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,15 @@ public class InvitesController {
 
     private final RbacService rbacService;
     private final AuthFlowProperties authFlowProps;
+    private final AuthEmailNotificationService authEmailNotificationService;
 
-    public InvitesController(RbacService rbacService, AuthFlowProperties authFlowProps) {
+    public InvitesController(
+            RbacService rbacService,
+            AuthFlowProperties authFlowProps,
+            AuthEmailNotificationService authEmailNotificationService) {
         this.rbacService = rbacService;
         this.authFlowProps = authFlowProps;
+        this.authEmailNotificationService = authEmailNotificationService;
     }
 
     @GetMapping
@@ -55,6 +61,7 @@ public class InvitesController {
         String regUrl = authFlowProps.registrationPageUrl(inv.getToken() != null ? inv.getToken() : "");
         if (regUrl != null && !regUrl.isEmpty()) {
             responseBody.put("registration_url", regUrl);
+            authEmailNotificationService.sendInviteEmail(email, regUrl);
         }
         return ResponseEntity.ok(responseBody);
     }

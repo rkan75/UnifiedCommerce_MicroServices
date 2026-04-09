@@ -27,11 +27,17 @@ public class AuthService {
     private final JdbcTemplate jdbc;
     private final CustomerProperties props;
     private final JwtHelper jwtHelper;
+    private final CustomerEmailNotificationService customerEmailNotificationService;
 
-    public AuthService(JdbcTemplate jdbc, CustomerProperties props, JwtHelper jwtHelper) {
+    public AuthService(
+            JdbcTemplate jdbc,
+            CustomerProperties props,
+            JwtHelper jwtHelper,
+            CustomerEmailNotificationService customerEmailNotificationService) {
         this.jdbc = jdbc;
         this.props = props;
         this.jwtHelper = jwtHelper;
+        this.customerEmailNotificationService = customerEmailNotificationService;
     }
 
     private String authTable() {
@@ -79,6 +85,11 @@ public class AuthService {
             );
             var tokenOpt = jwtHelper.generateToken(customerId, authId);
             if (tokenOpt.isPresent()) {
+                try {
+                    customerEmailNotificationService.sendWelcomeEmail(normalizedEmail, firstName);
+                } catch (Exception ex) {
+                    log.debug("Welcome email skipped: {}", ex.getMessage());
+                }
                 return RegisterResult.ok(tokenOpt.get());
             }
             return RegisterResult.jwtError(); // customer+auth created but JWT failed (e.g. JWT_SECRET not set)
@@ -150,7 +161,11 @@ public class AuthService {
                 token, java.sql.Timestamp.from(expires), normalizedEmail
             );
             if (n > 0) {
-                // TODO: send email with reset link containing token. For now we just store the token.
+                try {
+                    customerEmailNotificationService.sendPasswordResetEmail(normalizedEmail, token);
+                } catch (Exception ex) {
+                    log.debug("Password reset email skipped: {}", ex.getMessage());
+                }
                 return true;
             }
             return true; // don't reveal whether email exists

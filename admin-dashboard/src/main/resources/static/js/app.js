@@ -190,6 +190,8 @@
   }
 
   var productListKeyHandler = null;
+  /** Root element passed to wireUsersAdminPage; cleared on teardown for document click handler. */
+  var uadmWiredRoot = null;
   var exportToastTimer = null;
   var productFilterDocClick = null;
   var productUi = {
@@ -2215,8 +2217,698 @@
       .catch(function() { showError('Failed to load regions.'); });
   }
 
-  function renderUsers() {
-    setTitle('Users');
+  var UADM_COL_STORAGE = 'uc_admin_users_table_cols_v1';
+  var UADM_COL_LABELS = { email: 'Email', first_name: 'First Name', last_name: 'Last Name', created_at: 'Created', updated_at: 'Updated' };
+  var UADM_COL_ORDER = ['email', 'first_name', 'last_name', 'created_at', 'updated_at'];
+
+  function uadmSvgSearch() {
+    return (
+      '<svg class="settings-cur-search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.75" />' +
+      '<path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" /></svg>'
+    );
+  }
+
+  function uadmSvgFilterFunnel() {
+    return (
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M4 5h16l-6.5 8.2V19l-3-1.6v-4.2L4 5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'
+    );
+  }
+
+  function uadmSvgColumns() {
+    return (
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M5 7h3M5 12h8M5 17h5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>' +
+      '<path d="M16 5v14M16 5l2 2M16 5l-2 2M19 12h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+    );
+  }
+
+  /** Toolbar sort control: horizontal rules + sort arrow (matches Users / Medusa-style sort trigger). */
+  function uadmSvgSortToolbar() {
+    return (
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M4 6h11M4 12h11M4 18h7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>' +
+      '<path d="M18.5 6.5v11M18.5 6.5l2 2M18.5 6.5l-2 2" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>'
+    );
+  }
+
+  function uadmFormatDisplayDate(iso) {
+    if (!iso) return '—';
+    var d = new Date(String(iso));
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function uadmParseTime(iso) {
+    if (!iso) return 0;
+    var d = new Date(String(iso));
+    var t = d.getTime();
+    return isNaN(t) ? 0 : t;
+  }
+
+  function uadmLoadCols() {
+    var def = { email: true, first_name: true, last_name: true, created_at: true, updated_at: true };
+    try {
+      var raw = localStorage.getItem(UADM_COL_STORAGE);
+      if (!raw) return def;
+      var o = JSON.parse(raw);
+      if (!o || typeof o !== 'object') return def;
+      UADM_COL_ORDER.forEach(function(k) {
+        if (typeof o[k] === 'boolean') def[k] = o[k];
+      });
+      return def;
+    } catch (e) {
+      return def;
+    }
+  }
+
+  function uadmSaveCols(cols) {
+    try {
+      localStorage.setItem(UADM_COL_STORAGE, JSON.stringify(cols));
+    } catch (e) {}
+  }
+
+  function buildUsersAdminCardInnerHtml() {
+    return (
+      '<section class="settings-card settings-card--overflow-visible">' +
+      '<div class="settings-card-head settings-users-split-head">' +
+      '<h2 class="settings-card-title">Users</h2>' +
+      '<div class="settings-users-head-right">' +
+      '<div class="settings-users-hero-tools">' +
+      '<div class="settings-cur-sort-wrap">' +
+      '<button type="button" class="settings-cur-filter-btn" id="uadmFilterTop" aria-label="Filter" aria-haspopup="true" aria-expanded="false">' +
+      uadmSvgFilterFunnel() +
+      '</button>' +
+      '</div>' +
+      '<div class="settings-cur-sort-wrap">' +
+      '<button type="button" class="settings-cur-filter-btn settings-cur-sort-open" id="uadmSortBtn" aria-label="Sort" aria-haspopup="true" aria-expanded="false">' +
+      uadmSvgSortToolbar() +
+      '</button>' +
+      '<div class="settings-store-dropdown hidden settings-cur-sort-dropdown uadm-sort-menu" id="uadmSortDropdown" role="menu">' +
+      '<div class="uadm-sort-fields">' +
+      '<button type="button" class="uadm-sort-field" data-sort-key="email" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span><span>Email</span></button>' +
+      '<button type="button" class="uadm-sort-field" data-sort-key="first_name" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span><span>First Name</span></button>' +
+      '<button type="button" class="uadm-sort-field" data-sort-key="last_name" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span><span>Last Name</span></button>' +
+      '<button type="button" class="uadm-sort-field" data-sort-key="created_at" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span><span>Created</span></button>' +
+      '<button type="button" class="uadm-sort-field" data-sort-key="updated_at" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span><span>Updated</span></button>' +
+      '</div>' +
+      '<div class="uadm-sort-separator" role="separator" aria-hidden="true"></div>' +
+      '<div class="uadm-sort-order">' +
+      '<button type="button" class="uadm-sort-dir" data-sort-dir="asc" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span>' +
+      '<span class="uadm-sort-dir-ico" aria-hidden="true">↑</span><span>A to Z</span></button>' +
+      '<button type="button" class="uadm-sort-dir" data-sort-dir="desc" role="menuitem">' +
+      '<span class="uadm-sort-bullet" aria-hidden="true"></span>' +
+      '<span class="uadm-sort-dir-ico" aria-hidden="true">↓</span><span>Z to A</span></button>' +
+      '</div></div></div>' +
+      '<div class="settings-cur-search">' +
+      uadmSvgSearch() +
+      '<input type="search" id="uadmSearch" class="settings-cur-input" placeholder="Search" autocomplete="off" />' +
+      '</div>' +
+      '<button type="button" class="btn-outline" id="uadmInviteBtn">Invite</button>' +
+      '</div>' +
+      '<div class="settings-store-dropdown hidden settings-users-filter-dropdown uadm-filter-dropdown-portal" id="uadmFilterDropdown" role="menu">' +
+      '<div class="settings-cur-sort-heading">Filter by role</div>' +
+      '<button type="button" class="settings-store-dropdown-item uadm-filter-role-opt" data-role-id="" role="menuitem">All roles</button>' +
+      '<div id="uadmFilterRoleItems"></div>' +
+      '</div></div></div>' +
+      '<div class="settings-users-subbar">' +
+      '<button type="button" class="settings-cur-filter-btn" id="uadmFilterSub" aria-label="Filter" aria-haspopup="true" aria-expanded="false">' +
+      uadmSvgFilterFunnel() +
+      '</button>' +
+      '<span class="settings-users-subbar-spacer" aria-hidden="true"></span>' +
+      '<div class="settings-card-menu-wrap">' +
+      '<button type="button" class="settings-icon-btn" id="uadmColBtn" aria-label="Column settings" aria-haspopup="true" aria-expanded="false">' +
+      uadmSvgColumns() +
+      '</button>' +
+      '<div class="settings-store-dropdown hidden settings-users-col-menu" id="uadmColDropdown" role="menu">' +
+      '<div class="settings-cur-sort-heading">Columns</div>' +
+      '<div id="uadmColChecks"></div>' +
+      '</div></div></div>' +
+      '<p class="settings-cur-api-err hidden" id="uadmApiErr" role="alert"></p>' +
+      '<div class="settings-card-body settings-users-card-body">' +
+      '<div class="settings-table-wrap settings-cur-table-wrap" id="uadmTableWrap">' +
+      '<table class="settings-table settings-table-users" id="uadmTable">' +
+      '<thead id="uadmThead"><tr></tr></thead>' +
+      '<tbody id="uadmTbody"></tbody></table></div>' +
+      '<div class="settings-table-foot">' +
+      '<span id="uadmFoot">0 – 0 of 0 results</span>' +
+      '<span id="uadmPageLabel">1 of 1 pages</span>' +
+      '<span class="settings-table-nav">' +
+      '<button type="button" class="btn-outline" id="uadmPrev">Prev</button> ' +
+      '<button type="button" class="btn-outline" id="uadmNext">Next</button></span></div>' +
+      '<div id="uadmRolePanel" class="settings-users-role-panel hidden" style="margin-top:1rem;padding:1rem;border:1px solid #e5e7eb;border-radius:10px;background:#fafafa;">' +
+      '<h3 style="margin:0 0 0.75rem 0;font-size:0.95rem;font-weight:600;color:#111827;">Roles for <span id="uadmRoleEditorEmail"></span></h3>' +
+      '<div id="uadmRoleCheckboxes"></div>' +
+      '<button type="button" class="btn-solid" id="uadmRoleSaveBtn" style="margin-top:0.75rem;">Save roles</button> ' +
+      '<button type="button" class="btn-outline" id="uadmRoleCancelBtn" style="margin-top:0.75rem;">Cancel</button>' +
+      '<p id="uadmRoleSaveMsg" class="hidden" style="margin-top:0.75rem;font-size:0.875rem;"></p></div>' +
+      '</div></section>'
+    );
+  }
+
+  function wireUsersAdminPage(root, list, allRoles) {
+    var allUsers = Array.isArray(list) ? list.slice() : [];
+    var roles = Array.isArray(allRoles) ? allRoles : [];
+    var state = {
+      q: '',
+      sortKey: 'created_at',
+      sortDir: 'desc',
+      roleFilterId: '',
+      page: 1,
+      pageSize: 15,
+      cols: uadmLoadCols(),
+      editingUserId: null
+    };
+
+    var tbody = root.querySelector('#uadmTbody');
+    var thead = root.querySelector('#uadmThead tr');
+    var foot = root.querySelector('#uadmFoot');
+    var pageLabel = root.querySelector('#uadmPageLabel');
+    var prevBtn = root.querySelector('#uadmPrev');
+    var nextBtn = root.querySelector('#uadmNext');
+    var searchEl = root.querySelector('#uadmSearch');
+    var filterRoleItems = root.querySelector('#uadmFilterRoleItems');
+    var colChecks = root.querySelector('#uadmColChecks');
+    var rolePanel = root.querySelector('#uadmRolePanel');
+
+    function closeUadmDropdowns() {
+      var fd = root.querySelector('#uadmFilterDropdown');
+      var sd = root.querySelector('#uadmSortDropdown');
+      var cd = root.querySelector('#uadmColDropdown');
+      if (fd) {
+        fd.classList.add('hidden');
+        fd.style.position = '';
+        fd.style.top = '';
+        fd.style.left = '';
+        fd.style.right = '';
+        fd.style.zIndex = '';
+      }
+      if (sd) sd.classList.add('hidden');
+      if (cd) cd.classList.add('hidden');
+      var ft = root.querySelector('#uadmFilterTop');
+      var fs = root.querySelector('#uadmFilterSub');
+      var sb = root.querySelector('#uadmSortBtn');
+      var cb = root.querySelector('#uadmColBtn');
+      if (ft) ft.setAttribute('aria-expanded', 'false');
+      if (fs) fs.setAttribute('aria-expanded', 'false');
+      if (sb) sb.setAttribute('aria-expanded', 'false');
+      if (cb) cb.setAttribute('aria-expanded', 'false');
+    }
+
+    function syncUadmSortUi() {
+      root.querySelectorAll('.uadm-sort-field').forEach(function(el) {
+        var k = el.getAttribute('data-sort-key');
+        el.classList.toggle('is-active', k === state.sortKey);
+        el.setAttribute('aria-checked', k === state.sortKey ? 'true' : 'false');
+      });
+      root.querySelectorAll('.uadm-sort-dir').forEach(function(el) {
+        var d = el.getAttribute('data-sort-dir');
+        el.classList.toggle('is-active', d === state.sortDir);
+        el.setAttribute('aria-checked', d === state.sortDir ? 'true' : 'false');
+      });
+    }
+
+    if (filterRoleItems) {
+      filterRoleItems.innerHTML = roles
+        .map(function(r) {
+          if (!r || !r.id) return '';
+          return (
+            '<button type="button" class="settings-store-dropdown-item uadm-filter-role-opt" data-role-id="' +
+            escapeHtml(r.id) +
+            '" role="menuitem">' +
+            escapeHtml(r.name || r.id) +
+            '</button>'
+          );
+        })
+        .join('');
+    }
+
+    function renderColChecks() {
+      if (!colChecks) return;
+      colChecks.innerHTML = UADM_COL_ORDER.map(function(key) {
+        var on = state.cols[key] ? ' checked' : '';
+        return (
+          '<label><input type="checkbox" class="uadm-col-toggle" data-col-key="' +
+          escapeHtml(key) +
+          '"' +
+          on +
+          ' /> ' +
+          escapeHtml(UADM_COL_LABELS[key] || key) +
+          '</label>'
+        );
+      }).join('');
+    }
+
+    renderColChecks();
+
+    function getFilteredUsers() {
+      var q = state.q.toLowerCase().trim();
+      var rf = state.roleFilterId;
+      return allUsers.filter(function(u) {
+        if (rf) {
+          var ids = (u.rbac_roles || []).map(function(r) {
+            return r && r.id;
+          });
+          if (ids.indexOf(rf) < 0) return false;
+        }
+        if (!q) return true;
+        var parts = [
+          u.email,
+          u.first_name,
+          u.last_name,
+          u.created_at,
+          u.updated_at
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        return parts.indexOf(q) >= 0;
+      });
+    }
+
+    function sortUsers(arr) {
+      var key = state.sortKey;
+      var dir = state.sortDir === 'desc' ? -1 : 1;
+      return arr.slice().sort(function(a, b) {
+        var va;
+        var vb;
+        if (key === 'created_at' || key === 'updated_at') {
+          va = uadmParseTime(a[key]);
+          vb = uadmParseTime(b[key]);
+        } else {
+          va = (a[key] != null ? String(a[key]) : '').toLowerCase();
+          vb = (b[key] != null ? String(b[key]) : '').toLowerCase();
+        }
+        if (va < vb) return -1 * dir;
+        if (va > vb) return 1 * dir;
+        return 0;
+      });
+    }
+
+    function visibleColKeys() {
+      return UADM_COL_ORDER.filter(function(k) {
+        return state.cols[k];
+      });
+    }
+
+    function renderTable() {
+      var filtered = sortUsers(getFilteredUsers());
+      var total = filtered.length;
+      var pages = Math.max(1, Math.ceil(total / state.pageSize) || 1);
+      if (state.page > pages) state.page = pages;
+      if (state.page < 1) state.page = 1;
+      var startIdx = (state.page - 1) * state.pageSize;
+      var pageRows = filtered.slice(startIdx, startIdx + state.pageSize);
+      var keys = visibleColKeys();
+      if (keys.length === 0) keys = ['email'];
+
+      if (thead) {
+        thead.innerHTML =
+          keys
+            .map(function(k) {
+              return '<th>' + escapeHtml(UADM_COL_LABELS[k] || k) + '</th>';
+            })
+            .join('') + '<th class="settings-th-actions"></th>';
+      }
+
+      if (tbody) {
+        if (total === 0) {
+          var emptyMsg =
+            allUsers.length === 0 ? 'No users.' : 'No matching users.';
+          tbody.innerHTML =
+            '<tr><td colspan="' +
+            (keys.length + 1) +
+            '" style="color:#6b7280;font-size:0.875rem;">' +
+            escapeHtml(emptyMsg) +
+            '</td></tr>';
+        } else {
+          tbody.innerHTML = pageRows
+          .map(function(u) {
+            var uid = escapeHtml(u.id || '');
+            var cells = keys
+              .map(function(k) {
+                var val = '—';
+                if (k === 'created_at' || k === 'updated_at') val = uadmFormatDisplayDate(u[k]);
+                else if (u[k] != null && String(u[k]).trim() !== '') val = String(u[k]);
+                return '<td>' + escapeHtml(val) + '</td>';
+              })
+              .join('');
+            return (
+              '<tr data-user-id="' +
+              uid +
+              '">' +
+              cells +
+              '<td class="settings-td-actions"><div class="settings-cur-actions-wrap">' +
+              '<button type="button" class="settings-cur-row-menu-btn uadm-row-menu" data-user-id="' +
+              uid +
+              '" aria-haspopup="true" aria-expanded="false" aria-label="Row actions">⋯</button>' +
+              '<div class="settings-store-dropdown hidden settings-cur-row-dropdown uadm-row-dropdown" role="menu">' +
+              '<button type="button" class="settings-store-dropdown-item uadm-edit-roles" data-user-id="' +
+              uid +
+              '" role="menuitem">Edit roles</button>' +
+              '</div></div></td></tr>'
+            );
+          })
+          .join('');
+        }
+      }
+
+      if (foot) {
+        if (!total) foot.textContent = '0 – 0 of 0 results';
+        else {
+          var endIdx = Math.min(startIdx + pageRows.length, total);
+          foot.textContent = startIdx + 1 + ' – ' + endIdx + ' of ' + total + ' results';
+        }
+      }
+      if (pageLabel) pageLabel.textContent = pages ? state.page + ' of ' + pages + ' pages' : '1 of 1 pages';
+      if (prevBtn) prevBtn.disabled = state.page <= 1;
+      if (nextBtn) nextBtn.disabled = state.page >= pages || pages <= 1;
+    }
+
+    function openRoleEditor(userId) {
+      var u = allUsers.filter(function(x) {
+        return x && x.id === userId;
+      })[0];
+      if (!u) return;
+      state.editingUserId = userId;
+      var emailEl = root.querySelector('#uadmRoleEditorEmail');
+      if (emailEl) emailEl.textContent = u.email || userId;
+      var cb = root.querySelector('#uadmRoleCheckboxes');
+      var cur = (u.rbac_roles || []).map(function(r) {
+        return r && r.id;
+      });
+      if (cb) {
+        cb.innerHTML =
+          roles
+            .map(function(r) {
+              if (!r || !r.id) return '';
+              var checked = cur.indexOf(r.id) >= 0 ? ' checked' : '';
+              return (
+                '<label style="display:block;margin:0.35rem 0;font-size:0.875rem;"><input type="checkbox" value="' +
+                escapeHtml(r.id) +
+                '"' +
+                checked +
+                ' /> ' +
+                escapeHtml(r.name || r.id) +
+                '</label>'
+              );
+            })
+            .join('') || '<p style="font-size:0.875rem;color:#64748b;">No roles in database.</p>';
+      }
+      var msg = root.querySelector('#uadmRoleSaveMsg');
+      if (msg) {
+        msg.classList.add('hidden');
+        msg.textContent = '';
+      }
+      if (rolePanel) rolePanel.classList.remove('hidden');
+      closeUadmDropdowns();
+    }
+
+    function closeRoleEditor() {
+      state.editingUserId = null;
+      if (rolePanel) rolePanel.classList.add('hidden');
+    }
+
+    if (!root.dataset.uadmDelegated) {
+      root.dataset.uadmDelegated = '1';
+      root.addEventListener('click', function(ev) {
+        var sortFieldBtn = ev.target.closest && ev.target.closest('.uadm-sort-field');
+        if (sortFieldBtn && root.contains(sortFieldBtn)) {
+          ev.stopPropagation();
+          state.sortKey = sortFieldBtn.getAttribute('data-sort-key') || 'email';
+          state.page = 1;
+          syncUadmSortUi();
+          renderTable();
+          return;
+        }
+        var sortDirBtn = ev.target.closest && ev.target.closest('.uadm-sort-dir');
+        if (sortDirBtn && root.contains(sortDirBtn)) {
+          ev.stopPropagation();
+          state.sortDir = sortDirBtn.getAttribute('data-sort-dir') || 'asc';
+          state.page = 1;
+          syncUadmSortUi();
+          renderTable();
+          return;
+        }
+        var editBtn = ev.target.closest && ev.target.closest('.uadm-edit-roles');
+        if (editBtn) {
+          ev.stopPropagation();
+          var uid = editBtn.getAttribute('data-user-id');
+          if (uid) openRoleEditor(uid);
+          root.querySelectorAll('.uadm-row-dropdown').forEach(function(d) {
+            d.classList.add('hidden');
+          });
+          return;
+        }
+        var menuBtn = ev.target.closest && ev.target.closest('.uadm-row-menu');
+        if (menuBtn) {
+          ev.stopPropagation();
+          closeUadmDropdowns();
+          var dd = menuBtn.parentElement.querySelector('.uadm-row-dropdown');
+          var wasHidden = dd && dd.classList.contains('hidden');
+          root.querySelectorAll('.uadm-row-dropdown').forEach(function(d) {
+            d.classList.add('hidden');
+          });
+          root.querySelectorAll('.uadm-row-menu').forEach(function(b) {
+            b.setAttribute('aria-expanded', 'false');
+          });
+          if (dd && wasHidden) {
+            dd.classList.remove('hidden');
+            menuBtn.setAttribute('aria-expanded', 'true');
+          }
+        }
+      });
+    }
+
+    syncUadmSortUi();
+    renderTable();
+
+    if (searchEl) {
+      searchEl.addEventListener('input', function() {
+        state.q = searchEl.value || '';
+        state.page = 1;
+        renderTable();
+      });
+    }
+
+    function positionUadmFilterDropdown(anchorBtn) {
+      var fd = root.querySelector('#uadmFilterDropdown');
+      if (!fd || !anchorBtn) return;
+      fd.classList.remove('hidden');
+      var r = anchorBtn.getBoundingClientRect();
+      fd.style.position = 'fixed';
+      fd.style.top = Math.round(r.bottom + 4) + 'px';
+      fd.style.left = 'auto';
+      fd.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
+      fd.style.zIndex = '300';
+    }
+
+    function toggleFilterDd(anchorBtn) {
+      var fd = root.querySelector('#uadmFilterDropdown');
+      if (!fd || !anchorBtn) return;
+      var wasHidden = fd.classList.contains('hidden');
+      closeUadmDropdowns();
+      if (wasHidden) {
+        positionUadmFilterDropdown(anchorBtn);
+        var ft = root.querySelector('#uadmFilterTop');
+        var fs = root.querySelector('#uadmFilterSub');
+        if (ft) ft.setAttribute('aria-expanded', 'true');
+        if (fs) fs.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    var ft = root.querySelector('#uadmFilterTop');
+    var fsub = root.querySelector('#uadmFilterSub');
+    if (ft) ft.addEventListener('click', function(ev) {
+      ev.stopPropagation();
+      toggleFilterDd(ft);
+    });
+    if (fsub) fsub.addEventListener('click', function(ev) {
+      ev.stopPropagation();
+      toggleFilterDd(fsub);
+    });
+
+    root.querySelectorAll('.uadm-filter-role-opt').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        state.roleFilterId = btn.getAttribute('data-role-id') || '';
+        state.page = 1;
+        closeUadmDropdowns();
+        renderTable();
+      });
+    });
+
+    var sortBtn = root.querySelector('#uadmSortBtn');
+    var sortDd = root.querySelector('#uadmSortDropdown');
+    if (sortBtn && sortDd) {
+      sortBtn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        var open = sortDd.classList.contains('hidden');
+        closeUadmDropdowns();
+        if (open) {
+          syncUadmSortUi();
+          sortDd.classList.remove('hidden');
+          sortBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    var colBtn = root.querySelector('#uadmColBtn');
+    var colDd = root.querySelector('#uadmColDropdown');
+    if (colBtn && colDd) {
+      colBtn.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        var open = colDd.classList.contains('hidden');
+        closeUadmDropdowns();
+        if (open) {
+          colDd.classList.remove('hidden');
+          colBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    root.addEventListener('change', function(ev) {
+      var t = ev.target;
+      if (t && t.classList && t.classList.contains('uadm-col-toggle')) {
+        var key = t.getAttribute('data-col-key');
+        if (key && state.cols.hasOwnProperty(key)) {
+          state.cols[key] = !!t.checked;
+          var vis = UADM_COL_ORDER.filter(function(k) {
+            return state.cols[k];
+          }).length;
+          if (vis === 0) {
+            state.cols[key] = true;
+            t.checked = true;
+            return;
+          }
+          uadmSaveCols(state.cols);
+          renderTable();
+        }
+      }
+    });
+
+    var inviteBtn = root.querySelector('#uadmInviteBtn');
+    if (inviteBtn) {
+      inviteBtn.addEventListener('click', function() {
+        navigate('/app/invites');
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function() {
+        if (state.page > 1) {
+          state.page--;
+          renderTable();
+        }
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function() {
+        var filtered = sortUsers(getFilteredUsers());
+        var total = filtered.length;
+        var pages = Math.max(1, Math.ceil(total / state.pageSize) || 1);
+        if (state.page < pages) {
+          state.page++;
+          renderTable();
+        }
+      });
+    }
+
+    var saveRoles = root.querySelector('#uadmRoleSaveBtn');
+    var cancelRoles = root.querySelector('#uadmRoleCancelBtn');
+    if (cancelRoles) {
+      cancelRoles.addEventListener('click', function() {
+        closeRoleEditor();
+      });
+    }
+    if (saveRoles) {
+      saveRoles.addEventListener('click', function() {
+        if (!state.editingUserId) return;
+        var ids = [];
+        root.querySelectorAll('#uadmRoleCheckboxes input[type=checkbox]:checked').forEach(function(inp) {
+          ids.push(inp.value);
+        });
+        var msg = root.querySelector('#uadmRoleSaveMsg');
+        if (msg) msg.classList.add('hidden');
+        fetch('/admin/users/' + encodeURIComponent(state.editingUserId) + '/roles', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ role_ids: ids })
+        })
+          .then(function(res) {
+            return res.json().then(function(j) {
+              return { res: res, j: j };
+            });
+          })
+          .then(function(x) {
+            if (!msg) return;
+            msg.classList.remove('hidden');
+            if (x.res.ok) {
+              msg.style.color = '#15803d';
+              msg.textContent = 'Roles updated.';
+              api('/admin/users')
+                .then(function(r) {
+                  return r.json();
+                })
+                .then(function(data) {
+                  var nu = (data && data.users) ? data.users : [];
+                  allUsers = nu.slice();
+                  closeRoleEditor();
+                  renderTable();
+                })
+                .catch(function() {
+                  renderUsers();
+                });
+              return;
+            }
+            msg.style.color = '#dc2626';
+            msg.textContent = (x.j && x.j.message) ? x.j.message : 'Save failed';
+          })
+          .catch(function() {
+            if (msg) {
+              msg.classList.remove('hidden');
+              msg.style.color = '#dc2626';
+              msg.textContent = 'Request failed.';
+            }
+          });
+      });
+    }
+
+    var docClick = function(ev) {
+      if (!root.contains(ev.target)) return;
+      if (ev.target.closest('.settings-cur-row-menu-btn')) return;
+      if (ev.target.closest('.uadm-row-dropdown')) return;
+      if (ev.target.closest('#uadmFilterTop') || ev.target.closest('#uadmFilterSub') || ev.target.closest('#uadmFilterDropdown')) return;
+      if (ev.target.closest('#uadmSortBtn') || ev.target.closest('#uadmSortDropdown')) return;
+      if (ev.target.closest('#uadmColBtn') || ev.target.closest('#uadmColDropdown')) return;
+      closeUadmDropdowns();
+      root.querySelectorAll('.uadm-row-dropdown').forEach(function(d) {
+        d.classList.add('hidden');
+      });
+      root.querySelectorAll('.uadm-row-menu').forEach(function(b) {
+        b.setAttribute('aria-expanded', 'false');
+      });
+    };
+    document.addEventListener('click', docClick);
+    root._uadmDocClick = docClick;
+  }
+
+  function teardownUsersAdminPage(root) {
+    if (root && root._uadmDocClick) {
+      document.removeEventListener('click', root._uadmDocClick);
+      root._uadmDocClick = null;
+    }
+  }
+
+  function renderUsersAdminShell(withSettingsCrumb) {
     showLoading();
     Promise.all([api('/admin/users').then(function(r) { return r.json(); }), api('/admin/roles').then(function(r) { return r.json(); })])
       .then(function(pair) {
@@ -2224,85 +2916,37 @@
         var rolesData = pair[1];
         var list = (data && data.users) ? data.users : [];
         var allRoles = (rolesData && rolesData.roles) ? rolesData.roles : [];
-        if (list.length === 0) {
-          content.innerHTML = '<div class="card"><p class="empty">No users.</p></div>';
-          return;
+        var crumb =
+          withSettingsCrumb
+            ? '<div class="settings-breadcrumb"><span class="settings-crumb-muted">Settings</span>' +
+              '<span class="settings-crumb-sep"> / </span>' +
+              '<span class="settings-crumb-current">Users</span></div>'
+            : '';
+        var inner = '<div class="settings-main-stack">' + crumb + buildUsersAdminCardInnerHtml() + '</div>';
+        if (withSettingsCrumb) {
+          content.innerHTML = settingsLayoutHtml('', inner);
+          wireSettingsNav(content.querySelector('.settings-layout'));
+        } else {
+          content.innerHTML = '<div class="users-page-standalone">' + inner + '</div>';
         }
-        var rows = list.map(function(u) {
-          var roleNames = (u.rbac_roles || []).map(function(r) { return r.name || r.id; }).join(', ') || '—';
-          return '<tr data-user-id="' + escapeHtml(u.id || '') + '">' +
-            '<td>' + escapeHtml(u.email || '-') + '</td>' +
-            '<td style="font-size:0.85rem;color:#64748b;">' + escapeHtml(roleNames) + '</td>' +
-            '<td><button type="button" class="btn-edit-roles" style="padding:0.35rem 0.75rem;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.8rem;">Edit roles</button></td></tr>';
-        }).join('');
-        content.innerHTML =
-          '<div class="card"><p class="hint" style="margin:0 0 1rem 0;font-size:0.875rem;color:#64748b;">Assign RBAC roles per user (same API as Medusa Admin user management).</p>' +
-          '<div class="table-wrap"><table><thead><tr><th>Email</th><th>Roles</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
-          '<div id="roleEditor" style="display:none;margin-top:1.5rem;padding:1rem;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;">' +
-          '<h3 style="margin:0 0 0.75rem 0;font-size:1rem;">Roles for <span id="roleEditorEmail"></span></h3>' +
-          '<div id="roleCheckboxes"></div>' +
-          '<button type="button" id="roleSaveBtn" style="margin-top:0.75rem;padding:0.5rem 1rem;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Save roles</button> ' +
-          '<button type="button" id="roleCancelBtn" style="margin-top:0.75rem;padding:0.5rem 1rem;background:#e2e8f0;color:#334155;border:none;border-radius:6px;cursor:pointer;">Cancel</button>' +
-          '<p id="roleSaveMsg" style="display:none;margin-top:0.75rem;font-size:0.875rem;"></p></div></div>';
-        var editor = document.getElementById('roleEditor');
-        var editingUserId = null;
-        function openEditor(userId, email, currentRoleIds) {
-          editingUserId = userId;
-          document.getElementById('roleEditorEmail').textContent = email || userId;
-          var cb = document.getElementById('roleCheckboxes');
-          cb.innerHTML = allRoles.map(function(r) {
-            var checked = currentRoleIds.indexOf(r.id) >= 0 ? ' checked' : '';
-            return '<label style="display:block;margin:0.35rem 0;"><input type="checkbox" value="' + escapeHtml(r.id) + '"' + checked + ' /> ' +
-              escapeHtml(r.name || r.id) + '</label>';
-          }).join('') || '<p>No roles in database. Seed RBAC roles (e.g. Medusa seed-rbac-roles).</p>';
-          document.getElementById('roleSaveMsg').style.display = 'none';
-          editor.style.display = 'block';
-        }
-        content.querySelectorAll('.btn-edit-roles').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var tr = btn.closest('tr');
-            var uid = tr.getAttribute('data-user-id');
-            var u = list.filter(function(x) { return x.id === uid; })[0];
-            var cur = (u && u.rbac_roles) ? u.rbac_roles.map(function(r) { return r.id; }) : [];
-            openEditor(uid, u && u.email, cur);
-          });
-        });
-        document.getElementById('roleCancelBtn').addEventListener('click', function() {
-          editor.style.display = 'none';
-          editingUserId = null;
-        });
-        document.getElementById('roleSaveBtn').addEventListener('click', function() {
-          if (!editingUserId) return;
-          var ids = [];
-          document.querySelectorAll('#roleCheckboxes input[type=checkbox]:checked').forEach(function(inp) { ids.push(inp.value); });
-          var msg = document.getElementById('roleSaveMsg');
-          msg.style.display = 'none';
-          fetch('/admin/users/' + encodeURIComponent(editingUserId) + '/roles', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ role_ids: ids })
-          })
-            .then(function(res) { return res.json().then(function(j) { return { res: res, j: j }; }); })
-            .then(function(x) {
-              msg.style.display = 'block';
-              if (x.res.ok) {
-                msg.style.color = '#15803d';
-                msg.textContent = 'Roles updated.';
-                setTimeout(function() { renderUsers(); }, 400);
-                return;
-              }
-              msg.style.color = '#dc2626';
-              msg.textContent = (x.j && x.j.message) ? x.j.message : 'Save failed';
-            })
-            .catch(function() {
-              msg.style.display = 'block';
-              msg.style.color = '#dc2626';
-              msg.textContent = 'Request failed.';
-            });
-        });
+        var layout = content.querySelector('.settings-main-stack') || content;
+        if (uadmWiredRoot) teardownUsersAdminPage(uadmWiredRoot);
+        uadmWiredRoot = layout;
+        wireUsersAdminPage(layout, list, allRoles);
       })
-      .catch(function() { showError('Failed to load users or roles.'); });
+      .catch(function() {
+        showError('Failed to load users or roles.');
+      });
+  }
+
+  function renderUsers() {
+    setTitle('Users');
+    renderUsersAdminShell(false);
+  }
+
+  function renderSettingsUsersSection() {
+    setTitle('Users');
+    renderUsersAdminShell(true);
   }
 
   function renderInvites() {
@@ -2515,8 +3159,11 @@
     setTitle(crumbTitle);
 
     if (section !== 'store') {
+      if (section === 'users') {
+        renderSettingsUsersSection();
+        return;
+      }
       var hints = {
-        users: 'Open the full directory under Users in the main sidebar, or manage invites from Invites.',
         regions: 'Use Regions in the main sidebar for the region list API.',
         profile: 'Use Profile in the footer or Users for account details.',
         'user-role-management': 'Manage users and RBAC roles from the Users and Invites pages in the main navigation.'
@@ -7967,6 +8614,10 @@
   };
 
   function init() {
+    if (uadmWiredRoot) {
+      teardownUsersAdminPage(uadmWiredRoot);
+      uadmWiredRoot = null;
+    }
     if (pdpOutsideClose) {
       document.removeEventListener('click', pdpOutsideClose, true);
       pdpOutsideClose = null;
