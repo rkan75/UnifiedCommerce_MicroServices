@@ -84,40 +84,55 @@ export default async function Home(props: {
   let wishlistData: Awaited<ReturnType<typeof getWishlist>> = null
   let carouselProducts: HttpTypes.StoreProduct[] = []
 
-  try {
-    const [
-      regionRes,
-      collectionsResult,
-      categoriesResult,
-      customerRes,
-      carouselProductsRes,
-    ] = await Promise.all([
-      getRegion(countryCode),
-      listCollections({ fields: "id, handle, title, metadata" }, countryCode),
-      listCategories({ limit: 100 }, countryCode).catch(() => []),
-      retrieveCustomer(),
-      listProducts({ countryCode, queryParams: { limit: 6 } })
-        .then((r) => r.response.products.slice(0, 6))
-        .catch(() => [] as HttpTypes.StoreProduct[]),
-    ])
-    region = regionRes
-    collections = collectionsResult.collections
-    categories = Array.isArray(categoriesResult) ? categoriesResult : null
-    customer = customerRes
-    carouselProducts = carouselProductsRes
+  const [
+    regionSettled,
+    collectionsSettled,
+    categoriesSettled,
+    customerSettled,
+    carouselSettled,
+  ] = await Promise.allSettled([
+    getRegion(countryCode),
+    listCollections({ fields: "id, handle, title, metadata" }, countryCode),
+    listCategories({ limit: 100 }, countryCode).catch(() => []),
+    retrieveCustomer(),
+    listProducts({ countryCode, queryParams: { limit: 6 } })
+      .then((r) => r.response.products.slice(0, 6))
+      .catch(() => [] as HttpTypes.StoreProduct[]),
+  ])
 
-    if (customerRes) {
-      const [ordersRes, wishlistRes] = await Promise.all([
-        listOrders(5, 0).catch(() => null),
-        getWishlist().catch(() => null),
-      ])
-      orders = ordersRes
-      wishlistData = wishlistRes
-    }
-  } catch (err) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("[Home] Backend fetch failed:", err)
-    }
+  if (regionSettled.status === "fulfilled") {
+    region = regionSettled.value
+  } else if (process.env.NODE_ENV === "development") {
+    console.error("[Home] getRegion failed:", regionSettled.reason)
+  }
+
+  if (collectionsSettled.status === "fulfilled") {
+    collections = collectionsSettled.value.collections
+  } else if (process.env.NODE_ENV === "development") {
+    console.error("[Home] listCollections failed:", collectionsSettled.reason)
+  }
+
+  if (categoriesSettled.status === "fulfilled") {
+    categories = Array.isArray(categoriesSettled.value)
+      ? categoriesSettled.value
+      : null
+  }
+
+  if (customerSettled.status === "fulfilled") {
+    customer = customerSettled.value
+  }
+
+  if (carouselSettled.status === "fulfilled") {
+    carouselProducts = carouselSettled.value
+  }
+
+  if (customer) {
+    const [ordersRes, wishlistRes] = await Promise.all([
+      listOrders(5, 0).catch(() => null),
+      getWishlist().catch(() => null),
+    ])
+    orders = ordersRes
+    wishlistData = wishlistRes
   }
 
   const pastPurchaseItems = getPastPurchaseItems(orders ?? null)
@@ -150,11 +165,13 @@ export default async function Home(props: {
     return (
       <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-fg-muted text-sm">
-          Store is temporarily unavailable. The home page needs a region from Medusa (
-          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">MEDUSA_BACKEND_URL</code>
-          , e.g. <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">npm run dev</code> in the Medusa project) and collections from the Java service (
-          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">COLLECTIONS_SERVICE_URL</code>
-          ). Check the server console for errors.
+          Store is temporarily unavailable. The home page needs a region from{" "}
+          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">REGIONS_SERVICE_URL</code>{" "}
+          (Java regions-service, default port 8084) or{" "}
+          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">MEDUSA_BACKEND_URL</code>, and
+          collections from{" "}
+          <code className="rounded bg-fg-subtle/10 px-1.5 py-0.5 text-xs">COLLECTIONS_SERVICE_URL</code>.
+          Check the server console for errors.
         </p>
       </div>
     )

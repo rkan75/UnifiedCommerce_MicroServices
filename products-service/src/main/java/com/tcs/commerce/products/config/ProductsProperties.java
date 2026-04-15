@@ -16,6 +16,11 @@ public class ProductsProperties {
     /** Pivot {@code product_variant_option} ({@code variant_id}, {@code option_value_id}). */
     private String productVariantOptionTable = "product_variant_option";
     private String regionTable = "region";
+    /**
+     * ISO country rows for admin catalog + region assignment. Medusa v2 uses {@code region_country} (PK {@code iso_2},
+     * nullable {@code region_id}); legacy Medusa v1 setups may use {@code country}.
+     */
+    private String countryTable = "region_country";
     private String productCategoryTable = "product_category";
     /** Link table name (e.g. product_category_product). Columns: product_id, product_category_id. Used in lowercase in SQL. */
     private String productCategoryLinkTable = "product_category_product";
@@ -55,6 +60,12 @@ public class ProductsProperties {
     private String productTagValueColumn = "value";
     private String productTagLinkProductColumn = "product_id";
     private String productTagLinkTagColumn = "product_tag_id";
+    /** Medusa Tax module {@code tax_region} (country / province / parent hierarchy). */
+    private String taxRegionTable = "tax_region";
+    /** Medusa {@code tax_rate} (links to {@code tax_region_id}). */
+    private String taxRateTable = "tax_rate";
+    /** Medusa {@code tax_provider} (e.g. {@code tp_system}). */
+    private String taxProviderTable = "tax_provider";
 
     public String getProductTable() {
         return productTable;
@@ -104,6 +115,14 @@ public class ProductsProperties {
 
     public void setRegionTable(String regionTable) {
         this.regionTable = regionTable;
+    }
+
+    public String getCountryTable() {
+        return countryTable;
+    }
+
+    public void setCountryTable(String countryTable) {
+        this.countryTable = countryTable != null && !countryTable.isBlank() ? countryTable : "region_country";
     }
 
     public String getProductCategoryTable() {
@@ -259,5 +278,29 @@ public class ProductsProperties {
     public void setProductTagLinkTagColumn(String productTagLinkTagColumn) {
         this.productTagLinkTagColumn =
             productTagLinkTagColumn != null && !productTagLinkTagColumn.isBlank() ? productTagLinkTagColumn : "product_tag_id";
+    }
+
+    public String getTaxRegionTable() {
+        return taxRegionTable != null && !taxRegionTable.isBlank() ? taxRegionTable : "tax_region";
+    }
+
+    public void setTaxRegionTable(String taxRegionTable) {
+        this.taxRegionTable = taxRegionTable != null ? taxRegionTable : "tax_region";
+    }
+
+    public String getTaxRateTable() {
+        return taxRateTable != null && !taxRateTable.isBlank() ? taxRateTable : "tax_rate";
+    }
+
+    public void setTaxRateTable(String taxRateTable) {
+        this.taxRateTable = taxRateTable != null ? taxRateTable : "tax_rate";
+    }
+
+    public String getTaxProviderTable() {
+        return taxProviderTable != null && !taxProviderTable.isBlank() ? taxProviderTable : "tax_provider";
+    }
+
+    public void setTaxProviderTable(String taxProviderTable) {
+        this.taxProviderTable = taxProviderTable != null ? taxProviderTable : "tax_provider";
     }
 }

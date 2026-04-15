@@ -54,3 +54,31 @@ export function getCartServiceBaseUrl(): string {
     "CART_SERVICE_URL"
   )
 }
+
+/**
+ * Ordered bases for GET /store/regions (and single-region GET): try Java first when set, then Medusa.
+ * Lets the storefront recover when regions-service is down but Medusa still serves regions.
+ */
+export function getRegionsApiBaseUrlCandidates(): string[] {
+  const out: string[] = []
+  const push = (raw?: string) => {
+    const t = raw?.trim()
+    if (!t) return
+    const n = normalizeLocalhostForServerFetch(t.replace(/\/$/, ""))
+    if (!out.includes(n)) out.push(n)
+  }
+  push(process.env.REGIONS_SERVICE_URL)
+  push(process.env.MEDUSA_BACKEND_URL)
+  if (out.length === 0) {
+    push("http://localhost:9000")
+  }
+  return out
+}
+
+/**
+ * Primary base for region API — first candidate (Java when {@code REGIONS_SERVICE_URL} is set).
+ */
+export function getRegionsApiBaseUrl(): string {
+  const c = getRegionsApiBaseUrlCandidates()
+  return c[0] ?? normalizeLocalhostForServerFetch("http://localhost:9000")
+}

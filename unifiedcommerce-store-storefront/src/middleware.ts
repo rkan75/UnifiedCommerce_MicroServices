@@ -1,10 +1,7 @@
-import { normalizeLocalhostForServerFetch } from "@lib/util/normalize-localhost-service-url"
+import { getRegionsApiBaseUrlCandidates } from "@lib/config/products-service"
 import { HttpTypes } from "@medusajs/types"
 import { NextRequest, NextResponse } from "next/server"
 
-const BACKEND_URL = process.env.MEDUSA_BACKEND_URL?.trim()
-  ? normalizeLocalhostForServerFetch(process.env.MEDUSA_BACKEND_URL.trim())
-  : undefined
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
@@ -16,9 +13,10 @@ const regionMapCache = {
 async function getRegionMap(cacheId: string) {
   const { regionMap, regionMapUpdated } = regionMapCache
 
-  if (!BACKEND_URL) {
+  const candidates = getRegionsApiBaseUrlCandidates()
+  if (candidates.length === 0) {
     throw new Error(
-      "Middleware.ts: Error fetching regions. Did you set up regions in your Medusa Admin and define a MEDUSA_BACKEND_URL environment variable? Note that the variable is no longer named NEXT_PUBLIC_MEDUSA_BACKEND_URL."
+      "Middleware.ts: Cannot fetch /store/regions. Set REGIONS_SERVICE_URL and/or MEDUSA_BACKEND_URL."
     )
   }
 
@@ -26,56 +24,76 @@ async function getRegionMap(cacheId: string) {
     !regionMap.keys().next().value ||
     regionMapUpdated < Date.now() - 3600 * 1000
   ) {
-    // Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.
-    try {
-      const response = await fetch(`${BACKEND_URL}/store/regions`, {
-        headers: {
-          "x-publishable-api-key": PUBLISHABLE_API_KEY || "",
-        },
-        // Edge runtime doesn't support Next.js cache options
-        cache: "no-store",
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        let errorMessage = `Failed to fetch regions: ${response.status} ${response.statusText}`
-        try {
-          const errorJson = JSON.parse(errorText)
-          errorMessage = errorJson.message || errorMessage
-        } catch {
-          // If not JSON, use the text
-          if (errorText) errorMessage = errorText
-        }
-        throw new Error(errorMessage)
-      }
-
-      const json = await response.json()
-      const { regions } = json
-
-      if (!regions?.length) {
-        throw new Error(
-          "No regions found. Please set up regions in your Medusa Admin."
-        )
-      }
-
-      // Create a map of country codes to regions.
-      regions.forEach((region: HttpTypes.StoreRegion) => {
-        region.countries?.forEach((c) => {
-          regionMapCache.regionMap.set(c.iso_2 ?? "", region)
+    // Edge: no JS SDK — try Java regions-service first, then Medusa (same order as server regions.ts).
+    let lastError: unknown
+    let loaded = false
+    for (const base of candidates) {
+      try {
+        const response = await fetch(`${base}/store/regions`, {
+          headers: {
+            "x-publishable-api-key": PUBLISHABLE_API_KEY || "",
+          },
+          cache: "no-store",
         })
-      })
 
-      regionMapCache.regionMapUpdated = Date.now()
-    } catch (error) {
-      // In development, log the error for debugging
+        if (!response.ok) {
+          const errorText = await response.text()
+          let errorMessage = `Failed to fetch regions: ${response.status} ${response.statusText}`
+          try {
+            const errorJson = JSON.parse(errorText)
+            errorMessage = errorJson.message || errorMessage
+          } catch {
+            if (errorText) errorMessage = errorText
+          }
+          throw new Error(`${errorMessage} (${base})`)
+        }
+
+        const json = (await response.json()) as { regions?: HttpTypes.StoreRegion[] }
+        const regions = json.regions
+
+        if (!regions?.length) {
+          throw new Error(`No regions in response from ${base}`)
+        }
+
+        regionMapCache.regionMap.clear()
+        regions.forEach((region: HttpTypes.StoreRegion) => {
+          region.countries?.forEach((c) => {
+            const iso = (c?.iso_2 ?? "").trim().toLowerCase()
+            if (iso) regionMapCache.regionMap.set(iso, region)
+          })
+        })
+
+        if (regionMapCache.regionMap.size === 0) {
+          const r = regions[0]
+          if (r) {
+            regionMapCache.regionMap.set(DEFAULT_REGION.toLowerCase(), r)
+          }
+        }
+
+        regionMapCache.regionMapUpdated = Date.now()
+        loaded = true
+        break
+      } catch (error) {
+        lastError = error
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            `[middleware] GET /store/regions failed for ${base}; trying next source if any:`,
+            error
+          )
+        }
+      }
+    }
+
+    if (!loaded) {
       if (process.env.NODE_ENV === "development") {
-        console.error("Middleware.ts: Error fetching regions:", error)
+        console.error("Middleware.ts: All region sources failed. Last error:", lastError)
         console.error(
-          `Backend URL: ${BACKEND_URL}, Publishable Key: ${PUBLISHABLE_API_KEY ? "Set" : "Not set"}`
+          `Tried: ${candidates.join(", ")} — Publishable Key: ${PUBLISHABLE_API_KEY ? "Set" : "Not set"}`
         )
       }
-      // Re-throw to let the caller handle it
-      throw error
+      throw lastError instanceof Error
+        ? lastError
+        : new Error("Could not load regions from any configured URL")
     }
   }
 
@@ -176,8 +194,8 @@ export async function middleware(request: NextRequest) {
     if (process.env.NODE_ENV === "development") {
       console.error("Middleware.ts: Failed to fetch regions:", error)
       console.error(
-        "Make sure your Medusa backend is running at:",
-        BACKEND_URL || "http://localhost:9000"
+        "Make sure regions are reachable (REGIONS_SERVICE_URL and/or MEDUSA_BACKEND_URL):",
+        getRegionsApiBaseUrlCandidates().join(" → ")
       )
     }
     // Use empty map - will fall back to DEFAULT_REGION or URL-based detection

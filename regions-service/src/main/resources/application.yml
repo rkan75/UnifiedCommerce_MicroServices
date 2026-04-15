@@ -1,0 +1,21 @@
+# Regions Service - replacement for Medusa GET /store/regions and GET /store/regions/:id
+# Connects to the same PostgreSQL database as Medusa (region + country tables).
+
+server:
+  port: ${SERVER_PORT:8084}
+
+spring:
+  application:
+    name: regions-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/grocery_store}
+    username: ${SPRING_DATASOURCE_USERNAME:grocery_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:UnifiedCommerce@1}
+    driver-class-name: org.postgresql.Driver
+
+# Medusa v2: region + region_country (iso_2 PK, region_id nullable). Legacy: separate country table.
+app:
+  regions:
+    region-table: ${REGION_TABLE:region}
+    country-table: ${COUNTRY_TABLE:region_country}
+    table-schema: ${REGION_TABLE_SCHEMA:public}

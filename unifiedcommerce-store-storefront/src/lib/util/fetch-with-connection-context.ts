@@ -29,7 +29,7 @@ export async function fetchWithConnectionContext(
         : ""
     const collectionsHint =
       isCollections && refused
-        ? "\n  Collections are served by Java collections-service (default port 8086). From the repo: cd collections-service && ./restart-dev.sh\n  Or set COLLECTIONS_SERVICE_URL in .env.local. In development the storefront falls back to Medusa automatically when the service is down; in production set COLLECTIONS_FALLBACK_TO_MEDUSA=true or start collections-service."
+        ? "\n  Collections are served by Java collections-service only (Medusa catalog routes are disabled). From the repo: cd collections-service && ./restart-dev.sh\n  Or set COLLECTIONS_SERVICE_URL in .env.local (default port 8086)."
         : ""
     const hint =
       cartHint !== ""
