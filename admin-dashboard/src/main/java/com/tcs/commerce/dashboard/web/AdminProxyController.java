@@ -52,14 +52,25 @@ public class AdminProxyController {
         return proxy(props.getAdminRbacUrl(), "/admin" + request.getRequestURI().substring("/admin".length()) + query(request), HttpMethod.GET, null, getToken(request));
     }
 
-    @RequestMapping(value = "/regions", method = { RequestMethod.GET })
-    public ResponseEntity<?> regionsList(HttpServletRequest request) {
-        return proxy(props.getRegionsUrl(), "/store/regions" + query(request), HttpMethod.GET, null, null);
+    @RequestMapping(value = "/regions", method = { RequestMethod.GET, RequestMethod.POST })
+    public ResponseEntity<?> regions(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body) {
+        return proxy(props.getProductsUrl(), "/admin/regions" + query(request), HttpMethod.valueOf(request.getMethod()), body, getToken(request));
     }
 
-    @RequestMapping(value = "/regions/{id}", method = { RequestMethod.GET })
-    public ResponseEntity<?> regionById(@PathVariable String id) {
-        return proxy(props.getRegionsUrl(), "/store/regions/" + id, HttpMethod.GET, null, null);
+    /** Paginated ISO country catalog ({@code country} table) for the region editor — must be before {@code /regions/{id}}. */
+    @RequestMapping(value = "/regions/meta/countries", method = RequestMethod.GET)
+    public ResponseEntity<?> regionCountryCatalog(HttpServletRequest request) {
+        return proxy(props.getProductsUrl(), "/admin/regions/meta/countries" + query(request), HttpMethod.GET, null, getToken(request));
+    }
+
+    @RequestMapping(value = "/regions/{id}", method = { RequestMethod.GET, RequestMethod.PATCH, RequestMethod.DELETE })
+    public ResponseEntity<?> regionById(
+        HttpServletRequest request,
+        @PathVariable String id,
+        @RequestBody(required = false) Map<String, Object> body
+    ) {
+        String enc = UriUtils.encodePathSegment(id, StandardCharsets.UTF_8);
+        return proxy(props.getProductsUrl(), "/admin/regions/" + enc + query(request), HttpMethod.valueOf(request.getMethod()), body, getToken(request));
     }
 
     @RequestMapping(value = "/notifications", method = RequestMethod.GET)

@@ -215,6 +215,147 @@
     suggestHighlight: -1
   };
   var collectionLabelById = {};
+  /** Settings → Regions list + create drawer */
+  var regionSetState = {
+    rows: [],
+    countryOptions: [],
+    /** Lowercase ISO-2 codes selected for the region editor (same as Medusa Admin country picker). */
+    regionSelectedIsos: [],
+    currencies: [],
+    /** From {@code store} row (same DB as Store settings). */
+    defaultRegionId: null,
+    defaultRegionName: null,
+    q: '',
+    sortField: 'name',
+    sortDir: 'asc',
+    page: 1,
+    pageSize: 20,
+    /** Date filters (yyyy-mm-dd); enabled shows pill + applies when from/to set. */
+    filterCreatedEnabled: false,
+    filterCreatedFrom: '',
+    filterCreatedTo: '',
+    filterUpdatedEnabled: false,
+    filterUpdatedFrom: '',
+    filterUpdatedTo: ''
+  };
+
+  /** Paginated catalog modal for Settings → Regions (GET /admin/regions/meta/countries). */
+  var regionCatalogPicker = { offset: 0, pageSize: 50, q: '', total: 0, debounceTimer: null };
+
+  function regionsYmdStartMs(ymd) {
+    if (!ymd || !String(ymd).trim()) return null;
+    var p = String(ymd).trim().split('-');
+    if (p.length !== 3) return null;
+    var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10), 0, 0, 0, 0);
+    var t = d.getTime();
+    return isNaN(t) ? null : t;
+  }
+
+  function regionsYmdEndMs(ymd) {
+    if (!ymd || !String(ymd).trim()) return null;
+    var p = String(ymd).trim().split('-');
+    if (p.length !== 3) return null;
+    var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10), 23, 59, 59, 999);
+    var t = d.getTime();
+    return isNaN(t) ? null : t;
+  }
+
+  function regionRowTimeMs(r, key) {
+    var v = r[key];
+    if (v == null || v === '') return null;
+    var t = new Date(v).getTime();
+    return isNaN(t) ? null : t;
+  }
+
+  function regionsPassDateFilters(r) {
+    if (regionSetState.filterCreatedEnabled) {
+      var cf = regionsYmdStartMs(regionSetState.filterCreatedFrom);
+      var ct = regionsYmdEndMs(regionSetState.filterCreatedTo);
+      if (cf != null || ct != null) {
+        var cms = regionRowTimeMs(r, 'created_at');
+        if (cms == null) return false;
+        if (cf != null && cms < cf) return false;
+        if (ct != null && cms > ct) return false;
+      }
+    }
+    if (regionSetState.filterUpdatedEnabled) {
+      var uf = regionsYmdStartMs(regionSetState.filterUpdatedFrom);
+      var ut = regionsYmdEndMs(regionSetState.filterUpdatedTo);
+      if (uf != null || ut != null) {
+        var ums = regionRowTimeMs(r, 'updated_at');
+        if (ums == null) return false;
+        if (uf != null && ums < uf) return false;
+        if (ut != null && ums > ut) return false;
+      }
+    }
+    return true;
+  }
+
+  function renderRegionsFilterPills() {
+    var host = document.getElementById('settingsRegionsFilterPills');
+    if (!host) return;
+    var chunks = [];
+    if (regionSetState.filterCreatedEnabled) {
+      chunks.push(
+        '<div class="filter-pill settings-regions-date-pill" data-region-date-pill="created">' +
+          '<span class="filter-pill-label">Created</span>' +
+          '<input type="date" class="settings-regions-date-input store-edit-input" id="settingsRegionsCreatedFrom" data-region-date-kind="created" data-region-date-bound="from" aria-label="Created from" value="' +
+          escapeHtml(regionSetState.filterCreatedFrom || '') +
+          '" />' +
+          '<span class="settings-regions-date-sep" aria-hidden="true">–</span>' +
+          '<input type="date" class="settings-regions-date-input store-edit-input" id="settingsRegionsCreatedTo" data-region-date-kind="created" data-region-date-bound="to" aria-label="Created to" value="' +
+          escapeHtml(regionSetState.filterCreatedTo || '') +
+          '" />' +
+          '<button type="button" class="filter-pill-remove" data-region-date-remove="created" aria-label="Remove created filter">×</button>' +
+          '</div>'
+      );
+    }
+    if (regionSetState.filterUpdatedEnabled) {
+      chunks.push(
+        '<div class="filter-pill settings-regions-date-pill" data-region-date-pill="updated">' +
+          '<span class="filter-pill-label">Updated</span>' +
+          '<input type="date" class="settings-regions-date-input store-edit-input" id="settingsRegionsUpdatedFrom" data-region-date-kind="updated" data-region-date-bound="from" aria-label="Updated from" value="' +
+          escapeHtml(regionSetState.filterUpdatedFrom || '') +
+          '" />' +
+          '<span class="settings-regions-date-sep" aria-hidden="true">–</span>' +
+          '<input type="date" class="settings-regions-date-input store-edit-input" id="settingsRegionsUpdatedTo" data-region-date-kind="updated" data-region-date-bound="to" aria-label="Updated to" value="' +
+          escapeHtml(regionSetState.filterUpdatedTo || '') +
+          '" />' +
+          '<button type="button" class="filter-pill-remove" data-region-date-remove="updated" aria-label="Remove updated filter">×</button>' +
+          '</div>'
+      );
+    }
+    host.innerHTML = chunks.join('');
+  }
+
+  function closeRegionsSettingsMenus() {
+    var sortMenu = document.getElementById('settingsRegionsSortMenu');
+    var sortBtn = document.getElementById('settingsRegionsSortBtn');
+    var filterMenu = document.getElementById('settingsRegionsAddFilterMenu');
+    var filterToggle = document.getElementById('settingsRegionsFilterToggle');
+    if (sortMenu) sortMenu.classList.add('hidden');
+    if (filterMenu) {
+      filterMenu.classList.add('hidden');
+      filterMenu.setAttribute('aria-hidden', 'true');
+    }
+    if (sortBtn) sortBtn.setAttribute('aria-expanded', 'false');
+    if (filterToggle) filterToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  function ucEnsureRegionsToolbarDocClose() {
+    if (window.__ucRegionsToolbarDocClose) return;
+    window.__ucRegionsToolbarDocClose = true;
+    document.addEventListener('click', function(ev) {
+      if (ev.target.closest('#settingsRegionsSortBtn') || ev.target.closest('#settingsRegionsSortMenu')) return;
+      if (ev.target.closest('#settingsRegionsFilterToggle') || ev.target.closest('#settingsRegionsAddFilterMenu')) return;
+      if (ev.target.closest('.settings-regions-date-pill')) return;
+      var sm = document.getElementById('settingsRegionsSortMenu');
+      var fm = document.getElementById('settingsRegionsAddFilterMenu');
+      if (!sm || !fm) return;
+      if (sm.classList.contains('hidden') && fm.classList.contains('hidden')) return;
+      closeRegionsSettingsMenus();
+    });
+  }
 
   function parseProductOrder(order) {
     var o = order || '-created_at';
@@ -2209,9 +2350,21 @@
       .then(function(data) {
         var list = (data && data.regions) ? data.regions : [];
         content.innerHTML = renderTable(
-          [{ key: 'name', label: 'Name' }, { key: 'currency_code', label: 'Currency' }, { key: 'id', label: 'ID' }],
-          list.map(function(r) { return { name: r.name, currency_code: r.currency_code, id: (r.id || '').substring(0, 8) }; }),
-          'No regions. Configure REGIONS_SERVICE_URL.'
+          [
+            { key: 'name', label: 'Name' },
+            { key: 'countries', label: 'Countries' },
+            { key: 'payment_providers', label: 'Payment Providers' },
+            { key: 'currency_code', label: 'Currency' }
+          ],
+          list.map(function(r) {
+            return {
+              name: r.name,
+              countries: r.countries || '—',
+              payment_providers: r.payment_providers || '—',
+              currency_code: r.currency_code || '—'
+            };
+          }),
+          'No regions. Create one under Settings → Regions or check the catalog database.'
         );
       })
       .catch(function() { showError('Failed to load regions.'); });
@@ -3136,6 +3289,1168 @@
     );
   }
 
+  function regionTaxPricingLabel(r) {
+    return r && r.tax_inclusive_pricing === true ? 'Tax inclusive' : 'Tax exclusive';
+  }
+
+  function getRegionsFilteredSorted() {
+    var q = (regionSetState.q || '').trim().toLowerCase();
+    var rows = regionSetState.rows.slice();
+    if (q) {
+      rows = rows.filter(function(r) {
+        var blobs = [r.name, r.countries, r.payment_providers, r.currency_code, regionTaxPricingLabel(r), 'tax inclusive', 'tax exclusive'].map(function(x) {
+          return String(x || '').toLowerCase();
+        });
+        return blobs.some(function(s) {
+          return s.indexOf(q) >= 0;
+        });
+      });
+    }
+    rows = rows.filter(function(r) {
+      return regionsPassDateFilters(r);
+    });
+    var sf = regionSetState.sortField || 'name';
+    var sd = regionSetState.sortDir === 'desc' ? -1 : 1;
+    rows.sort(function(a, b) {
+      if (sf === 'created_at' || sf === 'updated_at') {
+        var at = regionRowTimeMs(a, sf);
+        var bt = regionRowTimeMs(b, sf);
+        if (at == null && bt == null) return 0;
+        if (at == null) return 1 * sd;
+        if (bt == null) return -1 * sd;
+        if (at < bt) return -1 * sd;
+        if (at > bt) return 1 * sd;
+        return 0;
+      }
+      if (sf === 'tax_inclusive_pricing') {
+        var ai = a.tax_inclusive_pricing === true ? 1 : 0;
+        var bi = b.tax_inclusive_pricing === true ? 1 : 0;
+        if (ai < bi) return -1 * sd;
+        if (ai > bi) return 1 * sd;
+        return 0;
+      }
+      var av = String((a[sf] != null ? a[sf] : '') || '');
+      var bv = String((b[sf] != null ? b[sf] : '') || '');
+      av = av.toLowerCase();
+      bv = bv.toLowerCase();
+      if (av < bv) return -1 * sd;
+      if (av > bv) return 1 * sd;
+      return 0;
+    });
+    return rows;
+  }
+
+  function renderRegionsSettingsTableBody() {
+    var tbody = document.getElementById('settingsRegionsBody');
+    if (!tbody) return;
+    var all = getRegionsFilteredSorted();
+    var pageSize = regionSetState.pageSize;
+    var pages = Math.max(1, Math.ceil(all.length / pageSize) || 1);
+    if (regionSetState.page > pages) regionSetState.page = pages;
+    var start = (regionSetState.page - 1) * pageSize;
+    var slice = all.slice(start, start + pageSize);
+    var defId = regionSetState.defaultRegionId ? String(regionSetState.defaultRegionId).trim() : '';
+    tbody.innerHTML = slice
+      .map(function(r) {
+        var rid = r.id != null ? String(r.id).trim() : '';
+        var isDefault = defId && rid && defId === rid;
+        return (
+          '<tr data-region-id="' +
+          escapeHtml(r.id || '') +
+          '"' +
+          (isDefault ? ' class="settings-table-row--default-region"' : '') +
+          '>' +
+          '<td>' +
+          (isDefault
+            ? '<span class="settings-regions-default-badge" title="Store default region">Default</span> '
+            : '') +
+          escapeHtml(r.name || '—') +
+          '</td><td>' +
+          escapeHtml(r.countries || '—') +
+          '</td><td>' +
+          escapeHtml(r.payment_providers || '—') +
+          '</td><td>' +
+          escapeHtml(regionTaxPricingLabel(r)) +
+          '</td>' +
+          '<td class="settings-td-actions">' +
+          '<div class="settings-regions-actions-wrap">' +
+          '<button type="button" class="settings-regions-row-menu-btn" aria-haspopup="true" aria-expanded="false" aria-label="Row actions">⋯</button>' +
+          '<div class="settings-store-dropdown settings-regions-row-dropdown hidden" role="menu">' +
+          '<button type="button" class="settings-store-dropdown-item settings-regions-row-edit" data-region-id="' +
+          escapeHtml(rid) +
+          '" role="menuitem">' +
+          '<svg class="settings-regions-menu-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>' +
+          '<span>Edit</span></button>' +
+          '<button type="button" class="settings-store-dropdown-item danger settings-regions-row-delete" data-region-id="' +
+          escapeHtml(rid) +
+          '" role="menuitem">' +
+          '<svg class="settings-regions-menu-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>' +
+          '<span>Delete</span></button>' +
+          '</div></div></td>' +
+          '</tr>'
+        );
+      })
+      .join('');
+  }
+
+  function renderRegionsSettingsFooter() {
+    var all = getRegionsFilteredSorted();
+    var total = all.length;
+    var pageSize = regionSetState.pageSize;
+    var pages = Math.max(1, Math.ceil(total / pageSize) || 1);
+    var start = total === 0 ? 0 : (regionSetState.page - 1) * pageSize + 1;
+    var end = Math.min(regionSetState.page * pageSize, total);
+    var rng = document.getElementById('settingsRegionsFoot');
+    var pl = document.getElementById('settingsRegionsPageLabel');
+    if (rng) {
+      rng.textContent =
+        (total === 0 ? '0' : start) + ' – ' + end + ' of ' + total + ' results';
+    }
+    if (pl) pl.textContent = regionSetState.page + ' of ' + pages + ' pages';
+    var prev = document.getElementById('settingsRegionsPrev');
+    var next = document.getElementById('settingsRegionsNext');
+    if (prev) prev.disabled = regionSetState.page <= 1;
+    if (next) next.disabled = regionSetState.page >= pages;
+  }
+
+  function closeRegionCreateDrawer() {
+    var bd = document.getElementById('regionCreateBackdrop');
+    var dr = document.getElementById('regionCreateDrawer');
+    if (bd) bd.classList.add('hidden');
+    if (dr) {
+      dr.classList.add('hidden');
+      dr.removeAttribute('data-edit-id');
+    }
+    document.body.classList.remove('region-create-open');
+    ucDrawer.unbindEscape();
+    var saveBtn = document.getElementById('regionCreateSave');
+    if (saveBtn) saveBtn.disabled = false;
+    var rt = document.getElementById('regionCreateTitle');
+    if (rt) rt.textContent = 'Create Region';
+  }
+
+  function closeAllRegionRowMenus() {
+    document.querySelectorAll('.settings-regions-row-dropdown:not(.hidden)').forEach(function(d) {
+      d.classList.add('hidden');
+    });
+    document.querySelectorAll('.settings-regions-row-menu-btn[aria-expanded="true"]').forEach(function(b) {
+      b.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function updateRegionCountriesSummary() {
+    var el = document.getElementById('regionCreateCountriesSummary');
+    if (!el) return;
+    var isos = regionSetState.regionSelectedIsos || [];
+    if (!isos.length) {
+      el.innerHTML =
+        '<span class="settings-card-sub" style="font-size:0.8rem;color:#64748b;">No countries selected. Click <strong>Add countries</strong> to open the catalog (<code class="settings-code-inline">region_country</code>, Medusa v2).</span>';
+      return;
+    }
+    var chips = isos
+      .slice()
+      .sort()
+      .map(function(iso) {
+        return '<span class="settings-region-iso-chip">' + escapeHtml(String(iso).toUpperCase()) + '</span>';
+      })
+      .join(' ');
+    el.innerHTML =
+      '<span style="font-size:0.75rem;color:#64748b;display:block;margin-bottom:0.35rem;">' +
+      isos.length +
+      ' selected</span><div class="settings-region-iso-chips">' +
+      chips +
+      '</div>';
+  }
+
+  function ensureRegionCountryPickerShell() {
+    if (document.getElementById('regionCountryPickerBackdrop')) return;
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<div id="regionCountryPickerBackdrop" class="uc-drawer-backdrop store-edit-backdrop hidden" aria-hidden="true"></div>' +
+        '<div id="regionCountryPickerPanel" class="region-country-picker hidden" role="dialog" aria-modal="true" aria-labelledby="regionCountryPickerTitle">' +
+        '<div class="region-country-picker-inner">' +
+        '<div class="region-country-picker-head">' +
+        '<h3 id="regionCountryPickerTitle" class="region-country-picker-title">Add countries</h3>' +
+        '<button type="button" class="store-edit-x" id="regionCountryPickerClose" aria-label="Close">×</button></div>' +
+        '<p class="settings-card-sub" style="margin:0 0 0.5rem;">Medusa v2 uses <code class="settings-code-inline">region_country</code> for ISO rows (PK <code class="settings-code-inline">iso_2</code>) and sets <code class="settings-code-inline">region_id</code> when a country belongs to a region — same table Medusa Admin lists.</p>' +
+        '<div class="region-country-picker-toolbar">' +
+        '<input type="search" id="regionCountryCatalogQ" class="store-edit-input" placeholder="Search by name or code" autocomplete="off" /></div>' +
+        '<div class="region-country-picker-table-wrap">' +
+        '<table class="region-country-picker-table" role="grid">' +
+        '<thead><tr><th class="region-country-picker-col-cb"></th><th>Name</th><th>Code</th></tr></thead>' +
+        '<tbody id="regionCountryCatalogTbody"><tr><td colspan="3">Loading…</td></tr></tbody></table></div>' +
+        '<div class="region-country-picker-foot">' +
+        '<span id="regionCountryCatalogRange" class="region-country-picker-range"></span>' +
+        '<div class="region-country-picker-pager">' +
+        '<button type="button" class="btn-outline" id="regionCountryCatalogPrev">Prev</button>' +
+        '<button type="button" class="btn-outline" id="regionCountryCatalogNext">Next</button></div>' +
+        '<button type="button" class="btn-solid" id="regionCountryPickerApply">Done</button></div></div></div>'
+    );
+    document.getElementById('regionCountryPickerBackdrop').addEventListener('click', closeRegionCountryPickerModal);
+    document.getElementById('regionCountryPickerClose').addEventListener('click', closeRegionCountryPickerModal);
+    document.getElementById('regionCountryPickerApply').addEventListener('click', applyRegionCountryPickerDone);
+    document.getElementById('regionCountryCatalogPrev').addEventListener('click', function() {
+      if (regionCatalogPicker.offset <= 0) return;
+      regionCatalogPicker.offset = Math.max(0, regionCatalogPicker.offset - regionCatalogPicker.pageSize);
+      loadRegionCountryCatalog();
+    });
+    document.getElementById('regionCountryCatalogNext').addEventListener('click', function() {
+      var nextOff = regionCatalogPicker.offset + regionCatalogPicker.pageSize;
+      if (nextOff >= regionCatalogPicker.total) return;
+      regionCatalogPicker.offset = nextOff;
+      loadRegionCountryCatalog();
+    });
+    var qEl = document.getElementById('regionCountryCatalogQ');
+    if (qEl) {
+      qEl.addEventListener('input', function() {
+        if (regionCatalogPicker.debounceTimer) clearTimeout(regionCatalogPicker.debounceTimer);
+        regionCatalogPicker.debounceTimer = setTimeout(function() {
+          regionCatalogPicker.q = (qEl.value || '').trim();
+          regionCatalogPicker.offset = 0;
+          loadRegionCountryCatalog();
+        }, 280);
+      });
+    }
+    var tbody = document.getElementById('regionCountryCatalogTbody');
+    if (tbody) {
+      tbody.addEventListener('change', function(ev) {
+        var t = ev.target;
+        if (!t || !t.getAttribute || t.getAttribute('type') !== 'checkbox') return;
+        if (!t.classList || !t.classList.contains('region-cat-check')) return;
+        var iso = (t.getAttribute('data-iso') || '').toLowerCase();
+        if (!iso) return;
+        var arr = regionSetState.regionSelectedIsos ? regionSetState.regionSelectedIsos.slice() : [];
+        var ix = arr.indexOf(iso);
+        if (t.checked) {
+          if (ix < 0) arr.push(iso);
+        } else if (ix >= 0) {
+          arr.splice(ix, 1);
+        }
+        regionSetState.regionSelectedIsos = arr;
+        updateRegionCountriesSummary();
+      });
+    }
+  }
+
+  function closeRegionCountryPickerModal() {
+    var bd = document.getElementById('regionCountryPickerBackdrop');
+    var pan = document.getElementById('regionCountryPickerPanel');
+    if (bd) {
+      bd.classList.add('hidden');
+      bd.setAttribute('aria-hidden', 'true');
+    }
+    if (pan) {
+      pan.classList.add('hidden');
+      pan.setAttribute('aria-hidden', 'true');
+    }
+    document.body.classList.remove('region-country-picker-open');
+  }
+
+  /** Done: refresh summary; when editing a region, persist countries to the server (PATCH). */
+  function applyRegionCountryPickerDone() {
+    updateRegionCountriesSummary();
+    var drawer = document.getElementById('regionCreateDrawer');
+    var editId = drawer && drawer.getAttribute('data-edit-id');
+    if (!editId) {
+      closeRegionCountryPickerModal();
+      return;
+    }
+    var applyBtn = document.getElementById('regionCountryPickerApply');
+    var isoList = regionSetState.regionSelectedIsos ? regionSetState.regionSelectedIsos.slice() : [];
+    if (applyBtn) applyBtn.disabled = true;
+    fetch('/admin/regions/' + encodeURIComponent(editId), {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ countries: isoList })
+    })
+      .then(function(r) {
+        return r.text().then(function(t) {
+          var j = {};
+          if (t) {
+            try {
+              j = JSON.parse(t);
+            } catch (e) {
+              j = {};
+            }
+          }
+          return { ok: r.ok, j: j, status: r.status };
+        });
+      })
+      .then(function(x) {
+        if (!x.ok) {
+          closeRegionCountryPickerModal();
+          var err = document.getElementById('regionCreateErr');
+          var msg = (x.j && (x.j.message || x.j.error))
+            ? String(x.j.message || x.j.error)
+            : 'Could not update countries.';
+          if (err) {
+            err.textContent = msg;
+            err.classList.remove('hidden');
+          }
+          return;
+        }
+        closeRegionCountryPickerModal();
+        Promise.all([api('/admin/regions'), api('/admin/store')])
+          .then(function(rs) {
+            return Promise.all(rs.map(function(r) { return r.json(); }));
+          })
+          .then(function(pair) {
+            var data = pair[0] || {};
+            var storeData = pair[1] || {};
+            var st = storeData.store || {};
+            regionSetState.rows = data.regions ? data.regions : [];
+            if (data.country_options) regionSetState.countryOptions = data.country_options;
+            regionSetState.defaultRegionId = st.default_region_id != null ? st.default_region_id : null;
+            regionSetState.defaultRegionName = st.default_region_name != null ? st.default_region_name : null;
+            var dn = document.getElementById('settingsRegionsDefaultName');
+            if (dn) {
+              var show =
+                regionSetState.defaultRegionName ||
+                regionSetState.defaultRegionId ||
+                '';
+              dn.textContent = show ? String(show) : '—';
+            }
+            renderRegionsSettingsTableBody();
+            renderRegionsSettingsFooter();
+          })
+          .catch(function() {});
+      })
+      .catch(function() {
+        closeRegionCountryPickerModal();
+        var err = document.getElementById('regionCreateErr');
+        if (err) {
+          err.textContent = 'Request failed.';
+          err.classList.remove('hidden');
+        }
+      })
+      .finally(function() {
+        if (applyBtn) applyBtn.disabled = false;
+      });
+  }
+
+  function loadRegionCountryCatalog() {
+    ensureRegionCountryPickerShell();
+    var tbody = document.getElementById('regionCountryCatalogTbody');
+    var rangeEl = document.getElementById('regionCountryCatalogRange');
+    var prevBtn = document.getElementById('regionCountryCatalogPrev');
+    var nextBtn = document.getElementById('regionCountryCatalogNext');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="3">Loading…</td></tr>';
+    var params = new URLSearchParams();
+    if (regionCatalogPicker.q) params.set('q', regionCatalogPicker.q);
+    params.set('limit', String(regionCatalogPicker.pageSize));
+    params.set('offset', String(regionCatalogPicker.offset));
+    fetch('/admin/regions/meta/countries?' + params.toString(), {
+      credentials: 'include',
+      headers: { Accept: 'application/json' }
+    })
+      .then(function(r) {
+        return r.json();
+      })
+      .then(function(data) {
+        regionCatalogPicker.total = typeof data.count === 'number' ? data.count : 0;
+        var rows = data.countries || [];
+        var selected = {};
+        (regionSetState.regionSelectedIsos || []).forEach(function(iso) {
+          if (iso) selected[String(iso).toLowerCase()] = true;
+        });
+        if (tbody) {
+          tbody.innerHTML = rows
+            .map(function(row) {
+              var iso = (row.iso_2 || '').toLowerCase();
+              var name = row.display_name || iso.toUpperCase();
+              var code = iso.toUpperCase();
+              var chk = selected[iso] ? ' checked' : '';
+              return (
+                '<tr><td class="region-country-picker-col-cb"><input type="checkbox" class="region-cat-check" data-iso="' +
+                escapeHtml(iso) +
+                '"' +
+                chk +
+                ' /></td><td>' +
+                escapeHtml(name) +
+                '</td><td>' +
+                escapeHtml(code) +
+                '</td></tr>'
+              );
+            })
+            .join('');
+          if (!rows.length) {
+            tbody.innerHTML =
+              '<tr><td colspan="3" class="region-country-picker-empty">' +
+              (regionCatalogPicker.total === 0
+                ? 'No rows in <code class="settings-code-inline">region_country</code> (Medusa v2). Run <code class="settings-code-inline">npx medusa exec ./src/scripts/seed-region-countries.ts</code> from <strong>unifiedcommerce-store</strong>, or ensure Region module migrations ran.'
+                : 'No matches for this search.') +
+              '</td></tr>';
+          }
+        }
+        var from = regionCatalogPicker.total === 0 ? 0 : regionCatalogPicker.offset + 1;
+        var to = regionCatalogPicker.offset + rows.length;
+        if (rangeEl) {
+          rangeEl.textContent = regionCatalogPicker.total
+            ? from + ' – ' + to + ' of ' + regionCatalogPicker.total + ' results'
+            : '0 results';
+        }
+        if (prevBtn) prevBtn.disabled = regionCatalogPicker.offset <= 0;
+        if (nextBtn)
+          nextBtn.disabled =
+            regionCatalogPicker.offset + regionCatalogPicker.pageSize >= regionCatalogPicker.total;
+      })
+      .catch(function() {
+        if (tbody) {
+          tbody.innerHTML =
+            '<tr><td colspan="3">Could not load countries. Is products-service running and pointing at the same DB as Medusa?</td></tr>';
+        }
+      });
+  }
+
+  function openRegionCountryPickerModal() {
+    ensureRegionCountryPickerShell();
+    regionCatalogPicker.offset = 0;
+    regionCatalogPicker.q = '';
+    var qEl = document.getElementById('regionCountryCatalogQ');
+    if (qEl) qEl.value = '';
+    var bd = document.getElementById('regionCountryPickerBackdrop');
+    var pan = document.getElementById('regionCountryPickerPanel');
+    if (bd) {
+      bd.classList.remove('hidden');
+      bd.setAttribute('aria-hidden', 'false');
+    }
+    if (pan) {
+      pan.classList.remove('hidden');
+      pan.setAttribute('aria-hidden', 'false');
+    }
+    document.body.classList.add('region-country-picker-open');
+    loadRegionCountryCatalog();
+  }
+
+  function ensureRegionCreateShell() {
+    if (document.getElementById('regionCreateBackdrop')) return;
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<div id="regionCreateBackdrop" class="uc-drawer-backdrop store-edit-backdrop hidden" aria-hidden="true"></div>' +
+        '<div id="regionCreateDrawer" class="store-edit-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="regionCreateTitle">' +
+        '<div class="store-edit-inner">' +
+        '<div class="store-edit-head">' +
+        '<div><h2 id="regionCreateTitle" class="store-edit-title">Create Region</h2>' +
+        '<p class="settings-card-sub" style="margin:0.35rem 0 0;">Manage tax rates and providers for a set of countries.</p></div>' +
+        '<div class="store-edit-head-actions">' +
+        '<span class="store-edit-kbd">Esc</span>' +
+        '<button type="button" class="store-edit-x" id="regionCreateClose" aria-label="Close">×</button></div></div>' +
+        '<div class="store-edit-body">' +
+        '<div class="store-edit-field"><label class="store-edit-label" for="regionCreateName">Name</label>' +
+        '<input id="regionCreateName" type="text" class="store-edit-input" autocomplete="off" /></div>' +
+        '<div class="store-edit-field"><label class="store-edit-label" for="regionCreateCurrency">Currency</label>' +
+        '<select id="regionCreateCurrency" class="store-edit-input"></select></div>' +
+        '<div class="store-edit-field">' +
+        '<label class="store-edit-label" for="regionCreateAutoTax">Automatic taxes</label>' +
+        '<div style="display:flex;align-items:center;gap:0.5rem;">' +
+        '<input type="checkbox" id="regionCreateAutoTax" checked />' +
+        '<span style="font-size:0.8rem;color:#64748b;">When enabled, taxes will only be calculated at checkout based on the shipping address.</span></div></div>' +
+        '<div class="store-edit-field">' +
+        '<label class="store-edit-label" for="regionCreateTaxIncl">Tax inclusive pricing</label>' +
+        '<div style="display:flex;align-items:center;gap:0.5rem;">' +
+        '<input type="checkbox" id="regionCreateTaxIncl" />' +
+        '<span style="font-size:0.8rem;color:#64748b;">When enabled, prices in the region will be tax inclusive.</span></div></div>' +
+        '<div class="store-edit-field">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;">' +
+        '<div><span class="store-edit-label">Countries</span>' +
+        '<p class="settings-card-sub" style="margin:0.25rem 0 0;font-size:0.8rem;">Same data as Medusa Admin: <code class="settings-code-inline">region_country</code> (Medusa v2 Region module).</p></div>' +
+        '<button type="button" class="btn-outline" id="regionCreateCountriesOpenPicker">Add countries</button></div>' +
+        '<div id="regionCreateCountriesSummary" class="region-create-countries-summary" style="margin-top:0.5rem;"></div>' +
+        '<p id="regionCreateCountriesHelp" class="settings-card-sub hidden" style="margin:0.35rem 0 0;font-size:0.75rem;color:#b45309;max-width:40rem;line-height:1.35;"></p></div>' +
+        '<div class="store-edit-field">' +
+        '<span class="store-edit-label">Providers</span>' +
+        '<p class="settings-card-sub" style="margin:0.25rem 0 0.5rem;font-size:0.8rem;">Add which payment providers are available in this region.</p>' +
+        '<label class="store-edit-label" for="regionCreateProvider">Payment Providers</label>' +
+        '<select id="regionCreateProvider" class="store-edit-input"><option value="">System (default)</option></select></div>' +
+        '<p class="store-edit-err hidden" id="regionCreateErr" role="alert"></p></div>' +
+        '<div class="store-edit-foot">' +
+        '<button type="button" class="btn-outline" id="regionCreateCancel">Cancel</button>' +
+        '<button type="button" class="btn-solid" id="regionCreateSave">Save</button></div></div></div>'
+    );
+    document.getElementById('regionCreateBackdrop').addEventListener('click', closeRegionCreateDrawer);
+    document.getElementById('regionCreateClose').addEventListener('click', closeRegionCreateDrawer);
+    document.getElementById('regionCreateCancel').addEventListener('click', closeRegionCreateDrawer);
+    document.getElementById('regionCreateCountriesOpenPicker').addEventListener('click', openRegionCountryPickerModal);
+  }
+
+  function resetRegionCreateForm() {
+    var name = document.getElementById('regionCreateName');
+    var cur = document.getElementById('regionCreateCurrency');
+    var autoTax = document.getElementById('regionCreateAutoTax');
+    var taxIncl = document.getElementById('regionCreateTaxIncl');
+    var err = document.getElementById('regionCreateErr');
+    if (name) name.value = '';
+    if (autoTax) autoTax.checked = true;
+    if (taxIncl) taxIncl.checked = false;
+    regionSetState.regionSelectedIsos = [];
+    updateRegionCountriesSummary();
+    if (cur && cur.options.length) {
+      cur.selectedIndex = 0;
+    }
+    if (err) {
+      err.classList.add('hidden');
+      err.textContent = '';
+    }
+  }
+
+  function populateRegionCreateCurrencySelect() {
+    var sel = document.getElementById('regionCreateCurrency');
+    if (!sel) return;
+    var list = regionSetState.currencies || [];
+    sel.innerHTML = list
+      .map(function(c) {
+        var code = (c.code || '').toLowerCase();
+        var nm = c.name || code.toUpperCase();
+        return '<option value="' + escapeHtml(code) + '">' + escapeHtml(nm + ' (' + code.toUpperCase() + ')') + '</option>';
+      })
+      .join('');
+    if (!list.length) {
+      sel.innerHTML = '<option value="usd">USD</option>';
+    }
+  }
+
+  function populateRegionCreateCountriesSelect() {
+    var help = document.getElementById('regionCreateCountriesHelp');
+    updateRegionCountriesSummary();
+    var list = regionSetState.countryOptions || [];
+    if (!list.length && help) {
+      help.innerHTML =
+        'The ISO catalog is empty: Medusa v2 stores countries in <code class="settings-code-inline">region_country</code> (no separate <code class="settings-code-inline">country</code> table). From <strong>unifiedcommerce-store</strong> run ' +
+        '<code class="settings-code-inline">npx medusa exec ./src/scripts/seed-region-countries.ts</code> (or rely on Medusa core migrations), then reload.';
+      help.classList.remove('hidden');
+    } else if (help) {
+      help.textContent = '';
+      help.classList.add('hidden');
+    }
+  }
+
+  function openRegionCreateDrawer() {
+    ensureRegionCreateShell();
+    var dr0 = document.getElementById('regionCreateDrawer');
+    if (dr0) dr0.removeAttribute('data-edit-id');
+    var rt0 = document.getElementById('regionCreateTitle');
+    if (rt0) rt0.textContent = 'Create Region';
+    resetRegionCreateForm();
+    populateRegionCreateCurrencySelect();
+    populateRegionCreateCountriesSelect();
+    var bd = document.getElementById('regionCreateBackdrop');
+    var dr = document.getElementById('regionCreateDrawer');
+    if (bd) {
+      bd.classList.remove('hidden');
+      bd.setAttribute('aria-hidden', 'false');
+    }
+    if (dr) {
+      dr.classList.remove('hidden');
+      dr.setAttribute('aria-hidden', 'false');
+    }
+    document.body.classList.add('region-create-open');
+    ucDrawer.bindEscape(function(ev) {
+      if (ev.key === 'Escape') closeRegionCreateDrawer();
+    });
+    var name = document.getElementById('regionCreateName');
+    if (name) setTimeout(function() { name.focus(); }, 50);
+  }
+
+  function openRegionEditDrawer(regionId) {
+    if (!regionId) return;
+    ensureRegionCreateShell();
+    resetRegionCreateForm();
+    populateRegionCreateCurrencySelect();
+    populateRegionCreateCountriesSelect();
+    var title = document.getElementById('regionCreateTitle');
+    if (title) title.textContent = 'Edit Region';
+    var dr = document.getElementById('regionCreateDrawer');
+    if (dr) dr.setAttribute('data-edit-id', regionId);
+    var err = document.getElementById('regionCreateErr');
+    if (err) {
+      err.classList.add('hidden');
+      err.textContent = '';
+    }
+    fetch('/admin/regions/' + encodeURIComponent(regionId), {
+      credentials: 'include',
+      headers: { Accept: 'application/json' }
+    })
+      .then(function(r) {
+        return r.json().then(function(j) {
+          return { ok: r.ok, j: j };
+        });
+      })
+      .then(function(x) {
+        if (!x.ok || !x.j || !x.j.region) {
+          if (err) {
+            err.textContent = (x.j && (x.j.message || x.j.error)) ? String(x.j.message || x.j.error) : 'Could not load region.';
+            err.classList.remove('hidden');
+          }
+          return;
+        }
+        var reg = x.j.region;
+        var nm = document.getElementById('regionCreateName');
+        if (nm) nm.value = reg.name || '';
+        var cur = document.getElementById('regionCreateCurrency');
+        if (cur) {
+          var code = reg.currency_code != null ? String(reg.currency_code).toLowerCase().trim() : '';
+          if (code) {
+            var foundOpt = null;
+            Array.prototype.forEach.call(cur.options, function(o) {
+              if ((o.value || '').toLowerCase() === code) {
+                foundOpt = o;
+              }
+            });
+            if (!foundOpt) {
+              var o = document.createElement('option');
+              o.value = code;
+              o.textContent = code.toUpperCase();
+              cur.appendChild(o);
+            }
+            cur.value = code;
+          }
+        }
+        var autoTax = document.getElementById('regionCreateAutoTax');
+        if (autoTax) autoTax.checked = reg.automatic_taxes !== false;
+        var taxIncl = document.getElementById('regionCreateTaxIncl');
+        if (taxIncl) taxIncl.checked = Boolean(reg.tax_inclusive_pricing);
+        var isos = reg.countries_iso && reg.countries_iso.length ? reg.countries_iso : [];
+        regionSetState.regionSelectedIsos = isos
+          .map(function(iso) {
+            return String(iso).toLowerCase().trim();
+          })
+          .filter(Boolean);
+        updateRegionCountriesSummary();
+        var bd = document.getElementById('regionCreateBackdrop');
+        if (bd) {
+          bd.classList.remove('hidden');
+          bd.setAttribute('aria-hidden', 'false');
+        }
+        if (dr) {
+          dr.classList.remove('hidden');
+          dr.setAttribute('aria-hidden', 'false');
+        }
+        document.body.classList.add('region-create-open');
+        ucDrawer.bindEscape(function(ev) {
+          if (ev.key === 'Escape') closeRegionCreateDrawer();
+        });
+        if (nm) setTimeout(function() { nm.focus(); }, 50);
+      })
+      .catch(function() {
+        if (err) {
+          err.textContent = 'Request failed.';
+          err.classList.remove('hidden');
+        }
+      });
+  }
+
+  function wireRegionsSettingsPage(root) {
+    if (!root) return;
+    ucEnsureRegionsToolbarDocClose();
+    var search = root.querySelector('#settingsRegionsSearch');
+    if (search) {
+      search.addEventListener('input', function() {
+        regionSetState.q = search.value || '';
+        regionSetState.page = 1;
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+      });
+    }
+    var sortBtn = root.querySelector('#settingsRegionsSortBtn');
+    var sortMenu = root.querySelector('#settingsRegionsSortMenu');
+    var filterToggle = root.querySelector('#settingsRegionsFilterToggle');
+    var filterMenu = root.querySelector('#settingsRegionsAddFilterMenu');
+    if (sortBtn && sortMenu) {
+      sortBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (filterMenu) {
+          filterMenu.classList.add('hidden');
+          filterMenu.setAttribute('aria-hidden', 'true');
+        }
+        if (filterToggle) filterToggle.setAttribute('aria-expanded', 'false');
+        var isHidden = sortMenu.classList.contains('hidden');
+        if (isHidden) {
+          sortMenu.classList.remove('hidden');
+          sortBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          sortMenu.classList.add('hidden');
+          sortBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      sortMenu.querySelectorAll('[data-region-sort-field]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          regionSetState.sortField = btn.getAttribute('data-region-sort-field') || 'name';
+          renderRegionsSettingsTableBody();
+          renderRegionsSettingsFooter();
+          sortMenu.classList.add('hidden');
+          sortBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      sortMenu.querySelectorAll('[data-region-sort-dir]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          regionSetState.sortDir = btn.getAttribute('data-region-sort-dir') || 'asc';
+          renderRegionsSettingsTableBody();
+          renderRegionsSettingsFooter();
+          sortMenu.classList.add('hidden');
+          sortBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+    if (filterToggle && filterMenu) {
+      filterToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (sortMenu) sortMenu.classList.add('hidden');
+        if (sortBtn) sortBtn.setAttribute('aria-expanded', 'false');
+        var isHidden = filterMenu.classList.contains('hidden');
+        if (isHidden) {
+          filterMenu.classList.remove('hidden');
+          filterMenu.setAttribute('aria-hidden', 'false');
+          filterToggle.setAttribute('aria-expanded', 'true');
+        } else {
+          filterMenu.classList.add('hidden');
+          filterMenu.setAttribute('aria-hidden', 'true');
+          filterToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+    var filterByCreated = root.querySelector('#settingsRegionsFilterByCreated');
+    if (filterByCreated && filterMenu && filterToggle) {
+      filterByCreated.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        regionSetState.filterCreatedEnabled = true;
+        regionSetState.page = 1;
+        filterMenu.classList.add('hidden');
+        filterMenu.setAttribute('aria-hidden', 'true');
+        filterToggle.setAttribute('aria-expanded', 'false');
+        renderRegionsFilterPills();
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+      });
+    }
+    var filterByUpdated = root.querySelector('#settingsRegionsFilterByUpdated');
+    if (filterByUpdated && filterMenu && filterToggle) {
+      filterByUpdated.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        regionSetState.filterUpdatedEnabled = true;
+        regionSetState.page = 1;
+        filterMenu.classList.add('hidden');
+        filterMenu.setAttribute('aria-hidden', 'true');
+        filterToggle.setAttribute('aria-expanded', 'false');
+        renderRegionsFilterPills();
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+      });
+    }
+    var clearF = root.querySelector('#settingsRegionsFilterClear');
+    if (clearF) {
+      clearF.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        regionSetState.q = '';
+        if (search) search.value = '';
+        regionSetState.filterCreatedEnabled = false;
+        regionSetState.filterCreatedFrom = '';
+        regionSetState.filterCreatedTo = '';
+        regionSetState.filterUpdatedEnabled = false;
+        regionSetState.filterUpdatedFrom = '';
+        regionSetState.filterUpdatedTo = '';
+        regionSetState.page = 1;
+        renderRegionsFilterPills();
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+        if (filterMenu) {
+          filterMenu.classList.add('hidden');
+          filterMenu.setAttribute('aria-hidden', 'true');
+        }
+        if (filterToggle) filterToggle.setAttribute('aria-expanded', 'false');
+      });
+    }
+    if (!root.dataset.regionsDateFilterDelegated) {
+      root.dataset.regionsDateFilterDelegated = '1';
+      root.addEventListener('change', function(ev) {
+        var t = ev.target;
+        if (!t || !t.classList || !t.classList.contains('settings-regions-date-input')) return;
+        var kind = t.getAttribute('data-region-date-kind');
+        var bound = t.getAttribute('data-region-date-bound');
+        var val = t.value || '';
+        if (kind === 'created') {
+          if (bound === 'from') regionSetState.filterCreatedFrom = val;
+          else regionSetState.filterCreatedTo = val;
+        } else if (kind === 'updated') {
+          if (bound === 'from') regionSetState.filterUpdatedFrom = val;
+          else regionSetState.filterUpdatedTo = val;
+        }
+        regionSetState.page = 1;
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+      });
+      root.addEventListener('click', function(ev) {
+        var rm = ev.target.closest('[data-region-date-remove]');
+        if (!rm) return;
+        ev.preventDefault();
+        var k = rm.getAttribute('data-region-date-remove');
+        if (k === 'created') {
+          regionSetState.filterCreatedEnabled = false;
+          regionSetState.filterCreatedFrom = '';
+          regionSetState.filterCreatedTo = '';
+        } else if (k === 'updated') {
+          regionSetState.filterUpdatedEnabled = false;
+          regionSetState.filterUpdatedFrom = '';
+          regionSetState.filterUpdatedTo = '';
+        }
+        regionSetState.page = 1;
+        renderRegionsFilterPills();
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+      });
+    }
+    var prev = root.querySelector('#settingsRegionsPrev');
+    var next = root.querySelector('#settingsRegionsNext');
+    if (prev) {
+      prev.addEventListener('click', function() {
+        if (regionSetState.page > 1) {
+          regionSetState.page--;
+          renderRegionsSettingsTableBody();
+          renderRegionsSettingsFooter();
+        }
+      });
+    }
+    if (next) {
+      next.addEventListener('click', function() {
+        var all = getRegionsFilteredSorted();
+        var pages = Math.max(1, Math.ceil(all.length / regionSetState.pageSize) || 1);
+        if (regionSetState.page < pages) {
+          regionSetState.page++;
+          renderRegionsSettingsTableBody();
+          renderRegionsSettingsFooter();
+        }
+      });
+    }
+    var createBtn = root.querySelector('#settingsRegionsCreateBtn');
+    if (createBtn) {
+      createBtn.addEventListener('click', function() {
+        openRegionCreateDrawer();
+      });
+    }
+    var regionsTableWrap = root.querySelector('#settingsRegionsTableWrap');
+    if (regionsTableWrap && regionsTableWrap.dataset.regionsRowMenuWired !== '1') {
+      regionsTableWrap.dataset.regionsRowMenuWired = '1';
+      regionsTableWrap.addEventListener('click', function(ev) {
+        var editBtn = ev.target.closest('.settings-regions-row-edit');
+        if (editBtn) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          closeAllRegionRowMenus();
+          var rid = editBtn.getAttribute('data-region-id') || '';
+          if (rid) openRegionEditDrawer(rid);
+          return;
+        }
+        var delBtn = ev.target.closest('.settings-regions-row-delete');
+        if (delBtn) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          closeAllRegionRowMenus();
+          var ridDel = delBtn.getAttribute('data-region-id') || '';
+          var tr = delBtn.closest('tr[data-region-id]');
+          var rowName = tr ? tr.textContent.replace(/\s+/g, ' ').trim() : '';
+          if (
+            ridDel &&
+            window.confirm('Delete this region' + (rowName ? ' (' + rowName.slice(0, 80) + ')' : '') + '?')
+          ) {
+            fetch('/admin/regions/' + encodeURIComponent(ridDel), {
+              method: 'DELETE',
+              credentials: 'include',
+              headers: { Accept: 'application/json' }
+            })
+              .then(function(r) {
+                return r.json().then(function(j) {
+                  return { ok: r.ok, j: j };
+                });
+              })
+              .then(function(x) {
+                if (!x.ok) {
+                  var msg =
+                    x.j && (x.j.message || x.j.error) ? String(x.j.message || x.j.error) : 'Could not delete region.';
+                  window.alert(msg);
+                  return;
+                }
+                return Promise.all([api('/admin/regions'), api('/admin/store')]).then(function(rs) {
+                  return Promise.all(rs.map(function(r) { return r.json(); }));
+                });
+              })
+              .then(function(pair) {
+                if (!pair) return;
+                var data = pair[0] || {};
+                var storeData = pair[1] || {};
+                var st = storeData.store || {};
+                regionSetState.rows = data.regions ? data.regions : [];
+                if (data.country_options) regionSetState.countryOptions = data.country_options;
+                regionSetState.defaultRegionId = st.default_region_id != null ? st.default_region_id : null;
+                regionSetState.defaultRegionName = st.default_region_name != null ? st.default_region_name : null;
+                var dn = document.getElementById('settingsRegionsDefaultName');
+                if (dn) {
+                  var show =
+                    regionSetState.defaultRegionName ||
+                    regionSetState.defaultRegionId ||
+                    '';
+                  dn.textContent = show ? String(show) : '—';
+                }
+                renderRegionsSettingsTableBody();
+                renderRegionsSettingsFooter();
+              })
+              .catch(function() {
+                window.alert('Request failed.');
+              });
+          }
+          return;
+        }
+        var menuBtn = ev.target.closest('.settings-regions-row-menu-btn');
+        if (menuBtn) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          closeAllRegionRowMenus();
+          var rowDrop =
+            menuBtn.parentElement && menuBtn.parentElement.querySelector('.settings-regions-row-dropdown');
+          if (rowDrop) {
+            rowDrop.classList.remove('hidden');
+            menuBtn.setAttribute('aria-expanded', 'true');
+          }
+          setTimeout(function() {
+            document.addEventListener(
+              'click',
+              function docC() {
+                closeAllRegionRowMenus();
+                document.removeEventListener('click', docC);
+              },
+              { once: true }
+            );
+          }, 0);
+        }
+      });
+    }
+    ensureRegionCreateShell();
+    var saveBtn = document.getElementById('regionCreateSave');
+    if (saveBtn) {
+      saveBtn.onclick = function() {
+        var err = document.getElementById('regionCreateErr');
+        var nm = document.getElementById('regionCreateName');
+        var cur = document.getElementById('regionCreateCurrency');
+        var autoTax = document.getElementById('regionCreateAutoTax');
+        var taxIncl = document.getElementById('regionCreateTaxIncl');
+        var drawer = document.getElementById('regionCreateDrawer');
+        var editId = drawer && drawer.getAttribute('data-edit-id');
+        var nameVal = nm ? nm.value.trim() : '';
+        var curVal = cur ? (cur.value || '').trim().toLowerCase() : '';
+        if (!nameVal) {
+          if (err) {
+            err.textContent = 'Name is required.';
+            err.classList.remove('hidden');
+          }
+          return;
+        }
+        if (!curVal) {
+          if (err) {
+            err.textContent = 'Currency is required.';
+            err.classList.remove('hidden');
+          }
+          return;
+        }
+        if (err) err.classList.add('hidden');
+        var isoList = regionSetState.regionSelectedIsos ? regionSetState.regionSelectedIsos.slice() : [];
+        var payload = {
+          name: nameVal,
+          currency_code: curVal,
+          automatic_taxes: autoTax ? autoTax.checked : true,
+          tax_inclusive_pricing: taxIncl ? taxIncl.checked : false,
+          countries: isoList
+        };
+        saveBtn.disabled = true;
+        var url = editId ? '/admin/regions/' + encodeURIComponent(editId) : '/admin/regions';
+        var method = editId ? 'PATCH' : 'POST';
+        fetch(url, {
+          method: method,
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function(r) {
+            return r.json().then(function(j) {
+              return { ok: r.ok, j: j };
+            });
+          })
+          .then(function(x) {
+            if (!x.ok) {
+              var msg = (x.j && (x.j.message || x.j.error))
+                ? String(x.j.message || x.j.error)
+                : editId
+                  ? 'Could not update region.'
+                  : 'Could not create region.';
+              if (err) {
+                err.textContent = msg;
+                err.classList.remove('hidden');
+              }
+              return;
+            }
+            closeRegionCreateDrawer();
+            Promise.all([api('/admin/regions'), api('/admin/store')])
+              .then(function(rs) {
+                return Promise.all(rs.map(function(r) { return r.json(); }));
+              })
+              .then(function(pair) {
+                var data = pair[0] || {};
+                var storeData = pair[1] || {};
+                var st = storeData.store || {};
+                regionSetState.rows = data.regions ? data.regions : [];
+                if (data.country_options) regionSetState.countryOptions = data.country_options;
+                regionSetState.defaultRegionId = st.default_region_id != null ? st.default_region_id : null;
+                regionSetState.defaultRegionName = st.default_region_name != null ? st.default_region_name : null;
+                regionSetState.page = 1;
+                var dn = document.getElementById('settingsRegionsDefaultName');
+                if (dn) {
+                  var show =
+                    regionSetState.defaultRegionName ||
+                    regionSetState.defaultRegionId ||
+                    '';
+                  dn.textContent = show ? String(show) : '—';
+                }
+                renderRegionsSettingsTableBody();
+                renderRegionsSettingsFooter();
+              });
+          })
+          .catch(function() {
+            if (err) {
+              err.textContent = 'Request failed.';
+              err.classList.remove('hidden');
+            }
+          })
+          .finally(function() {
+            saveBtn.disabled = false;
+          });
+      };
+    }
+  }
+
+  function renderSettingsRegionsSection() {
+    setTitle('Regions');
+    showLoading();
+    Promise.all([api('/admin/regions'), api('/admin/store')])
+      .then(function(responses) {
+        return Promise.all(responses.map(function(r) { return r.json(); }));
+      })
+      .then(function(arr) {
+        var regData = arr[0] || {};
+        var storeData = arr[1] || {};
+        var st = storeData.store || {};
+        regionSetState.rows = regData.regions ? regData.regions : [];
+        regionSetState.countryOptions = regData.country_options ? regData.country_options : [];
+        regionSetState.currencies = storeData.options && storeData.options.currencies ? storeData.options.currencies : [];
+        regionSetState.defaultRegionId = st.default_region_id != null ? st.default_region_id : null;
+        regionSetState.defaultRegionName = st.default_region_name != null ? st.default_region_name : null;
+        var sf = regionSetState.sortField;
+        var sd = regionSetState.sortDir;
+        var main =
+          '<div class="settings-breadcrumb"><span class="settings-crumb-muted">Settings</span>' +
+          '<span class="settings-crumb-sep"> / </span>' +
+          '<span class="settings-crumb-current">Regions</span></div>' +
+          '<div class="settings-main-stack">' +
+          '<section class="settings-card settings-card--overflow-visible settings-regions-card">' +
+          '<div class="settings-card-head settings-regions-card-head">' +
+          '<div><h2 class="settings-card-title settings-regions-title">Regions</h2>' +
+          '<p class="settings-card-sub">A region is an area that you sell products in. It can cover multiple countries, and has different tax rates, providers, and currency.</p>' +
+          '<p class="settings-card-sub settings-regions-default-line" id="settingsRegionsDefaultLine">' +
+          '<span class="settings-regions-default-k">Store default region</span> ' +
+          '<strong class="settings-regions-default-v" id="settingsRegionsDefaultName">—</strong>' +
+          '</p></div>' +
+          '<button type="button" class="btn-solid" id="settingsRegionsCreateBtn">Create</button></div>' +
+          '<div class="settings-card-body settings-regions-card-body">' +
+          '<div class="products-toolbar settings-regions-toolbar">' +
+          '<div class="filter-toolbar-left">' +
+          '<div id="settingsRegionsFilterPills" class="filter-pills"></div>' +
+          '<div class="add-filter-wrap">' +
+          '<button type="button" id="settingsRegionsFilterToggle" class="btn-outline" aria-haspopup="true" aria-expanded="false" aria-controls="settingsRegionsAddFilterMenu">Add filter</button>' +
+          '<div id="settingsRegionsAddFilterMenu" class="filter-dropdown hidden" role="menu" aria-hidden="true">' +
+          '<button type="button" class="filter-menu-item" id="settingsRegionsFilterByCreated" role="menuitem">Created</button>' +
+          '<button type="button" class="filter-menu-item" id="settingsRegionsFilterByUpdated" role="menuitem">Updated</button>' +
+          '<hr class="filter-dropdown-sep" />' +
+          '<button type="button" class="filter-menu-item" id="settingsRegionsFilterClear" role="menuitem">Clear all filters</button>' +
+          '</div></div></div>' +
+          '<div class="products-search-row">' +
+          '<div class="product-search-field-wrap">' +
+          '<div class="products-search-wrap">' +
+          '<span class="products-search-icon" aria-hidden="true">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>' +
+          '</span>' +
+          '<input type="search" id="settingsRegionsSearch" placeholder="Search" autocomplete="off" spellcheck="false" value="' +
+          escapeHtml(regionSetState.q) +
+          '" />' +
+          '</div></div>' +
+          '<div class="product-sort-wrap">' +
+          '<button type="button" id="settingsRegionsSortBtn" class="product-sort-trigger" title="Sort" aria-label="Sort" aria-expanded="false" aria-haspopup="true">' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">' +
+          '<path d="M4 6h14M7 12h8M10 18h4"/><path d="M19 8l2 2 2-2M19 16l2-2 2 2"/></svg>' +
+          '</button>' +
+          '<div id="settingsRegionsSortMenu" class="product-sort-menu hidden" role="menu">' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sf === 'name' ? ' is-active' : '') +
+          '" data-region-sort-field="name" role="menuitem">Name</button>' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sf === 'countries' ? ' is-active' : '') +
+          '" data-region-sort-field="countries" role="menuitem">Countries</button>' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sf === 'payment_providers' ? ' is-active' : '') +
+          '" data-region-sort-field="payment_providers" role="menuitem">Payment Providers</button>' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sf === 'tax_inclusive_pricing' ? ' is-active' : '') +
+          '" data-region-sort-field="tax_inclusive_pricing" role="menuitem">Tax pricing</button>' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sf === 'created_at' ? ' is-active' : '') +
+          '" data-region-sort-field="created_at" role="menuitem">Created</button>' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sf === 'updated_at' ? ' is-active' : '') +
+          '" data-region-sort-field="updated_at" role="menuitem">Updated</button>' +
+          '<hr class="product-sort-menu-sep" />' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sd === 'asc' ? ' is-active' : '') +
+          '" data-region-sort-dir="asc" role="menuitem"><span class="product-sort-menu-label"><span class="product-sort-bullet" aria-hidden="true"></span>A–Z</span></button>' +
+          '<button type="button" class="product-sort-menu-item' +
+          (sd === 'desc' ? ' is-active' : '') +
+          '" data-region-sort-dir="desc" role="menuitem"><span class="product-sort-menu-label"><span class="product-sort-bullet" aria-hidden="true"></span>Z–A</span></button>' +
+          '</div></div></div></div>' +
+          '<div class="settings-table-wrap settings-regions-table-wrap" id="settingsRegionsTableWrap">' +
+          '<table class="settings-table settings-table-regions">' +
+          '<thead><tr><th>Name</th><th>Countries</th><th>Payment Providers</th><th>Tax pricing</th><th class="settings-th-actions"></th></tr></thead>' +
+          '<tbody id="settingsRegionsBody"></tbody></table></div>' +
+          '<div class="settings-table-foot settings-regions-foot">' +
+          '<span id="settingsRegionsFoot">0 – 0 of 0 results</span>' +
+          '<div class="settings-regions-foot-right">' +
+          '<span id="settingsRegionsPageLabel">1 of 1 pages</span>' +
+          '<span class="settings-table-nav settings-regions-table-nav">' +
+          '<button type="button" class="btn-outline" id="settingsRegionsPrev">Prev</button> ' +
+          '<button type="button" class="btn-outline" id="settingsRegionsNext">Next</button></span></div></div></div></section></div>';
+        content.innerHTML = settingsLayoutHtml('', main);
+        wireSettingsNav(content.querySelector('.settings-layout'));
+        wireRegionsSettingsPage(content.querySelector('.settings-main'));
+        renderRegionsFilterPills();
+        var dn = document.getElementById('settingsRegionsDefaultName');
+        var dl = document.getElementById('settingsRegionsDefaultLine');
+        if (dn) {
+          var show =
+            regionSetState.defaultRegionName ||
+            regionSetState.defaultRegionId ||
+            '';
+          dn.textContent = show ? String(show) : '—';
+        }
+        if (dl && !regionSetState.defaultRegionId && !regionSetState.defaultRegionName) {
+          dl.setAttribute('title', 'Set the default region under Settings → Store.');
+        } else if (dl) {
+          dl.removeAttribute('title');
+        }
+        renderRegionsSettingsTableBody();
+        renderRegionsSettingsFooter();
+      })
+      .catch(function() {
+        showError('Failed to load regions.');
+      });
+  }
+
   function renderSettingsPage() {
     var section = getSettingsSectionKey();
     var titles = {
@@ -3163,8 +4478,11 @@
         renderSettingsUsersSection();
         return;
       }
+      if (section === 'regions') {
+        renderSettingsRegionsSection();
+        return;
+      }
       var hints = {
-        regions: 'Use Regions in the main sidebar for the region list API.',
         profile: 'Use Profile in the footer or Users for account details.',
         'user-role-management': 'Manage users and RBAC roles from the Users and Invites pages in the main navigation.'
       };

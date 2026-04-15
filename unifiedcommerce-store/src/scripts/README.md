@@ -40,6 +40,28 @@ npx medusa exec ./src/scripts/my-script.ts
 
 ---
 
+## Seed region countries (fix "Countries with codes: us do not exist")
+
+Medusa validates ISO codes against the `region_country` table. If that table was never populated (e.g. empty DB or migrations without seed), attaching **United States** to a region in Admin fails with:
+
+`Countries with codes: "us" do not exist`
+
+From the `unifiedcommerce-store` directory, run:
+
+```bash
+npm run seed:region-countries
+```
+
+Or:
+
+```bash
+npx medusa exec ./src/scripts/seed-region-countries.ts
+```
+
+This inserts a curated set of common countries (including **us**) via the Region module. For a raw SQL fallback, see `scripts/sql/ensure-region-country-us.sql`.
+
+---
+
 ## Custom CLI Script Arguments
 
 Your script can accept arguments from the command line. Arguments are passed to the function's object parameter in the `args` property.

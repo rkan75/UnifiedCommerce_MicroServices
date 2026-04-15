@@ -582,6 +582,11 @@ tr:hover td {
   padding: 6px 0;
 }
 .filter-dropdown.hidden { display: none; }
+.filter-dropdown-sep {
+  margin: 0.35rem 0.65rem;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
 .filter-menu-item {
   display: block;
   width: 100%;
@@ -4464,19 +4469,168 @@ body.pdp-cv-open {
 .settings-cur-table-wrap {
   overflow: visible;
 }
+/* Same as currencies: .settings-table-wrap defaults to overflow:auto which clips row action popovers. */
+.settings-table-wrap.settings-regions-table-wrap {
+  overflow: visible;
+}
 .settings-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.82rem;
   table-layout: fixed;
 }
-.settings-table:not(.settings-table-currencies) th:nth-child(2),
-.settings-table:not(.settings-table-currencies) td:nth-child(2) {
+.settings-table:not(.settings-table-currencies):not(.settings-table-regions) th:nth-child(2),
+.settings-table:not(.settings-table-currencies):not(.settings-table-regions) td:nth-child(2) {
   width: 5rem;
 }
-.settings-table:not(.settings-table-currencies) th:nth-child(4),
-.settings-table:not(.settings-table-currencies) td:nth-child(4) {
+.settings-table:not(.settings-table-currencies):not(.settings-table-regions) th:nth-child(4),
+.settings-table:not(.settings-table-currencies):not(.settings-table-regions) td:nth-child(4) {
   width: 11rem;
+}
+/* Settings → Regions: Medusa-style list (name / countries / providers / tax pricing / actions) */
+.settings-regions-card {
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+.settings-regions-card-head {
+  align-items: flex-start;
+}
+.settings-regions-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.settings-regions-card-body {
+  padding-top: 0;
+}
+.settings-regions-toolbar.products-toolbar {
+  margin-bottom: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.settings-regions-table-wrap {
+  margin-top: 0;
+  border-radius: 8px;
+}
+.settings-regions-date-pill {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+}
+.settings-regions-date-pill .store-edit-input.settings-regions-date-input {
+  width: auto;
+  min-width: 0;
+  max-width: 11rem;
+  padding: 0.22rem 0.5rem;
+  font-size: 0.8rem;
+}
+.settings-regions-date-sep {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  user-select: none;
+}
+.settings-table-regions {
+  table-layout: auto;
+}
+.settings-table-regions th:nth-child(1),
+.settings-table-regions td:nth-child(1) {
+  width: 20%;
+  min-width: 8rem;
+}
+.settings-table-regions th:nth-child(2),
+.settings-table-regions td:nth-child(2) {
+  width: 26%;
+  min-width: 10rem;
+}
+.settings-table-regions th:nth-child(3),
+.settings-table-regions td:nth-child(3) {
+  width: auto;
+  min-width: 10rem;
+}
+.settings-table-regions th:nth-child(4),
+.settings-table-regions td:nth-child(4) {
+  width: 11%;
+  min-width: 7rem;
+  white-space: nowrap;
+}
+.settings-table-regions .settings-th-actions,
+.settings-table-regions .settings-td-actions {
+  width: 3.25rem;
+  text-align: right;
+  vertical-align: middle;
+}
+.settings-table-regions thead .settings-th-actions {
+  text-align: right;
+}
+.settings-table-regions .settings-card-menu {
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+.settings-regions-actions-wrap {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 2;
+}
+.settings-regions-row-menu-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  padding: 0.15rem 0.4rem;
+  color: #6b7280;
+  border-radius: 6px;
+  font-family: inherit;
+}
+.settings-regions-row-menu-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.settings-regions-row-dropdown {
+  right: 0;
+  left: auto;
+  min-width: 10rem;
+  z-index: 200;
+}
+.settings-table-regions .settings-td-actions {
+  overflow: visible;
+}
+.settings-regions-menu-svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+.settings-regions-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.settings-regions-foot #settingsRegionsFoot {
+  flex: 1;
+  min-width: 0;
+}
+.settings-regions-foot-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+.settings-regions-foot .settings-regions-table-nav {
+  margin-left: 0;
+}
+.settings-regions-table-nav button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 .settings-table-currencies th:nth-child(2),
 .settings-table-currencies td:nth-child(2) {
@@ -5088,6 +5242,157 @@ body.store-json-drawer-open {
 body.store-edit-open {
   overflow: hidden;
 }
+body.region-create-open {
+  overflow: hidden;
+}
+
+/* Settings → Regions: store default from DB (store.default_region_id) */
+/* Region editor — Medusa-style country catalog modal (GET /admin/regions/meta/countries) */
+.region-country-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 12050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.region-country-picker.hidden {
+  display: none !important;
+}
+.region-country-picker-inner {
+  width: 100%;
+  max-width: 36rem;
+  max-height: min(90vh, 40rem);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.region-country-picker-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.region-country-picker-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.region-country-picker-toolbar {
+  padding: 0 1rem 0.5rem;
+}
+.region-country-picker-table-wrap {
+  flex: 1;
+  overflow: auto;
+  min-height: 12rem;
+  max-height: min(50vh, 22rem);
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+.region-country-picker-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.region-country-picker-table thead th {
+  text-align: left;
+  padding: 0.45rem 0.65rem;
+  background: #fafafa;
+  font-weight: 600;
+  color: #64748b;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.region-country-picker-table tbody td {
+  padding: 0.4rem 0.65rem;
+  border-top: 1px solid #f1f5f9;
+}
+.region-country-picker-col-cb {
+  width: 2.25rem;
+  vertical-align: middle;
+}
+.region-country-picker-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+}
+.region-country-picker-range {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+.region-country-picker-pager {
+  display: flex;
+  gap: 0.35rem;
+}
+.region-country-picker-empty .settings-code-inline {
+  font-size: 0.68rem;
+}
+.settings-region-iso-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.settings-region-iso-chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+body.region-country-picker-open {
+  overflow: hidden;
+}
+
+/* Inline monospace in settings help text (e.g. seed command) */
+.settings-code-inline {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  background: #f1f5f9;
+  padding: 0.08rem 0.28rem;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.settings-regions-default-line {
+  margin-top: 0.5rem;
+}
+.settings-regions-default-k {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+.settings-regions-default-v {
+  font-weight: 600;
+}
+.settings-regions-default-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  margin-right: 0.35rem;
+  vertical-align: middle;
+}
+.settings-table-row--default-region td {
+  background: #f8fafc;
+}
+
 .store-edit-inner {
   display: flex;
   flex-direction: column;

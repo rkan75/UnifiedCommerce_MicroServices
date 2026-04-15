@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc6daf8c-bc6b-44db-86db-48e71089feb7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/config/EmailConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/java/com/tcs/commerce/rbac/config/EmailConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-rbac-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin-rbac-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer-service/src/main/java/com/tcs/commerce/customer/config/EmailConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/customer-service/src/main/java/com/tcs/commerce/customer/config/EmailConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/customer-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminProxyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/java/com/tcs/commerce/dashboard/web/AdminProxyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/css/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/css/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dashboard/src/main/resources/static/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/data/regions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store-storefront/src/lib/data/regions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unifiedcommerce-store/src/scripts/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/unifiedcommerce-store/src/scripts/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

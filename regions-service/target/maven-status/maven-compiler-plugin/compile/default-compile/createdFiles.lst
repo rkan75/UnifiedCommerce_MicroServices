@@ -1,0 +1,7 @@
+com/tcs/commerce/regions/web/RegionsController.class
+com/tcs/commerce/regions/service/RegionsService.class
+com/tcs/commerce/regions/config/WebConfig.class
+com/tcs/commerce/regions/web/CountryDto.class
+com/tcs/commerce/regions/RegionsApplication.class
+com/tcs/commerce/regions/web/RegionDto.class
+com/tcs/commerce/regions/config/RegionsProperties.class

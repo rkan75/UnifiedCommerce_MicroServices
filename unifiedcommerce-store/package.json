@@ -15,6 +15,7 @@
   "scripts": {
     "build": "XDG_CONFIG_HOME=\"${XDG_CONFIG_HOME:-.medusa-cli-config}\" npx medusa build",
     "seed": "npx medusa exec ./src/scripts/seed.ts",
+    "seed:region-countries": "npx medusa exec ./src/scripts/seed-region-countries.ts",
     "fix-express-shipping": "npx medusa exec ./src/scripts/fix-express-shipping-price.ts",
     "load-store-locations": "medusa exec ./src/scripts/load-store-locations-from-csv.ts",
     "import-amazon-gnc-products": "medusa exec ./src/scripts/import-amazon-gnc-products-from-xlsx.ts",
